@@ -15,6 +15,7 @@ import { useRecentApps, type RecentAppItem } from "@/hooks/useRecentApps";
 import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan, type NavItem } from "@/config/nav";
 import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 
 interface RecentModalProps {
   isOpen: boolean;
@@ -161,7 +162,8 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
         </div>
 
         {/* List of Recent Apps */}
-        <div className="flex-1 overflow-y-auto px-2 pb-3 space-y-1 max-h-[340px]">
+        <div className="relative flex-1 min-h-0">
+          <div className="overflow-y-auto px-2 pb-3 space-y-1 max-h-[340px] no-scrollbar">
           {filteredApps.length === 0 ? (
             <div className="py-8 px-4 text-center">
               <div className="w-10 h-10 rounded-2xl bg-muted/50 text-muted-foreground flex items-center justify-center mx-auto mb-2.5">
@@ -284,6 +286,14 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
               );
             })
           )}
+          </div>
+          <ProgressiveBlur
+            direction="bottom"
+            height={28}
+            blurLevels={[0.5, 1, 2, 4]}
+            tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
+            className="absolute bottom-0 inset-x-0 pointer-events-none"
+          />
         </div>
 
         {/* Footer info */}
