@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import {
   CornerUpRight,
@@ -56,6 +57,26 @@ export function ShortcutModal({ isOpen, onClose, onOpenQuickCapture }: ShortcutM
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"all" | "nav" | "action" | "external">("all");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input on open & close on escape
+  useEffect(() => {
+    if (isOpen) {
+      setSearch("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   const shortcuts: ShortcutItem[] = useMemo(
     () => [
@@ -323,155 +344,178 @@ export function ShortcutModal({ isOpen, onClose, onOpenQuickCapture }: ShortcutM
   };
 
   return (
-    <>
-      {/* Invisible backdrop (dismiss on outside click, just like switch profile / mode) */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
-
-      {/* Pop-up window positioned directly above dock */}
-      <div
-        className="fixed bottom-[88px] left-1/2 -translate-x-1/2 z-50 w-[92vw] sm:w-[420px] max-h-[calc(100vh-110px)] rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-[30px] border border-white/60 dark:border-white/15 shadow-[0px_4px_21px_-8px_rgba(255,255,255,0.5),0_20px_50px_rgba(0,0,0,0.22)] liquid-glass-dock overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-200 select-none cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="p-3 border-b border-border/60 bg-muted/20">
-          <div className="flex items-center justify-between mb-2.5">
-            <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5 tracking-tight">
-              <span className="p-1 rounded-lg bg-primary/10 text-primary">
-                <CornerUpRight className="size-3.5" />
-              </span>
-              <span>Shortcut & Pintasan Cepat</span>
-            </h3>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-colors"
-            >
-              <X className="size-3.5" />
-            </button>
-          </div>
-
-          {/* Search bar */}
-          <div className="relative mb-2">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari pintasan, navigasi, atau tautan portal..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-neutral-200/60 dark:border-zinc-700/60 bg-white/80 dark:bg-zinc-800/80 focus:outline-none focus:ring-1.5 focus:ring-primary/40 text-foreground placeholder:text-muted-foreground/70"
-            />
-          </div>
-
-          {/* Filter pills */}
-          <div className="grid grid-cols-4 gap-1 p-0.5 bg-background/80 dark:bg-zinc-800/80 rounded-xl border border-border/60 backdrop-blur-md">
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("all")}
-              className={`py-1 text-[11px] font-medium rounded-lg transition-all ${
-                selectedCategory === "all"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Semua ({shortcuts.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("nav")}
-              className={`py-1 text-[11px] font-medium rounded-lg transition-all ${
-                selectedCategory === "nav"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Halaman
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("action")}
-              className={`py-1 text-[11px] font-medium rounded-lg transition-all ${
-                selectedCategory === "action"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Aksi
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("external")}
-              className={`py-1 text-[11px] font-medium rounded-lg transition-all ${
-                selectedCategory === "external"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Tautan ({shortcuts.filter((s) => s.category === "external").length})
-            </button>
-          </div>
-        </div>
-
-        {/* Shortcuts list */}
-        <div className="relative flex-1 min-h-0">
-          <div className="p-2 space-y-1 overflow-y-auto no-scrollbar max-h-[50vh]">
-          {filtered.length === 0 ? (
-            <div className="py-8 text-center text-xs text-muted-foreground">
-              Tidak ada pintasan yang cocok dengan &quot;{search}&quot;
-            </div>
-          ) : (
-            filtered.map((item) => {
-              const Icon = item.icon;
-              const isExternal = Boolean(item.externalUrl);
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleItemClick(item)}
-                  className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left hover:bg-neutral-100/80 dark:hover:bg-zinc-800/70 transition-colors group cursor-pointer"
-                >
-                  <div className="p-1.5 rounded-full bg-neutral-100 dark:bg-zinc-800 text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors shrink-0">
-                    <Icon className="size-4" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-foreground truncate group-hover:text-primary transition-colors flex items-center gap-1.5">
-                      <span>{item.title}</span>
-                      {isExternal && (
-                        <ExternalLink className="size-3 text-muted-foreground/60 shrink-0 inline" />
-                      )}
-                    </div>
-                    {item.subtitle && (
-                      <div className="text-[10px] text-muted-foreground truncate">
-                        {item.subtitle}
-                      </div>
-                    )}
-                  </div>
-                  {item.badge ? (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-zinc-800 text-muted-foreground border border-neutral-200/60 dark:border-zinc-700/60 shrink-0">
-                      {item.badge}
-                    </span>
-                  ) : (
-                    <ArrowRight className="size-3 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
-                  )}
-                </button>
-              );
-            })
-          )}
-          </div>
-          <ProgressiveBlur
-            direction="bottom"
-            height={28}
-            blurLevels={[0.5, 1, 2, 4]}
-            tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
-            className="absolute bottom-0 inset-x-0 pointer-events-none"
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Click outside overlay to dismiss - no blur or black overlay */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={onClose}
           />
-        </div>
 
-        {/* Footer info */}
-        <div className="p-2.5 border-t border-border/60 bg-muted/20 flex items-center justify-between text-[10px] text-muted-foreground">
-          <span>Tekan Esc untuk menutup</span>
-          <span className="font-mono">Pintasan Cepat & Tautan</span>
-        </div>
-      </div>
-    </>
+          {/* Floating Stack anchored directly above dock */}
+          <div className="fixed bottom-[82px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.16, ease: "easeOut" }}
+              className="w-80 sm:w-96 rounded-3xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 shadow-2xl p-2.5 flex flex-col overflow-hidden cursor-default text-left select-none max-h-[75vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+                      <CornerUpRight className="size-3.5" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
+                        Shortcut & Pintasan
+                      </h3>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                        Akses cepat navigasi & portal
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
+
+                {/* Search bar */}
+                <div className="relative mb-2">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-neutral-400" />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Cari pintasan..."
+                    className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-50 dark:bg-zinc-800 focus:outline-none focus:ring-1.5 focus:ring-primary/40 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-400"
+                  />
+                </div>
+
+                {/* Filter pills */}
+                <div className="grid grid-cols-4 gap-1 p-0.5 bg-neutral-100 dark:bg-zinc-800 rounded-xl border border-neutral-200/60 dark:border-zinc-700/60">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("all")}
+                    className={`py-1 text-[10.5px] font-medium rounded-lg transition-all ${
+                      selectedCategory === "all"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    Semua
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("nav")}
+                    className={`py-1 text-[10.5px] font-medium rounded-lg transition-all ${
+                      selectedCategory === "nav"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    Laman
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("action")}
+                    className={`py-1 text-[10.5px] font-medium rounded-lg transition-all ${
+                      selectedCategory === "action"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    Aksi
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("external")}
+                    className={`py-1 text-[10.5px] font-medium rounded-lg transition-all ${
+                      selectedCategory === "external"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    Tautan
+                  </button>
+                </div>
+              </div>
+
+              {/* Shortcuts list */}
+              <div className="relative flex-1 min-h-0 pt-2">
+                <div className="flex flex-col gap-1.5 overflow-y-auto no-scrollbar max-h-[46vh] px-0.5">
+                  {filtered.length === 0 ? (
+                    <div className="py-6 text-center text-xs text-neutral-400">
+                      Tidak ada pintasan yang cocok
+                    </div>
+                  ) : (
+                    filtered.map((item) => {
+                      const Icon = item.icon;
+                      const isExternal = Boolean(item.externalUrl);
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleItemClick(item)}
+                          className="group flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left transition-all duration-150 select-none cursor-pointer border bg-neutral-50 dark:bg-zinc-800 text-neutral-600 dark:text-neutral-300 shadow-xs hover:bg-neutral-100 dark:hover:bg-zinc-700 hover:text-neutral-900 dark:hover:text-white border-neutral-200/70 dark:border-zinc-700/60"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="size-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-150 bg-white dark:bg-zinc-700 text-neutral-500 dark:text-neutral-300 shadow-2xs border border-neutral-200/50 dark:border-zinc-600/50 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:scale-105">
+                              <Icon className="size-4 shrink-0" strokeWidth={2.2} />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[13px] font-medium tracking-tight truncate leading-tight text-neutral-800 dark:text-neutral-100 group-hover:text-neutral-900 dark:group-hover:text-white">
+                                  {item.title}
+                                </span>
+                                {isExternal && (
+                                  <ExternalLink className="size-3 text-neutral-400 shrink-0 inline" />
+                                )}
+                              </div>
+                              <span className="text-[10.5px] truncate leading-tight mt-0.5 text-neutral-500 dark:text-neutral-400">
+                                {item.subtitle || "Pintasan Eksekutif"}
+                              </span>
+                            </div>
+                          </div>
+                          {item.badge ? (
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white dark:bg-zinc-700 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-zinc-600/60 shrink-0 shadow-2xs">
+                              {item.badge}
+                            </span>
+                          ) : (
+                            <ArrowRight className="size-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+                <ProgressiveBlur
+                  direction="bottom"
+                  height={24}
+                  blurLevels={[0.5, 1, 2, 4]}
+                  tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
+                  className="absolute bottom-0 inset-x-0 pointer-events-none"
+                />
+              </div>
+
+              {/* Footer info */}
+              <div className="pt-2 px-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Tekan Esc untuk menutup</span>
+                <span className="font-mono">Pintasan Cepat</span>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

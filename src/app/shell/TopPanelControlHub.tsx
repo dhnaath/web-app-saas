@@ -1,15 +1,66 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   User,
   Settings,
   Clock,
   Laptop,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { ThemeLangToggle, TIMEZONE_IANA_MAP } from "../theme-lang-toggle";
 import { ProfileMenu } from "../wira-settings";
 import { ProgressiveBlurSettingControl } from "./ProgressiveBlurSettingControl";
 import { LiquidGlassSettingControl } from "./LiquidGlassSettingControl";
 import { ThemeColorPicker } from "./ThemeColorPicker";
+import { LanguageToggle } from "./LanguageToggle";
+
+// Daftar Negara Lengkap (ISO 3 digit + Icon Bendera SVG dari flag-icons)
+export interface CountryData {
+  code: string;
+  iso2: string;
+  name: string;
+  defaultCity: string;
+  defaultTimezone: string;
+}
+
+export const COUNTRIES_DATA: CountryData[] = [
+  // ASEAN
+  { code: "IDN", iso2: "id", name: "Indonesia", defaultCity: "Jakarta", defaultTimezone: "UTC+07:00" },
+  { code: "SGP", iso2: "sg", name: "Singapura", defaultCity: "Singapore", defaultTimezone: "UTC+08:00" },
+  { code: "MYS", iso2: "my", name: "Malaysia", defaultCity: "Kuala Lumpur", defaultTimezone: "UTC+08:00" },
+  { code: "THA", iso2: "th", name: "Thailand", defaultCity: "Bangkok", defaultTimezone: "UTC+07:00" },
+  { code: "VNM", iso2: "vn", name: "Vietnam", defaultCity: "Hanoi", defaultTimezone: "UTC+07:00" },
+  { code: "PHL", iso2: "ph", name: "Filipina", defaultCity: "Manila", defaultTimezone: "UTC+08:00" },
+  { code: "BRN", iso2: "bn", name: "Brunei", defaultCity: "Bandar Seri Begawan", defaultTimezone: "UTC+08:00" },
+  { code: "KHM", iso2: "kh", name: "Kamboja", defaultCity: "Phnom Penh", defaultTimezone: "UTC+07:00" },
+  { code: "LAO", iso2: "la", name: "Laos", defaultCity: "Vientiane", defaultTimezone: "UTC+07:00" },
+  { code: "MMR", iso2: "mm", name: "Myanmar", defaultCity: "Naypyidaw", defaultTimezone: "UTC+06:30" },
+  { code: "TLS", iso2: "tl", name: "Timor-Leste", defaultCity: "Dili", defaultTimezone: "UTC+09:00" },
+
+  // Asia Timur
+  { code: "CHN", iso2: "cn", name: "China", defaultCity: "Beijing", defaultTimezone: "UTC+08:00" },
+  { code: "KOR", iso2: "kr", name: "Korea Selatan", defaultCity: "Seoul", defaultTimezone: "UTC+09:00" },
+  { code: "JPN", iso2: "jp", name: "Jepang", defaultCity: "Tokyo", defaultTimezone: "UTC+09:00" },
+
+  // Eropa Maju
+  { code: "DEU", iso2: "de", name: "Jerman", defaultCity: "Berlin", defaultTimezone: "UTC+01:00" },
+  { code: "FRA", iso2: "fr", name: "Prancis", defaultCity: "Paris", defaultTimezone: "UTC+01:00" },
+  { code: "CHE", iso2: "ch", name: "Swiss", defaultCity: "Zurich", defaultTimezone: "UTC+01:00" },
+  { code: "NLD", iso2: "nl", name: "Belanda", defaultCity: "Amsterdam", defaultTimezone: "UTC+01:00" },
+  { code: "SWE", iso2: "se", name: "Swedia", defaultCity: "Stockholm", defaultTimezone: "UTC+01:00" },
+  { code: "NOR", iso2: "no", name: "Norwegia", defaultCity: "Oslo", defaultTimezone: "UTC+01:00" },
+  { code: "DNK", iso2: "dk", name: "Denmark", defaultCity: "Copenhagen", defaultTimezone: "UTC+01:00" },
+  { code: "FIN", iso2: "fi", name: "Finlandia", defaultCity: "Helsinki", defaultTimezone: "UTC+02:00" },
+  { code: "AUT", iso2: "at", name: "Austria", defaultCity: "Vienna", defaultTimezone: "UTC+01:00" },
+  { code: "BEL", iso2: "be", name: "Belgia", defaultCity: "Brussels", defaultTimezone: "UTC+01:00" },
+  { code: "ITA", iso2: "it", name: "Italia", defaultCity: "Roma", defaultTimezone: "UTC+01:00" },
+  { code: "ESP", iso2: "es", name: "Spanyol", defaultCity: "Madrid", defaultTimezone: "UTC+01:00" },
+  { code: "GBR", iso2: "gb", name: "United Kingdom", defaultCity: "London", defaultTimezone: "UTC+00:00" },
+
+  // Lainnya
+  { code: "USA", iso2: "us", name: "United States", defaultCity: "New York", defaultTimezone: "UTC-05:00" },
+  { code: "AUS", iso2: "au", name: "Australia", defaultCity: "Sydney", defaultTimezone: "UTC+10:00" },
+];
 
 interface TopPanelControlHubProps {
   onClose: () => void;
@@ -21,13 +72,50 @@ export function TopPanelControlHub({
   onOpenSettings,
 }: TopPanelControlHubProps) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close country dropdown on click outside or escape
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        countryDropdownRef.current &&
+        !countryDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsCountryOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsCountryOpen(false);
+      }
+    };
+    if (isCountryOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isCountryOpen]);
 
   // Region State
   const [country, setCountry] = useState<string>(() => {
     try {
-      return localStorage.getItem("aio_region_country") || "Indonesia";
+      const stored = localStorage.getItem("aio_region_country") || "IDN";
+      const legacyMap: Record<string, string> = {
+        Indonesia: "IDN",
+        Singapore: "SGP",
+        Malaysia: "MYS",
+        "United States": "USA",
+        "United Kingdom": "GBR",
+        Australia: "AUS",
+        Japan: "JPN",
+      };
+      return legacyMap[stored] || stored || "IDN";
     } catch {
-      return "Indonesia";
+      return "IDN";
     }
   });
 
@@ -41,9 +129,20 @@ export function TopPanelControlHub({
 
   const [timezone, setTimezone] = useState<string>(() => {
     try {
-      return localStorage.getItem("aio_region_timezone") || "(UTC+07:00) WIB";
+      const stored = localStorage.getItem("aio_region_timezone") || "UTC+07:00";
+      if (stored.includes("07:00")) return "UTC+07:00";
+      if (stored.includes("08:00")) return "UTC+08:00";
+      if (stored.includes("09:00")) return "UTC+09:00";
+      if (stored.includes("06:30")) return "UTC+06:30";
+      if (stored.includes("01:00")) return "UTC+01:00";
+      if (stored.includes("02:00")) return "UTC+02:00";
+      if (stored.includes("00:00")) return "UTC+00:00";
+      if (stored.includes("10:00")) return "UTC+10:00";
+      if (stored.includes("-05:00") || stored.includes("EST")) return "UTC-05:00";
+      if (stored.includes("-08:00") || stored.includes("PST")) return "UTC-08:00";
+      return stored || "UTC+07:00";
     } catch {
-      return "(UTC+07:00) WIB";
+      return "UTC+07:00";
     }
   });
 
@@ -82,6 +181,13 @@ export function TopPanelControlHub({
     setCountry(val);
     try {
       localStorage.setItem("aio_region_country", val);
+      const matched = COUNTRIES_DATA.find((c) => c.code === val);
+      if (matched) {
+        setCity(matched.defaultCity);
+        localStorage.setItem("aio_region_city", matched.defaultCity);
+        setTimezone(matched.defaultTimezone);
+        localStorage.setItem("aio_region_timezone", matched.defaultTimezone);
+      }
     } catch {}
   };
 
@@ -99,6 +205,9 @@ export function TopPanelControlHub({
     } catch {}
   };
 
+  const currentCountry =
+    COUNTRIES_DATA.find((c) => c.code === country) || COUNTRIES_DATA[0];
+
   return (
     <div
       className="w-full flex flex-col relative z-10"
@@ -111,66 +220,30 @@ export function TopPanelControlHub({
       >
         <div className="max-w-[1500px] w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch min-w-0">
           {/* Kolom 1: Akun & Profil Pengguna */}
-          <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <div className="card-content text-slate-900" style={{ color: "#0f172a" }}>
-              <div className="card-header">
-                <div className="user-info">
-                  <div className="avatar bg-primary/10 border-2 border-primary">
-                    <svg className="avatar-icon text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                  </div>
-                  <div className="user-details">
-                    <p className="user-name text-slate-900 font-bold">Executive User</p>
-                    <p className="user-role text-slate-500 text-xs">DNA Advisory Workspace</p>
-                  </div>
-                </div>
+          <div className="liquid-glass-card min-w-0 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-white/50 dark:border-slate-800/80 overflow-hidden text-slate-900 dark:text-slate-100 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col justify-center">
+            <div className="card-content text-slate-900 dark:text-slate-100 flex flex-col justify-center flex-1 h-full">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => onOpenSettings("notifications")}
-                  className="notification-icon text-slate-400 hover:text-slate-700 cursor-pointer"
-                  title="Notifikasi Akun"
-                  aria-label="Notifikasi"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="glass-button flex-1 whitespace-nowrap text-xs font-semibold py-2 px-3 min-w-0 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer"
                 >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
+                  <User className="size-4 shrink-0 text-slate-700 dark:text-slate-300" />
+                  <span>Menu Profil</span>
                 </button>
-              </div>
 
-              <div className="card-body text-left">
-                <h3 className="card-title text-slate-900 font-bold text-base mb-1">Profil & Kredensial</h3>
-                <p className="card-description text-slate-600 text-xs mb-3">
-                  Kelola sesi login, hak akses tim, dan sinkronisasi profil workspace.
-                </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="glass-button flex-1 whitespace-nowrap text-xs font-semibold py-2 px-3 min-w-0 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 shadow-2xs cursor-pointer"
-                  >
-                    <User className="size-4 shrink-0 text-slate-700" />
-                    <span>Menu Profil</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      onOpenSettings("general");
-                    }}
-                    className="glass-button size-9 p-0 shrink-0 aspect-square rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 shadow-2xs cursor-pointer"
-                    title="Buka Pengaturan"
-                    aria-label="Pengaturan"
-                  >
-                    <Settings className="size-4 shrink-0 text-slate-700" />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    onOpenSettings("general");
+                  }}
+                  className="glass-button size-9 p-0 shrink-0 aspect-square rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer"
+                  title="Buka Pengaturan"
+                  aria-label="Pengaturan"
+                >
+                  <Settings className="size-4 shrink-0 text-slate-700 dark:text-slate-300" />
+                </button>
               </div>
 
               <div className="relative">
@@ -188,11 +261,8 @@ export function TopPanelControlHub({
           </div>
 
           {/* Kolom 2: Pengaturan Visual & Efek */}
-          <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <div className="card-content text-slate-900 flex flex-col justify-center flex-1 h-full" style={{ color: "#0f172a" }}>
+          <div className="liquid-glass-card min-w-0 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-white/50 dark:border-slate-800/80 overflow-hidden text-slate-900 dark:text-slate-100 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col">
+            <div className="card-content text-slate-900 dark:text-slate-100 flex flex-col justify-center flex-1 h-full">
               <div className="flex flex-col gap-2 text-left w-full">
                 <ThemeColorPicker />
                 <ProgressiveBlurSettingControl />
@@ -202,45 +272,68 @@ export function TopPanelControlHub({
           </div>
 
           {/* Kolom 3: Wilayah & Preferensi Waktu */}
-          <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col justify-between"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <div className="card-content text-slate-900 flex flex-col gap-2.5 text-left w-full h-full" style={{ color: "#0f172a" }}>
-              {/* Hanya Jam Digital & Info Ringkas */}
-              <div className="flex items-center justify-between w-full">
-                <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200 shadow-2xs">
-                  <Clock className="size-3.5 text-emerald-600 animate-pulse" />
+          <div className="liquid-glass-card min-w-0 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-white/50 dark:border-slate-800/80 overflow-hidden text-slate-900 dark:text-slate-100 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col justify-between">
+            <div className="card-content text-slate-900 dark:text-slate-100 flex flex-col gap-2.5 text-left w-full h-full">
+              {/* Baris Atas: Jam Digital (Kiri) & Pilihan Negara (Kanan) */}
+              <div className="flex items-center justify-between gap-2 w-full">
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-200 dark:border-emerald-800 shadow-2xs shrink-0">
+                  <Clock className="size-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
                   <span className="tracking-wide">{currentTime || "--:--:--"}</span>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
-                  {timezone.split(" ")[0]} · {city}
-                </span>
+
+                {/* Dropdown Negara Custom dengan Flag-Icons SVG */}
+                <div className="relative" ref={countryDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsCountryOpen(!isCountryOpen)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 dark:bg-slate-800 hover:bg-white dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs transition-all focus:outline-none focus:ring-1 focus:ring-primary"
+                    title={`Pilih Negara (${currentCountry.code} - ${currentCountry.name})`}
+                    aria-label="Pilih Negara"
+                    aria-expanded={isCountryOpen}
+                  >
+                    <span className={`fi fi-${currentCountry.iso2} rounded-2xs shadow-2xs text-[13px] leading-none shrink-0`} />
+                    <span className="font-mono font-bold tracking-tight text-xs">{currentCountry.code}</span>
+                    <ChevronDown className={`size-3 text-slate-400 transition-transform duration-150 ${isCountryOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {isCountryOpen && (
+                    <div className="absolute right-0 top-full mt-1.5 w-48 max-h-56 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 p-1 no-scrollbar animate-in fade-in-50 zoom-in-95 duration-100">
+                      <div className="space-y-0.5">
+                        {COUNTRIES_DATA.map((c) => {
+                          const isSelected = c.code === country;
+                          return (
+                            <button
+                              key={c.code}
+                              type="button"
+                              onClick={() => {
+                                handleCountryChange(c.code);
+                                setIsCountryOpen(false);
+                              }}
+                              className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs transition-colors cursor-pointer ${
+                                isSelected
+                                  ? "bg-primary/10 text-primary font-bold dark:bg-primary/20"
+                                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className={`fi fi-${c.iso2} rounded-2xs shadow-2xs text-[14px] leading-none shrink-0`} />
+                                <span className="font-mono font-bold text-xs">{c.code}</span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{c.name}</span>
+                              </div>
+                              {isSelected && <Check className="size-3.5 text-primary shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Form Lokasi: Negara & Kota */}
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
-                    Negara
-                  </label>
-                  <select
-                    value={country}
-                    onChange={(e) => handleCountryChange(e.target.value)}
-                    className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
-                  >
-                    <option value="Indonesia">Indonesia</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="Malaysia">Malaysia</option>
-                    <option value="United States">United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Japan">Japan</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
+              {/* Form Lokasi: Kota (Lebar fleksibel) & Zona Waktu (Dipendekkan ringkas) */}
+              <div className="flex items-center gap-2 w-full">
+                <div className="flex-1 min-w-0">
+                  <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 block mb-0.5">
                     Kota
                   </label>
                   <input
@@ -248,73 +341,77 @@ export function TopPanelControlHub({
                     value={city}
                     onChange={(e) => handleCityChange(e.target.value)}
                     placeholder="Jakarta"
-                    className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 focus:bg-white focus:border-primary"
+                    className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none text-xs font-medium text-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800 focus:border-primary"
                   />
+                </div>
+
+                <div className="w-auto shrink-0">
+                  <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 block mb-0.5">
+                    Zona Waktu
+                  </label>
+                  <select
+                    value={timezone}
+                    onChange={(e) => handleTimezoneChange(e.target.value)}
+                    className="w-auto min-w-[104px] px-2 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none text-xs font-semibold text-slate-800 dark:text-slate-200 cursor-pointer focus:bg-white dark:focus:bg-slate-800 focus:border-primary shadow-2xs"
+                  >
+                    <option value="UTC-08:00">UTC-08:00</option>
+                    <option value="UTC-05:00">UTC-05:00</option>
+                    <option value="UTC+00:00">UTC+00:00</option>
+                    <option value="UTC+01:00">UTC+01:00</option>
+                    <option value="UTC+02:00">UTC+02:00</option>
+                    <option value="UTC+06:30">UTC+06:30</option>
+                    <option value="UTC+07:00">UTC+07:00</option>
+                    <option value="UTC+08:00">UTC+08:00</option>
+                    <option value="UTC+09:00">UTC+09:00</option>
+                    <option value="UTC+10:00">UTC+10:00</option>
+                  </select>
                 </div>
               </div>
 
-              {/* Zona Waktu */}
-              <div>
-                <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
-                  Zona Waktu
-                </label>
-                <select
-                  value={timezone}
-                  onChange={(e) => handleTimezoneChange(e.target.value)}
-                  className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
-                >
-                  <option value="(UTC+07:00) WIB">(UTC+07:00) WIB - Jakarta</option>
-                  <option value="(UTC+08:00) WITA">(UTC+08:00) WITA - Bali</option>
-                  <option value="(UTC+09:00) WIT">(UTC+09:00) WIT - Jayapura</option>
-                  <option value="(UTC+00:00) UTC">(UTC+00:00) UTC - London</option>
-                  <option value="(UTC-05:00) EST">(UTC-05:00) EST - New York</option>
-                  <option value="(UTC-08:00) PST">(UTC-08:00) PST - San Francisco</option>
-                </select>
-              </div>
-
-              {/* Mode Tema & Bahasa (Tanpa Garis Pembatas Mendatar) */}
+              {/* Mode Tema & Bahasa */}
               <ThemeLangToggle
                 timezone={timezone}
+                className="mt-0.5"
+              />
+
+              <LanguageToggle
                 className="mt-0.5"
               />
             </div>
           </div>
 
           {/* Kolom 4: Informasi Versi & Status Sistem */}
-          <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <div className="card-content text-slate-900" style={{ color: "#0f172a" }}>
+          <div className="liquid-glass-card min-w-0 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-white/50 dark:border-slate-800/80 overflow-hidden text-slate-900 dark:text-slate-100 transition-transform duration-200 hover:-translate-y-0.5">
+            <div className="card-content text-slate-900 dark:text-slate-100">
               <div className="card-header">
                 <div className="user-info">
-                  <div className="avatar bg-cyan-50 border-2 border-cyan-500">
+                  <div className="avatar bg-cyan-50 dark:bg-cyan-950/60 border-2 border-cyan-500">
                     <Laptop className="avatar-icon text-cyan-500" />
                   </div>
                   <div className="user-details">
-                    <p className="user-name text-slate-900 font-bold">Client OS</p>
-                    <p className="user-role text-slate-500 text-xs">v2.4.2 · Production</p>
+                    <p className="user-name text-slate-900 dark:text-slate-100 font-bold">Client OS</p>
+                    <p className="user-role text-slate-500 dark:text-slate-400 text-xs">v2.4.2 · Production</p>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold flex items-center gap-1.5">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-semibold flex items-center gap-1.5">
                   <span className="size-1.5 rounded-full bg-emerald-500 shadow-[0_0_2px_rgba(16,185,129,0.15)] animate-pulse" />
                   Aktif
                 </span>
               </div>
 
               <div className="card-body text-left">
-                <div className="space-y-1.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-left shadow-2xs">
-                  <div className="flex justify-between items-center text-slate-700">
+                <div className="space-y-1.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-left shadow-2xs">
+                  <div className="flex justify-between items-center text-slate-700 dark:text-slate-300">
                     <span>Versi Rilis</span>
-                    <span className="font-mono font-semibold text-slate-900">2026.09-stable</span>
+                    <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">2026.09-stable</span>
                   </div>
-                  <div className="flex justify-between items-center text-slate-700">
+                  <div className="flex justify-between items-center text-slate-700 dark:text-slate-300">
                     <span>Platform</span>
-                    <span className="font-medium text-slate-900">React 19 + Vite</span>
+                    <span className="font-medium text-slate-900 dark:text-slate-100">React 19 + Vite</span>
                   </div>
-                  <div className="flex justify-between items-center text-slate-700">
+                  <div className="flex justify-between items-center text-slate-700 dark:text-slate-300">
                     <span>Sinkronisasi</span>
-                    <span className="text-emerald-600 font-semibold">✓ Terverifikasi</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ Terverifikasi</span>
                   </div>
                 </div>
               </div>
