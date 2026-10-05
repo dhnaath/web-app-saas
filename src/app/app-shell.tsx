@@ -94,6 +94,10 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { HeaderNavControls } from "./HeaderNavControls";
 import { useCustomNav } from "@/hooks/useCustomNav";
 import { navKonsultan, navAllSidebar, type NavItem, type NavGroup as NavGroupType } from "@/config/nav";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
+import { useProgressiveBlurSetting } from "@/hooks/useProgressiveBlurSetting";
+import { useLiquidGlassSetting } from "@/hooks/useLiquidGlassSetting";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 
 export type AppModeId = "personal" | "household" | "relatives" | "employment" | "owner" | "public" | "student" | "creator" | "wellbeing" | "leisure";
@@ -330,6 +334,9 @@ export function AppShell({
   const rawNav = navKonsultan;
   const { enabledMenus } = useMenuSettings();
   const { findItemById, findItemByPath } = useCustomNav();
+  const { config: blurConfig, blurLevels } = useProgressiveBlurSetting();
+  useLiquidGlassSetting();
+  useThemeColor();
 
 
   // ---------------------------------------------------------------------------
@@ -890,6 +897,17 @@ export function AppShell({
               }}
             />
           )}
+
+          {blurConfig.enabled && !isLeftSidebar75 && (
+            <div className="sticky bottom-0 inset-x-0 -mx-3 -mb-4 h-8 pointer-events-none z-20">
+              <ProgressiveBlur
+                direction="bottom"
+                height={32}
+                blurLevels={[0.5, 1, 2, 4, 8]}
+                tint={blurConfig.tint ? "linear-gradient(to bottom, transparent 0%, hsl(var(--card) / 0.8) 100%)" : false}
+              />
+            </div>
+          )}
         </div>
       </aside>
 
@@ -1196,6 +1214,17 @@ export function AppShell({
             </div>
           </nav>
           )}
+
+          {blurConfig.enabled && (
+            <div className="sticky bottom-0 inset-x-0 -mx-4 -mb-4 sm:-mx-5 sm:-mb-4 h-8 pointer-events-none z-20">
+              <ProgressiveBlur
+                direction="bottom"
+                height={32}
+                blurLevels={[0.5, 1, 2, 4, 8]}
+                tint={blurConfig.tint ? "linear-gradient(to bottom, transparent 0%, hsl(var(--card) / 0.8) 100%)" : false}
+              />
+            </div>
+          )}
         </div>
 
       </aside>
@@ -1323,6 +1352,36 @@ export function AppShell({
             </div>
           </div>
         </header>
+
+        {/* Progressive Blur (Top & Bottom Viewport Transitions - Planes & Apple VisionOS Inspired) */}
+        {blurConfig.enabled && (
+          <>
+            {/* Top progressive blur: seamless melt for scrolling content under header pills */}
+            <ProgressiveBlur
+              direction="top"
+              height={96}
+              blurLevels={blurLevels}
+              tint={blurConfig.tint ? `linear-gradient(to top, transparent 0%, hsl(var(--background) / 0.82) 100%)` : false}
+              className="fixed top-0 right-0 z-15 pointer-events-none transition-[left] duration-300 ease-in-out"
+              style={{
+                left: openDrawer === "left" && isLeftSidebar75 ? "75px" : "0px",
+              }}
+            />
+
+            {/* Bottom progressive blur: soft dissolve above floating dock and edge */}
+            <ProgressiveBlur
+              direction="bottom"
+              height={116}
+              blurLevels={blurLevels}
+              tint={blurConfig.tint ? `linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.88) 100%)` : false}
+              className="fixed bottom-0 right-0 z-15 pointer-events-none transition-[left] duration-300 ease-in-out"
+              style={{
+                left: openDrawer === "left" && isLeftSidebar75 ? "75px" : "0px",
+              }}
+            />
+          </>
+        )}
+
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar relative z-10 ${
             pathname === "/" ? "px-4 pb-[68px] sm:px-6 sm:pb-[68px]" : "pb-[80px]"

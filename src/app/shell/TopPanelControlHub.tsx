@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import {
   User,
   Settings,
-  Globe,
   Clock,
-  Sparkles,
   Laptop,
 } from "lucide-react";
-import { ThemeLangToggle } from "../theme-lang-toggle";
+import { ThemeLangToggle, TIMEZONE_IANA_MAP } from "../theme-lang-toggle";
 import { ProfileMenu } from "../wira-settings";
+import { ProgressiveBlurSettingControl } from "./ProgressiveBlurSettingControl";
+import { LiquidGlassSettingControl } from "./LiquidGlassSettingControl";
+import { ThemeColorPicker } from "./ThemeColorPicker";
 
 interface TopPanelControlHubProps {
   onClose: () => void;
@@ -50,19 +51,32 @@ export function TopPanelControlHub({
 
   useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(
-        now.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
+      const iana = TIMEZONE_IANA_MAP[timezone] || "Asia/Jakarta";
+      try {
+        const now = new Date();
+        setCurrentTime(
+          now.toLocaleTimeString("id-ID", {
+            timeZone: iana,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        );
+      } catch {
+        const now = new Date();
+        setCurrentTime(
+          now.toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        );
+      }
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [timezone]);
 
   const handleCountryChange = (val: string) => {
     setCountry(val);
@@ -104,7 +118,7 @@ export function TopPanelControlHub({
             <div className="card-content text-slate-900" style={{ color: "#0f172a" }}>
               <div className="card-header">
                 <div className="user-info">
-                  <div className="avatar bg-blue-50 border-2 border-primary">
+                  <div className="avatar bg-primary/10 border-2 border-primary">
                     <svg className="avatar-icon text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                       <circle cx="12" cy="7" r="4" />
@@ -173,117 +187,96 @@ export function TopPanelControlHub({
             </div>
           </div>
 
-          {/* Kolom 2: Personalisasi Tampilan & Bahasa */}
+          {/* Kolom 2: Pengaturan Visual & Efek */}
           <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5"
+            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col"
             style={{ backgroundColor: "#ffffff" }}
           >
-            <div className="card-content text-slate-900" style={{ color: "#0f172a" }}>
-              <div className="card-header">
-                <div className="user-info">
-                  <div className="avatar bg-amber-50 border-2 border-amber-500">
-                    <Sparkles className="avatar-icon text-amber-500" />
-                  </div>
-                  <div className="user-details">
-                    <p className="user-name text-slate-900 font-bold">Tampilan & Bahasa</p>
-                    <p className="user-role text-slate-500 text-xs">Tema UI & Translasi</p>
-                  </div>
-                </div>
-                <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-                  <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
-                  Aktif
-                </span>
-              </div>
-
-              <div className="card-body text-left">
-                <h3 className="card-title text-slate-900 font-bold text-base mb-1">Kontras & Bahasa</h3>
-                <p className="card-description text-slate-600 text-xs mb-3">
-                  Pilih mode gelap/terang dan bahasa sistem antarmuka kerja.
-                </p>
-                <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
-                  <ThemeLangToggle />
-                </div>
+            <div className="card-content text-slate-900 flex flex-col justify-center flex-1 h-full" style={{ color: "#0f172a" }}>
+              <div className="flex flex-col gap-2 text-left w-full">
+                <ThemeColorPicker />
+                <ProgressiveBlurSettingControl />
+                <LiquidGlassSettingControl />
               </div>
             </div>
           </div>
 
-          {/* Kolom 3: Wilayah, Kota & Zona Waktu */}
+          {/* Kolom 3: Wilayah & Preferensi Waktu */}
           <div
-            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5"
+            className="liquid-glass-card min-w-0 bg-white rounded-2xl shadow-xl border border-white/50 overflow-hidden text-slate-900 transition-transform duration-200 hover:-translate-y-0.5 flex flex-col justify-between"
             style={{ backgroundColor: "#ffffff" }}
           >
-            <div className="card-content text-slate-900" style={{ color: "#0f172a" }}>
-              <div className="card-header">
-                <div className="user-info">
-                  <div className="avatar bg-emerald-50 border-2 border-emerald-500">
-                    <Globe className="avatar-icon text-emerald-500" />
-                  </div>
-                  <div className="user-details">
-                    <p className="user-name text-slate-900 font-bold">Wilayah & Waktu</p>
-                    <p className="user-role text-slate-500 text-xs">Region & Timezone</p>
-                  </div>
+            <div className="card-content text-slate-900 flex flex-col gap-2.5 text-left w-full h-full" style={{ color: "#0f172a" }}>
+              {/* Hanya Jam Digital & Info Ringkas */}
+              <div className="flex items-center justify-between w-full">
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200 shadow-2xs">
+                  <Clock className="size-3.5 text-emerald-600 animate-pulse" />
+                  <span className="tracking-wide">{currentTime || "--:--:--"}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  <Clock className="size-3.5" />
-                  <span>{currentTime || "--:--"}</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                  {timezone.split(" ")[0]} · {city}
+                </span>
+              </div>
+
+              {/* Form Lokasi: Negara & Kota */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
+                    Negara
+                  </label>
+                  <select
+                    value={country}
+                    onChange={(e) => handleCountryChange(e.target.value)}
+                    className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
+                  >
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Japan">Japan</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
+                    Kota
+                  </label>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => handleCityChange(e.target.value)}
+                    placeholder="Jakarta"
+                    className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 focus:bg-white focus:border-primary"
+                  />
                 </div>
               </div>
 
-              <div className="card-body text-left">
-                <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
-                        Negara
-                      </label>
-                      <select
-                        value={country}
-                        onChange={(e) => handleCountryChange(e.target.value)}
-                        className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
-                      >
-                        <option value="Indonesia">Indonesia</option>
-                        <option value="Singapore">Singapore</option>
-                        <option value="Malaysia">Malaysia</option>
-                        <option value="United States">United States</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Australia">Australia</option>
-                        <option value="Japan">Japan</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
-                        Kota
-                      </label>
-                      <input
-                        type="text"
-                        value={city}
-                        onChange={(e) => handleCityChange(e.target.value)}
-                        placeholder="Jakarta"
-                        className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 focus:bg-white focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
-                      Zona Waktu
-                    </label>
-                    <select
-                      value={timezone}
-                      onChange={(e) => handleTimezoneChange(e.target.value)}
-                      className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
-                    >
-                      <option value="(UTC+07:00) WIB">(UTC+07:00) WIB - Jakarta</option>
-                      <option value="(UTC+08:00) WITA">(UTC+08:00) WITA - Bali</option>
-                      <option value="(UTC+09:00) WIT">(UTC+09:00) WIT - Jayapura</option>
-                      <option value="(UTC+00:00) UTC">(UTC+00:00) UTC - London</option>
-                      <option value="(UTC-05:00) EST">(UTC-05:00) EST - New York</option>
-                      <option value="(UTC-08:00) PST">(UTC-08:00) PST - San Francisco</option>
-                    </select>
-                  </div>
-                </div>
+              {/* Zona Waktu */}
+              <div>
+                <label className="text-[10px] font-semibold text-slate-600 block mb-0.5">
+                  Zona Waktu
+                </label>
+                <select
+                  value={timezone}
+                  onChange={(e) => handleTimezoneChange(e.target.value)}
+                  className="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none text-xs font-medium text-slate-800 cursor-pointer focus:bg-white focus:border-primary"
+                >
+                  <option value="(UTC+07:00) WIB">(UTC+07:00) WIB - Jakarta</option>
+                  <option value="(UTC+08:00) WITA">(UTC+08:00) WITA - Bali</option>
+                  <option value="(UTC+09:00) WIT">(UTC+09:00) WIT - Jayapura</option>
+                  <option value="(UTC+00:00) UTC">(UTC+00:00) UTC - London</option>
+                  <option value="(UTC-05:00) EST">(UTC-05:00) EST - New York</option>
+                  <option value="(UTC-08:00) PST">(UTC-08:00) PST - San Francisco</option>
+                </select>
               </div>
+
+              {/* Mode Tema & Bahasa (Tanpa Garis Pembatas Mendatar) */}
+              <ThemeLangToggle
+                timezone={timezone}
+                className="mt-0.5"
+              />
             </div>
           </div>
 

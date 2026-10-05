@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import {
   CheckSquare,
   DollarSign,
@@ -199,7 +200,8 @@ export function QuickCaptureModal({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-3.5 space-y-3 overflow-y-auto no-scrollbar max-h-[60vh]">
+        <div className="relative flex-1 min-h-0">
+          <form onSubmit={handleSubmit} className="p-3.5 space-y-3 overflow-y-auto no-scrollbar max-h-[60vh]">
           {tab === "task" && (
             <div className="space-y-2.5">
               <div>
@@ -395,6 +397,14 @@ export function QuickCaptureModal({
             </button>
           </div>
         </form>
+        <ProgressiveBlur
+          direction="bottom"
+          height={24}
+          blurLevels={[0.5, 1, 2, 4]}
+          tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.8))"
+          className="absolute bottom-[48px] inset-x-0 pointer-events-none"
+        />
+      </div>
       </div>
     </>
   );

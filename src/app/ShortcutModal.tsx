@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import {
   CornerUpRight,
   X,
@@ -411,7 +412,8 @@ export function ShortcutModal({ isOpen, onClose, onOpenQuickCapture }: ShortcutM
         </div>
 
         {/* Shortcuts list */}
-        <div className="p-2 space-y-1 overflow-y-auto no-scrollbar max-h-[50vh]">
+        <div className="relative flex-1 min-h-0">
+          <div className="p-2 space-y-1 overflow-y-auto no-scrollbar max-h-[50vh]">
           {filtered.length === 0 ? (
             <div className="py-8 text-center text-xs text-muted-foreground">
               Tidak ada pintasan yang cocok dengan &quot;{search}&quot;
@@ -454,6 +456,14 @@ export function ShortcutModal({ isOpen, onClose, onOpenQuickCapture }: ShortcutM
               );
             })
           )}
+          </div>
+          <ProgressiveBlur
+            direction="bottom"
+            height={28}
+            blurLevels={[0.5, 1, 2, 4]}
+            tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
+            className="absolute bottom-0 inset-x-0 pointer-events-none"
+          />
         </div>
 
         {/* Footer info */}
