@@ -813,37 +813,8 @@ export function AppShell({
 
           {sidebarView === "navigation" ? (
             <div className="flex flex-col gap-3">
-              {/* Liquid Glass Card Feature Component */}
-              {!isLeftSidebar75 ? (
-                <div className="liquid-glass-card p-4 flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center text-primary shrink-0">
-                        <activeModeConfig.icon className="size-4" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold leading-tight text-foreground">{activeModeConfig.label}</p>
-                        <p className="text-[10px] text-muted-foreground">{activeModeConfig.desc}</p>
-                      </div>
-                    </div>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${activeModeConfig.badgeClass}`}>
-                      {activeModeConfig.badge}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Workspace aktif terintegrasi dengan preferensi {activeModeConfig.label.toLowerCase()}.
-                  </p>
-                </div>
-              ) : (
-                <div className="flex justify-center py-1" title={`${activeModeConfig.label}: ${activeModeConfig.desc}`}>
-                  <div className="size-10 rounded-2xl bg-white/20 hover:bg-white/30 border border-white/30 flex items-center justify-center text-white shrink-0 shadow-xs transition-transform hover:scale-105 cursor-pointer">
-                    <activeModeConfig.icon className="size-5 text-white" />
-                  </div>
-                </div>
-              )}
-
               {/* Navigation items for current mode */}
-              <div className="flex flex-col gap-1.5 pt-2">
+              <div className="flex flex-col gap-1.5">
                 {!isLeftSidebar75 && (
                   <p className="px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Navigasi Mode ({activeModeConfig.label})
@@ -1316,6 +1287,12 @@ export function AppShell({
                   />
                 </div>
               )}
+
+              {/* Pill Shape Kosongan (5x panjang pill ~600px) di samping setting & sidebar kanan */}
+              <div
+                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all"
+                aria-hidden="true"
+              />
 
               {/* Pill 2: Pengaturan (Panel Atas) & Sidebar Kanan (Control Center) */}
               <div className="pointer-events-auto flex items-center gap-1 p-1 rounded-full liquid-glass-header-pill">

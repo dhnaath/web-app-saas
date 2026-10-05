@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   GalleryHorizontal,
   X,
@@ -192,265 +193,271 @@ export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Invisible backdrop */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Click outside overlay to dismiss - no blur or black overlay */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={onClose}
+          />
 
-      {/* Pop-up window positioned directly above dock */}
-      <div
-        className="fixed bottom-[88px] left-1/2 -translate-x-1/2 z-50 w-[92vw] sm:w-[440px] max-h-[calc(100vh-110px)] rounded-3xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-[30px] border border-white/60 dark:border-white/15 shadow-[0px_4px_21px_-8px_rgba(255,255,255,0.5),0_20px_50px_rgba(0,0,0,0.22)] liquid-glass-dock overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-200 select-none cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="p-3 border-b border-border/60 bg-muted/20">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-xl bg-primary/10 text-primary">
-                <GalleryHorizontal className="size-4" />
-              </span>
-              <div>
-                <h3 className="text-xs font-bold text-foreground tracking-tight flex items-center gap-1.5">
-                  Taskbar & Active Switcher
-                  <span className="text-[10px] font-normal px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
-                    Live
-                  </span>
-                </h3>
-                <p className="text-[10px] text-muted-foreground">
-                  Multitasking & manajemen ruang kerja aktif
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          {/* Floating Stack anchored directly above dock */}
+          <div className="fixed bottom-[82px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.16, ease: "easeOut" }}
+              className="w-80 sm:w-96 rounded-3xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 shadow-2xl p-2.5 flex flex-col overflow-hidden cursor-default text-left select-none max-h-[75vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="size-3.5" />
-            </button>
-          </div>
-
-          {/* Segmented control */}
-          <div className="grid grid-cols-2 gap-1 p-1 bg-muted/50 rounded-xl">
-            <button
-              type="button"
-              onClick={() => setActiveTab("switcher")}
-              className={`flex items-center justify-center gap-1.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                activeTab === "switcher"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Layers className="size-3.5" />
-              <span>Ruang Kerja</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("tasks")}
-              className={`flex items-center justify-center gap-1.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                activeTab === "tasks"
-                  ? "bg-background text-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <CheckSquare className="size-3.5" />
-              <span>Tugas Berjalan ({activePendingTasksCount})</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Tab 1: Switcher (Workspace Cards) */}
-        {activeTab === "switcher" && (
-          <div className="flex-1 overflow-y-auto p-2.5 space-y-1.5 max-h-[350px]">
-            <div className="text-[10px] font-semibold text-muted-foreground px-1 pb-1 flex items-center justify-between">
-              <span>JENDELA & MODUL AKTIF</span>
-              <span className="capitalize text-primary font-medium">Mode: {activeMode}</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              {primaryWindows.map((win) => {
-                const isCurrent =
-                  pathname === win.to ||
-                  (win.to !== "/" && pathname.startsWith(win.to));
-                const Icon = win.icon;
-
-                return (
-                  <button
-                    key={win.id}
-                    type="button"
-                    onClick={() => handleSwitchWindow(win.to)}
-                    className={`group relative text-left p-2.5 rounded-xl border transition-all flex flex-col justify-between ${
-                      isCurrent
-                        ? "bg-primary/10 border-primary/40 ring-1 ring-primary/20 shadow-xs"
-                        : "bg-muted/30 hover:bg-muted/70 border-border/50 hover:border-border"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      {(() => {
-                        const isRevised = isNewlyRevisedApp(win.to, win.title);
-                        return (
-                          <div
-                            className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                              isRevised
-                                ? "bg-white text-zinc-950 border border-zinc-300 dark:border-white shadow-2xs"
-                                : isCurrent
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-background text-muted-foreground group-hover:text-foreground border border-border/60"
-                            }`}
-                          >
-                            <Icon className={`size-3.5 ${isRevised ? "text-zinc-950" : ""}`} />
-                          </div>
-                        );
-                      })()}
-                      {isCurrent ? (
-                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-primary text-primary-foreground">
-                          Aktif
-                        </span>
-                      ) : (
-                        <ArrowRight className="size-3 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
-                      )}
+              {/* Header */}
+              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+                      <GalleryHorizontal className="size-3.5" />
                     </div>
-
                     <div>
-                      <div className="text-xs font-semibold text-foreground truncate">
-                        {win.title}
-                      </div>
-                      <div className="text-[10px] text-muted-foreground truncate mt-0.5">
-                        {win.subtitle}
-                      </div>
+                      <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight flex items-center gap-1.5">
+                        Taskbar & Switcher
+                        <span className="text-[9px] font-medium px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                          Live
+                        </span>
+                      </h3>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                        Manajemen ruang kerja aktif
+                      </p>
                     </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
+                  >
+                    <X className="size-3.5" />
                   </button>
-                );
-              })}
-            </div>
-
-            {/* Quick action bar */}
-            <div className="pt-2 border-t border-border/40 mt-2 flex items-center justify-between px-1">
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  navigate({ to: "/task-manager" as any });
-                }}
-                className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline"
-              >
-                <span>Buka Task Manager Lengkap</span>
-                <ExternalLink className="size-3" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  navigate({ to: "/" as any });
-                }}
-                className="text-[10px] text-muted-foreground hover:text-foreground"
-              >
-                Kembali ke Launcher
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 2: Running Tasks & Active Session */}
-        {activeTab === "tasks" && (
-          <div className="flex-1 overflow-y-auto p-3 flex flex-col max-h-[350px]">
-            {/* Quick Task Input Form */}
-            <form onSubmit={handleAddTask} className="flex gap-1.5 mb-3">
-              <input
-                type="text"
-                placeholder="Catat tugas cepat saat ini..."
-                value={newTaskInput}
-                onChange={(e) => setNewTaskInput(e.target.value)}
-                className="flex-1 px-3 py-1.5 rounded-xl text-xs bg-muted/40 border border-border/50 focus:outline-none focus:ring-1 focus:ring-primary/40 placeholder:text-muted-foreground/60 transition-all"
-              />
-              <button
-                type="submit"
-                disabled={!newTaskInput.trim()}
-                className="px-3 py-1.5 bg-primary text-primary-foreground rounded-xl text-xs font-semibold disabled:opacity-40 hover:opacity-90 transition-opacity flex items-center gap-1 shrink-0"
-              >
-                <Plus className="size-3.5" />
-                <span>Catat</span>
-              </button>
-            </form>
-
-            {/* Task list */}
-            <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
-              {tasks.length === 0 ? (
-                <div className="py-8 text-center text-muted-foreground">
-                  <CheckSquare className="size-6 mx-auto mb-2 opacity-50" />
-                  <p className="text-xs font-semibold text-foreground">Tidak ada tugas aktif</p>
-                  <p className="text-[10px] mt-0.5">
-                    Gunakan kolom di atas untuk mencatat tugas yang sedang berjalan.
-                  </p>
                 </div>
-              ) : (
-                tasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className={`group flex items-center justify-between p-2 rounded-xl border transition-all ${
-                      task.completed
-                        ? "bg-muted/20 border-transparent text-muted-foreground opacity-60"
-                        : "bg-muted/30 border-border/40 hover:border-border text-foreground"
+
+                {/* Segmented control */}
+                <div className="grid grid-cols-2 gap-1 p-0.5 bg-neutral-100 dark:bg-zinc-800 rounded-xl border border-neutral-200/60 dark:border-zinc-700/60">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("switcher")}
+                    className={`flex items-center justify-center gap-1.5 py-1 text-[11px] font-medium rounded-lg transition-all ${
+                      activeTab === "switcher"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
                     }`}
                   >
+                    <Layers className="size-3" />
+                    <span>Ruang Kerja</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("tasks")}
+                    className={`flex items-center justify-center gap-1.5 py-1 text-[11px] font-medium rounded-lg transition-all ${
+                      activeTab === "tasks"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <CheckSquare className="size-3" />
+                    <span>Tugas ({activePendingTasksCount})</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tab 1: Switcher (Workspace Cards) */}
+              {activeTab === "switcher" && (
+                <div className="flex-1 overflow-y-auto p-1 pt-2 space-y-1.5 max-h-[46vh] no-scrollbar">
+                  <div className="flex flex-col gap-1.5 px-0.5">
+                    {primaryWindows.map((win) => {
+                      const isCurrent =
+                        pathname === win.to ||
+                        (win.to !== "/" && pathname.startsWith(win.to));
+                      const Icon = win.icon;
+                      const isRevised = isNewlyRevisedApp(win.to, win.title);
+
+                      return (
+                        <button
+                          key={win.id}
+                          type="button"
+                          onClick={() => handleSwitchWindow(win.to)}
+                          className={`group flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left transition-all duration-150 select-none cursor-pointer border ${
+                            isCurrent
+                              ? "bg-primary/10 border-primary/40 ring-1 ring-primary/20 text-neutral-900 dark:text-white shadow-xs"
+                              : "bg-neutral-50 dark:bg-zinc-800 text-neutral-600 dark:text-neutral-300 shadow-xs hover:bg-neutral-100 dark:hover:bg-zinc-700 hover:text-neutral-900 dark:hover:text-white border-neutral-200/70 dark:border-zinc-700/60"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0 pr-1">
+                            <div
+                              className={`size-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-150 ${
+                                isCurrent
+                                  ? "bg-primary text-primary-foreground shadow-2xs"
+                                  : isRevised
+                                  ? "bg-white text-zinc-950 border border-zinc-300 dark:border-white shadow-2xs"
+                                  : "bg-white dark:bg-zinc-700 text-neutral-500 dark:text-neutral-300 shadow-2xs border border-neutral-200/50 dark:border-zinc-600/50 group-hover:scale-105"
+                              }`}
+                            >
+                              <Icon className="size-4 shrink-0" strokeWidth={2.2} />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-[13px] font-medium tracking-tight truncate leading-tight text-neutral-800 dark:text-neutral-100 group-hover:text-neutral-900 dark:group-hover:text-white">
+                                {win.title}
+                              </span>
+                              <span className="text-[10.5px] truncate leading-tight mt-0.5 text-neutral-500 dark:text-neutral-400">
+                                {win.subtitle}
+                              </span>
+                            </div>
+                          </div>
+
+                          {isCurrent ? (
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-primary text-primary-foreground shadow-2xs">
+                              Aktif
+                            </span>
+                          ) : (
+                            <ArrowRight className="size-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Quick action bar */}
+                  <div className="pt-2 border-t border-neutral-200/60 dark:border-zinc-800/60 mt-2 flex items-center justify-between px-1">
                     <button
                       type="button"
-                      onClick={() => toggleTask(task.id)}
-                      className="flex items-center gap-2.5 flex-1 min-w-0 text-left"
+                      onClick={() => {
+                        onClose();
+                        navigate({ to: "/task-manager" as any });
+                      }}
+                      className="inline-flex items-center gap-1 text-[10.5px] font-medium text-primary hover:underline"
                     >
-                      <div
-                        className={`size-4 rounded-md border flex items-center justify-center transition-colors ${
-                          task.completed
-                            ? "bg-primary border-primary text-primary-foreground"
-                            : "border-border hover:border-primary/60"
-                        }`}
-                      >
-                        {task.completed && <Check className="size-3 stroke-[3]" />}
-                      </div>
-                      <span
-                        className={`text-xs truncate ${
-                          task.completed ? "line-through opacity-70" : "font-medium"
-                        }`}
-                      >
-                        {task.text}
-                      </span>
+                      <span>Task Manager</span>
+                      <ExternalLink className="size-3" />
                     </button>
 
                     <button
                       type="button"
-                      onClick={() => deleteTask(task.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive rounded-md transition-all ml-1"
-                      title="Hapus tugas"
+                      onClick={() => {
+                        onClose();
+                        navigate({ to: "/" as any });
+                      }}
+                      className="text-[10px] text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
                     >
-                      <X className="size-3" />
+                      Kembali ke Launcher
                     </button>
                   </div>
-                ))
+                </div>
               )}
-            </div>
 
-            {/* Clear completed button */}
-            {tasks.some((t) => t.completed) && (
-              <div className="pt-2 mt-2 border-t border-border/40 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setTasks((prev) => prev.filter((t) => !t.completed))}
-                  className="text-[10px] text-muted-foreground hover:text-foreground"
-                >
-                  Bersihkan tugas yang selesai
-                </button>
+              {/* Tab 2: Running Tasks & Active Session */}
+              {activeTab === "tasks" && (
+                <div className="flex-1 overflow-y-auto p-1 pt-2 flex flex-col max-h-[46vh] no-scrollbar">
+                  {/* Quick Task Input Form */}
+                  <form onSubmit={handleAddTask} className="flex gap-1.5 mb-2.5 px-0.5">
+                    <input
+                      type="text"
+                      placeholder="Catat tugas cepat..."
+                      value={newTaskInput}
+                      onChange={(e) => setNewTaskInput(e.target.value)}
+                      className="flex-1 px-3 py-1.5 rounded-xl text-xs bg-neutral-50 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 focus:outline-none focus:ring-1.5 focus:ring-primary/40 placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-100 transition-all"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newTaskInput.trim()}
+                      className="px-3 py-1.5 bg-primary text-primary-foreground rounded-xl text-xs font-semibold disabled:opacity-40 hover:opacity-90 transition-opacity flex items-center gap-1 shrink-0"
+                    >
+                      <Plus className="size-3.5" />
+                      <span>Catat</span>
+                    </button>
+                  </form>
+
+                  {/* Task list */}
+                  <div className="flex-1 overflow-y-auto space-y-1.5 px-0.5">
+                    {tasks.length === 0 ? (
+                      <div className="py-6 text-center text-neutral-400">
+                        <CheckSquare className="size-6 mx-auto mb-1.5 opacity-50" />
+                        <p className="text-xs font-semibold text-neutral-700 dark:text-neutral-200">
+                          Tidak ada tugas aktif
+                        </p>
+                        <p className="text-[10px] mt-0.5 text-neutral-500">
+                          Gunakan kolom di atas untuk mencatat tugas berjalan.
+                        </p>
+                      </div>
+                    ) : (
+                      tasks.map((task) => (
+                        <div
+                          key={task.id}
+                          className={`group flex items-center justify-between p-2 rounded-2xl border transition-all ${
+                            task.completed
+                              ? "bg-neutral-50/50 dark:bg-zinc-800/40 border-transparent text-neutral-400 opacity-60"
+                              : "bg-neutral-50 dark:bg-zinc-800 border-neutral-200/70 dark:border-zinc-700/60 text-neutral-800 dark:text-neutral-200"
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => toggleTask(task.id)}
+                            className="flex items-center gap-2.5 flex-1 min-w-0 text-left"
+                          >
+                            <div
+                              className={`size-4 rounded-md border flex items-center justify-center transition-colors ${
+                                task.completed
+                                  ? "bg-primary border-primary text-primary-foreground"
+                                  : "border-neutral-300 dark:border-zinc-600 hover:border-primary"
+                              }`}
+                            >
+                              {task.completed && <Check className="size-3 stroke-[3]" />}
+                            </div>
+                            <span
+                              className={`text-xs truncate ${
+                                task.completed ? "line-through opacity-70" : "font-medium"
+                              }`}
+                            >
+                              {task.text}
+                            </span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => deleteTask(task.id)}
+                            className="opacity-0 group-hover:opacity-100 p-1 text-neutral-400 hover:text-rose-500 rounded-md transition-all ml-1"
+                            title="Hapus tugas"
+                          >
+                            <X className="size-3" />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Clear completed button */}
+                  {tasks.some((t) => t.completed) && (
+                    <div className="pt-2 mt-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex justify-end px-1">
+                      <button
+                        type="button"
+                        onClick={() => setTasks((prev) => prev.filter((t) => !t.completed))}
+                        className="text-[10px] text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
+                      >
+                        Bersihkan tugas yang selesai
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Footer info */}
+              <div className="pt-2 px-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Taskbar Switcher</span>
+                <span className="font-mono">Esc untuk menutup</span>
               </div>
-            )}
+            </motion.div>
           </div>
-        )}
-
-        {/* Footer info */}
-        <div className="px-3 py-2 border-t border-border/50 bg-muted/10 flex items-center justify-between text-[10px] text-muted-foreground">
-          <span>Taskbar Multitasking</span>
-          <span className="font-medium text-foreground/80">Esc untuk menutup</span>
-        </div>
-      </div>
-    </>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

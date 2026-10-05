@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   History,
   X,
@@ -87,221 +88,193 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Invisible backdrop to dismiss on outside click */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Click outside overlay to dismiss - no blur or black overlay */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={onClose}
+          />
 
-      {/* Pop-up modal positioned directly above the dock */}
-      <div
-        className="fixed bottom-[88px] left-1/2 -translate-x-1/2 z-50 w-[92vw] sm:w-[410px] max-h-[calc(100vh-110px)] rounded-3xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-[30px] border border-white/60 dark:border-white/15 shadow-[0px_4px_21px_-8px_rgba(255,255,255,0.5),0_20px_50px_rgba(0,0,0,0.22)] liquid-glass-dock overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-200 select-none cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="p-3 border-b border-border/60 bg-muted/20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-primary/10 text-primary">
-              <History className="size-4" />
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-xs font-bold text-foreground tracking-tight">
-                  Recent Apps & History
-                </h3>
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                  {recentApps.length}
-                </span>
-              </div>
-              <p className="text-[10px] text-muted-foreground">
-                Riwayat akses & pintasan aplikasi terakhir
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1">
-            {recentApps.length > 0 && (
-              <button
-                type="button"
-                onClick={clearRecentApps}
-                title="Hapus riwayat"
-                className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-              >
-                <Trash2 className="size-3.5" />
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          {/* Floating Stack anchored directly above dock */}
+          <div className="fixed bottom-[82px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.16, ease: "easeOut" }}
+              className="w-80 sm:w-96 rounded-3xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 shadow-2xl p-2.5 flex flex-col overflow-hidden cursor-default text-left select-none max-h-[75vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="size-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Search input */}
-        <div className="px-3 pt-2.5 pb-2">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Cari riwayat aplikasi..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-muted/40 border border-border/50 focus:outline-none focus:ring-1 focus:ring-primary/40 placeholder:text-muted-foreground/60 transition-all"
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <X className="size-3" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* List of Recent Apps */}
-        <div className="relative flex-1 min-h-0">
-          <div className="overflow-y-auto px-2 pb-3 space-y-1 max-h-[340px] no-scrollbar">
-          {filteredApps.length === 0 ? (
-            <div className="py-8 px-4 text-center">
-              <div className="w-10 h-10 rounded-2xl bg-muted/50 text-muted-foreground flex items-center justify-center mx-auto mb-2.5">
-                <Clock className="size-5 opacity-60" />
-              </div>
-              <p className="text-xs font-semibold text-foreground mb-1">
-                {search ? "Tidak ada riwayat yang cocok" : "Belum ada riwayat aktivitas"}
-              </p>
-              <p className="text-[11px] text-muted-foreground max-w-[240px] mx-auto mb-3">
-                {search
-                  ? "Coba gunakan kata kunci pencarian yang lain."
-                  : "Aplikasi yang Anda kunjungi akan otomatis tercatat di sini."}
-              </p>
-
-              {/* Quick Jump Suggestions when empty */}
-              <div className="pt-2 border-t border-border/40">
-                <span className="text-[10px] font-semibold text-muted-foreground block mb-2">
-                  Pintasan Populer:
-                </span>
-                <div className="flex flex-wrap items-center justify-center gap-1.5">
-                  {[
-                    { to: "/", label: "Launcher", icon: LayoutDashboard },
-                    { to: "/home", label: "Beranda", icon: Sparkles },
-                    { to: "/100-framework", label: "Mini MBA", icon: Compass },
-                  ].map((s) => (
-                    <button
-                      key={s.to}
-                      type="button"
-                      onClick={() => {
-                        onClose();
-                        navigate({ to: s.to as any });
-                      }}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/60 hover:bg-muted text-foreground transition-colors"
-                    >
-                      <s.icon className="size-3 text-primary" />
-                      <span>{s.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : (
-            filteredApps.map((app, idx) => {
-              const navItem = navMap.get(app.to);
-              const AppIcon = navItem?.icon || History;
-              const isFav = isFavorite(app.to);
-
-              return (
-                <div
-                  key={app.id || `${app.to}-${app.timestamp || idx}`}
-                  onClick={() => handleOpenApp(app)}
-                  className="group relative flex items-center justify-between p-2 rounded-xl hover:bg-accent/70 border border-transparent hover:border-border/50 transition-all cursor-pointer text-left"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    {(() => {
-                      const isRevised = isNewlyRevisedApp(app.to, app.label);
-                      return (
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
-                            isRevised
-                              ? "bg-white text-zinc-950 border border-zinc-300 dark:border-white shadow-2xs"
-                              : "bg-primary/10 text-primary"
-                          }`}
-                        >
-                          <AppIcon className={`size-4 ${isRevised ? "text-zinc-950" : ""}`} />
-                        </div>
-                      );
-                    })()}
-                    <div className="min-w-0">
+              {/* Header */}
+              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+                      <History className="size-3.5" />
+                    </div>
+                    <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-semibold text-foreground truncate block">
-                          {app.label}
-                        </span>
-                        {app.category && (
-                          <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-muted text-muted-foreground shrink-0">
-                            {app.category}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5">
-                        <Clock className="size-2.5" />
-                        <span>{formatRelativeTime(app.visitedAt || app.timestamp || Date.now())}</span>
-                        <span className="opacity-40">•</span>
-                        <span className="font-mono text-[9px] opacity-70 truncate max-w-[120px]">
-                          {app.to}
+                        <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
+                          Recent Apps
+                        </h3>
+                        <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-zinc-700/60">
+                          {recentApps.length}
                         </span>
                       </div>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                        Riwayat aktivitas terakhir
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1">
+                    {recentApps.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={clearRecentApps}
+                        title="Hapus riwayat"
+                        className="p-1 rounded-lg text-neutral-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(app.to);
-                      }}
-                      title={isFav ? "Hapus dari favorit dock" : "Pin ke favorit dock"}
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        isFav
-                          ? "text-amber-500 hover:bg-amber-500/10"
-                          : "text-muted-foreground hover:text-amber-500 hover:bg-muted"
-                      }`}
-                    >
-                      <Star className={`size-3.5 ${isFav ? "fill-amber-500" : ""}`} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeRecentApp(app.to);
-                      }}
-                      title="Hapus item ini"
-                      className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      onClick={onClose}
+                      className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
                     >
                       <X className="size-3.5" />
                     </button>
                   </div>
                 </div>
-              );
-            })
-          )}
-          </div>
-          <ProgressiveBlur
-            direction="bottom"
-            height={28}
-            blurLevels={[0.5, 1, 2, 4]}
-            tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
-            className="absolute bottom-0 inset-x-0 pointer-events-none"
-          />
-        </div>
 
-        {/* Footer info */}
-        <div className="px-3 py-2 border-t border-border/50 bg-muted/10 flex items-center justify-between text-[10px] text-muted-foreground">
-          <span>Tekan Esc untuk menutup</span>
-          <span className="font-medium text-foreground/80">Klik untuk langsung membuka</span>
-        </div>
-      </div>
-    </>
+                {/* Search input */}
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-neutral-400" />
+                  <input
+                    type="text"
+                    placeholder="Cari riwayat..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-neutral-50 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 focus:outline-none focus:ring-1.5 focus:ring-primary/40 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-400 transition-all"
+                  />
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={() => setSearch("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                    >
+                      <X className="size-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* List of Recent Apps */}
+              <div className="relative flex-1 min-h-0 pt-2">
+                <div className="flex flex-col gap-1.5 overflow-y-auto px-0.5 max-h-[46vh] no-scrollbar">
+                  {filteredApps.length === 0 ? (
+                    <div className="py-6 px-4 text-center">
+                      <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-400 flex items-center justify-center mx-auto mb-2">
+                        <Clock className="size-4 opacity-60" />
+                      </div>
+                      <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-0.5">
+                        {search ? "Tidak ada riwayat yang cocok" : "Belum ada riwayat"}
+                      </p>
+                      <p className="text-[10px] text-neutral-500 max-w-[200px] mx-auto">
+                        Aplikasi yang Anda akses akan muncul di sini.
+                      </p>
+                    </div>
+                  ) : (
+                    filteredApps.map((app, idx) => {
+                      const navItem = navMap.get(app.to);
+                      const AppIcon = navItem?.icon || History;
+                      const isFav = isFavorite(app.to);
+
+                      return (
+                        <div
+                          key={app.id || `${app.to}-${app.timestamp || idx}`}
+                          onClick={() => handleOpenApp(app)}
+                          className="group flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left transition-all duration-150 select-none cursor-pointer border bg-neutral-50 dark:bg-zinc-800 text-neutral-600 dark:text-neutral-300 shadow-xs hover:bg-neutral-100 dark:hover:bg-zinc-700 hover:text-neutral-900 dark:hover:text-white border-neutral-200/70 dark:border-zinc-700/60"
+                        >
+                          <div className="flex items-center gap-3 min-w-0 pr-1">
+                            <div className="size-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-150 bg-white dark:bg-zinc-700 text-neutral-500 dark:text-neutral-300 shadow-2xs border border-neutral-200/50 dark:border-zinc-600/50 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:scale-105">
+                              <AppIcon className="size-4 shrink-0" strokeWidth={2.2} />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[13px] font-medium tracking-tight truncate leading-tight text-neutral-800 dark:text-neutral-100 group-hover:text-neutral-900 dark:group-hover:text-white">
+                                  {app.label}
+                                </span>
+                                {app.category && (
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-white dark:bg-zinc-700 text-neutral-500 dark:text-neutral-400 border border-neutral-200/50 dark:border-zinc-600/50 shrink-0">
+                                    {app.category}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                                <span>{formatRelativeTime(app.visitedAt || app.timestamp || Date.now())}</span>
+                                <span className="opacity-40">•</span>
+                                <span className="font-mono text-[9px] opacity-70 truncate max-w-[110px]">
+                                  {app.to}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(app.to);
+                              }}
+                              title={isFav ? "Hapus dari favorit dock" : "Pin ke favorit dock"}
+                              className={`p-1 rounded-lg transition-colors ${
+                                isFav
+                                  ? "text-amber-500 hover:bg-amber-500/10"
+                                  : "text-neutral-400 hover:text-amber-500"
+                              }`}
+                            >
+                              <Star className={`size-3.5 ${isFav ? "fill-amber-500" : ""}`} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeRecentApp(app.to);
+                              }}
+                              title="Hapus item ini"
+                              className="p-1 rounded-lg text-neutral-400 hover:text-rose-500 transition-colors"
+                            >
+                              <X className="size-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+                <ProgressiveBlur
+                  direction="bottom"
+                  height={24}
+                  blurLevels={[0.5, 1, 2, 4]}
+                  tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
+                  className="absolute bottom-0 inset-x-0 pointer-events-none"
+                />
+              </div>
+
+              {/* Footer info */}
+              <div className="pt-2 px-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Tekan Esc untuk menutup</span>
+                <span className="font-mono">Riwayat Apps</span>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

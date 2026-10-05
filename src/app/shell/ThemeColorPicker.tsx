@@ -5,24 +5,19 @@ export function ThemeColorPicker() {
   const { color, setColor, currentOption, options } = useThemeColor();
 
   return (
-    <div className="flex flex-col gap-1.5 pt-0.5 text-slate-900 select-none">
+    <div className="flex flex-col gap-1.5 pt-0.5 text-slate-900 dark:text-slate-100 select-none">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Palette className="size-3.5 transition-colors duration-200" style={{ color: currentOption.hex }} />
-          <span className="text-xs font-semibold text-slate-800">Warna Aksen Tema</span>
+          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Warna Aksen Tema</span>
         </div>
         <span
-          className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full border transition-all duration-200"
+          className="inline-flex items-center text-[10px] font-semibold px-2.5 py-0.5 rounded-full text-white transition-all duration-200 shadow-2xs"
           style={{
-            backgroundColor: `${currentOption.hex}15`,
-            color: currentOption.hex,
-            borderColor: `${currentOption.hex}35`,
+            backgroundColor: currentOption.hex,
+            color: "#ffffff",
           }}
         >
-          <span
-            className="size-1.5 rounded-full shrink-0"
-            style={{ backgroundColor: currentOption.hex }}
-          />
           {currentOption.name}
         </span>
       </div>

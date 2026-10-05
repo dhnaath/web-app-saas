@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import {
   CheckSquare,
@@ -43,6 +44,17 @@ export function QuickCaptureModal({
 
   // Habit form state
   const [habitName, setHabitName] = useState("");
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -117,87 +129,101 @@ export function QuickCaptureModal({
   };
 
   return (
-    <>
-      {/* Invisible backdrop (dismiss on outside click, just like switch profile / mode) */}
-      <div
-        className="fixed inset-0 z-40"
-        onClick={onClose}
-      />
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Click outside overlay to dismiss - no blur or black overlay */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={onClose}
+          />
 
-      {/* Pop-up window positioned directly above dock */}
-      <div
-        className="fixed bottom-[88px] left-1/2 -translate-x-1/2 z-50 w-[92vw] sm:w-[380px] max-h-[calc(100vh-110px)] rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-[30px] border border-white/60 dark:border-white/15 shadow-[0px_4px_21px_-8px_rgba(255,255,255,0.5),0_20px_50px_rgba(0,0,0,0.22)] liquid-glass-dock overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-200 select-none cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header with segmented tabs */}
-        <div className="p-3 border-b border-border/60 bg-muted/20">
-          <div className="flex items-center justify-between mb-2.5">
-            <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5 tracking-tight">
-              <span className="p-1 rounded-lg bg-primary/10 text-primary">
-                <Plus className="size-3.5" />
-              </span>
-              <span>Quick Capture</span>
-            </h3>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-colors"
+          {/* Floating Stack anchored directly above dock */}
+          <div className="fixed bottom-[82px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.16, ease: "easeOut" }}
+              className="w-80 sm:w-96 rounded-3xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 shadow-2xl p-2.5 flex flex-col overflow-hidden cursor-default text-left select-none max-h-[75vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="size-3.5" />
-            </button>
-          </div>
+              {/* Header with segmented tabs */}
+              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+                      <Plus className="size-3.5" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
+                        Quick Capture
+                      </h3>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                        Catat tugas, kas, catatan & habit
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
 
-          <div className="grid grid-cols-4 gap-1 p-0.5 bg-background/80 dark:bg-zinc-800/80 rounded-xl border border-border/60 backdrop-blur-md">
-            <button
-              type="button"
-              onClick={() => setTab("task")}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                tab === "task"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <CheckSquare className="size-3" />
-              <span>Tugas</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("transaction")}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                tab === "transaction"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <DollarSign className="size-3" />
-              <span>Uang</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("note")}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                tab === "note"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <FileText className="size-3" />
-              <span>Catatan</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("habit")}
-              className={`flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                tab === "habit"
-                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Heart className="size-3" />
-              <span>Habit</span>
-            </button>
-          </div>
-        </div>
+                <div className="grid grid-cols-4 gap-1 p-0.5 bg-neutral-100 dark:bg-zinc-800 rounded-xl border border-neutral-200/60 dark:border-zinc-700/60">
+                  <button
+                    type="button"
+                    onClick={() => setTab("task")}
+                    className={`flex items-center justify-center gap-1 py-1 rounded-lg text-[10.5px] font-medium transition-all ${
+                      tab === "task"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <CheckSquare className="size-3" />
+                    <span>Tugas</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTab("transaction")}
+                    className={`flex items-center justify-center gap-1 py-1 rounded-lg text-[10.5px] font-medium transition-all ${
+                      tab === "transaction"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <DollarSign className="size-3" />
+                    <span>Uang</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTab("note")}
+                    className={`flex items-center justify-center gap-1 py-1 rounded-lg text-[10.5px] font-medium transition-all ${
+                      tab === "note"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <FileText className="size-3" />
+                    <span>Catatan</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTab("habit")}
+                    className={`flex items-center justify-center gap-1 py-1 rounded-lg text-[10.5px] font-medium transition-all ${
+                      tab === "habit"
+                        ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-2xs font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Heart className="size-3" />
+                    <span>Habit</span>
+                  </button>
+                </div>
+              </div>
 
         {/* Form Body */}
         <div className="relative flex-1 min-h-0">
@@ -404,8 +430,11 @@ export function QuickCaptureModal({
           tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.8))"
           className="absolute bottom-[48px] inset-x-0 pointer-events-none"
         />
-      </div>
-      </div>
-    </>
+        </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

@@ -1,13 +1,40 @@
 import { useState, useEffect, useCallback } from "react";
-import { Sun, Moon, Clock, Languages, Check } from "lucide-react";
+import { Sun, Moon, Clock } from "lucide-react";
 
 export type ThemePreference = "light" | "dark" | "auto";
 
 export const TIMEZONE_IANA_MAP: Record<string, string> = {
+  // Format ringkas: hanya UTC dan angka
+  "UTC-08:00": "America/Los_Angeles",
+  "UTC-05:00": "America/New_York",
+  "UTC+00:00": "UTC",
+  "UTC+01:00": "Europe/Berlin",
+  "UTC+02:00": "Europe/Helsinki",
+  "UTC+06:30": "Asia/Yangon",
+  "UTC+07:00": "Asia/Jakarta",
+  "UTC+08:00": "Asia/Singapore",
+  "UTC+09:00": "Asia/Tokyo",
+  "UTC+10:00": "Australia/Sydney",
+
+  // Backward compatibility
   "(UTC+07:00) WIB": "Asia/Jakarta",
   "(UTC+08:00) WITA": "Asia/Makassar",
   "(UTC+09:00) WIT": "Asia/Jayapura",
+  "(UTC+08:00) SGT": "Asia/Singapore",
+  "(UTC+08:00) MYT": "Asia/Kuala_Lumpur",
+  "(UTC+07:00) ICT": "Asia/Bangkok",
+  "(UTC+08:00) PHT": "Asia/Manila",
+  "(UTC+08:00) BNT": "Asia/Brunei",
+  "(UTC+06:30) MMT": "Asia/Yangon",
+  "(UTC+09:00) TLT": "Asia/Dili",
+  "(UTC+08:00) CST": "Asia/Shanghai",
+  "(UTC+09:00) KST": "Asia/Seoul",
+  "(UTC+09:00) JST": "Asia/Tokyo",
+  "(UTC+01:00) CET": "Europe/Berlin",
+  "(UTC+02:00) EET": "Europe/Helsinki",
+  "(UTC+00:00) GMT": "Europe/London",
   "(UTC+00:00) UTC": "UTC",
+  "(UTC+10:00) AEST": "Australia/Sydney",
   "(UTC-05:00) EST": "America/New_York",
   "(UTC-08:00) PST": "America/Los_Angeles",
 };
@@ -79,13 +106,6 @@ export function ThemeLangToggle({ timezone = "(UTC+07:00) WIB", className = "" }
     return "auto";
   });
 
-  const [lang, setLang] = useState<"id" | "en">(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("aio_lang") as "id" | "en") || "id";
-    }
-    return "id";
-  });
-
   const [autoStatus, setAutoStatus] = useState<{ isDay: boolean; timeFormatted: string }>({
     isDay: true,
     timeFormatted: "12:00",
@@ -124,34 +144,31 @@ export function ThemeLangToggle({ timezone = "(UTC+07:00) WIB", className = "" }
     return () => clearInterval(interval);
   }, [themePref, timezone, evaluateAndApplyTheme]);
 
-  const toggleLang = () => {
-    const next = lang === "id" ? "en" : "id";
-    setLang(next);
-    localStorage.setItem("aio_lang", next);
-  };
-
   const themeOptions: { id: ThemePreference; label: string; icon: typeof Sun }[] = [
     { id: "light", label: "Terang", icon: Sun },
     { id: "dark", label: "Gelap", icon: Moon },
     { id: "auto", label: "Auto Waktu", icon: Clock },
   ];
 
+  const CurrentIcon = themePref === "light" ? Sun : themePref === "dark" ? Moon : Clock;
+
   return (
-    <div className={`flex flex-col gap-2 select-none ${className}`}>
-      {/* Mode Tema: 3 Pilihan (Terang, Gelap, Auto Waktu) */}
-      <div>
-        <div className="flex items-center justify-between mb-1">
-          <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400">
+    <div className={`select-none ${className}`}>
+      {/* Mode Tema: Gaya sama persis dengan Bahasa UI (Kecil, Icon-only) */}
+      <div className="flex items-center justify-between text-slate-900 dark:text-slate-100">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <CurrentIcon className="size-3.5 text-primary shrink-0" />
+          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
             Mode Tema
-          </label>
+          </span>
           {themePref === "auto" && (
-            <span className="text-[9px] font-medium px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-              {autoStatus.isDay ? "Siang (Terang)" : "Malam (Gelap)"}
+            <span className="text-[9px] font-medium px-1.5 py-0.2 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              {autoStatus.isDay ? "Siang" : "Malam"}
             </span>
           )}
         </div>
 
-        <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200">
+        <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
           {themeOptions.map((opt) => {
             const isSelected = themePref === opt.id;
             const Icon = opt.icon;
@@ -160,16 +177,17 @@ export function ThemeLangToggle({ timezone = "(UTC+07:00) WIB", className = "" }
                 key={opt.id}
                 type="button"
                 onClick={() => setThemePref(opt.id)}
-                className={`flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                className={`p-1 rounded-md cursor-pointer transition-all ${
                   isSelected
-                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                    ? "bg-white dark:bg-slate-700 shadow-2xs"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50"
                 }`}
                 title={
                   opt.id === "auto"
-                    ? "Otomatis: 05:31-17:31 Terang, 17:31-05:31 Gelap berdasarkan zona waktu"
-                    : `Aktifkan Mode ${opt.label}`
+                    ? `Auto Waktu (${autoStatus.isDay ? "Siang · Terang" : "Malam · Gelap"})`
+                    : `Mode ${opt.label}`
                 }
+                aria-label={`Pilih Mode ${opt.label}`}
               >
                 <Icon
                   className={`size-3.5 shrink-0 ${
@@ -177,59 +195,14 @@ export function ThemeLangToggle({ timezone = "(UTC+07:00) WIB", className = "" }
                       ? opt.id === "light"
                         ? "text-amber-500"
                         : opt.id === "dark"
-                        ? "text-indigo-600"
-                        : "text-emerald-600"
-                      : "text-slate-500"
+                        ? "text-indigo-400"
+                        : "text-emerald-500"
+                      : "text-slate-500 dark:text-slate-400"
                   }`}
                 />
-                <span>{opt.label}</span>
               </button>
             );
           })}
-        </div>
-
-        {themePref === "auto" && (
-          <p className="text-[9px] text-slate-500 mt-1 leading-tight">
-            *05:31 - 17:31 Mode Terang, 17:31 - 05:31 Mode Gelap mengikuti zona waktu {timezone.split(" ")[0] || "lokal"}.
-          </p>
-        )}
-      </div>
-
-      {/* Bahasa Antarmuka (ID / EN) */}
-      <div className="flex items-center justify-between pt-0.5">
-        <div className="flex items-center gap-1.5">
-          <Languages className="size-3.5 text-primary shrink-0" />
-          <span className="text-[10px] font-semibold text-slate-600">Bahasa UI</span>
-        </div>
-        <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-          <button
-            type="button"
-            onClick={() => {
-              setLang("id");
-              localStorage.setItem("aio_lang", "id");
-            }}
-            className={`px-2 py-0.5 rounded-md text-[10px] font-semibold cursor-pointer transition-all ${
-              lang === "id"
-                ? "bg-white text-primary shadow-2xs font-bold"
-                : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            ID
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setLang("en");
-              localStorage.setItem("aio_lang", "en");
-            }}
-            className={`px-2 py-0.5 rounded-md text-[10px] font-semibold cursor-pointer transition-all ${
-              lang === "en"
-                ? "bg-white text-primary shadow-2xs font-bold"
-                : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            EN
-          </button>
         </div>
       </div>
     </div>
