@@ -30,6 +30,80 @@ import { STANDALONE_APPS } from "./features/standalone/standaloneAppsData";
 import { ValueTreatedPage } from "./features/value-treated/ValueTreatedPage";
 import { AppModuleSection } from "./features/launcher/AppModuleSection";
 import { useFavorites } from "./hooks/useFavorites";
+import {
+  PehHabitsView,
+  PehJournalView,
+  PehGoalsView,
+  PehReadingView,
+  PehFitnessView,
+  PehSleepView,
+  PehVaultView,
+  PehDocumentsView,
+  PehSubscriptionsView,
+  PehBudgetView,
+  PehInsuranceView,
+  PehChoresView,
+  PehMaintenanceView,
+  PehPantryView,
+  PehPlantsView,
+  PehVehiclesView,
+  PehFamilyTreeView,
+  PehFamilyHealthView,
+  PehFamilyRecipesView,
+  PehTraditionsView,
+  PehFamilyBudgetView,
+  PehPetCareView,
+  PehWorkflowsView,
+  PehVendorsView,
+  PehIncidentsView,
+  PehProcurementView,
+  PehComplianceView,
+  PehAssetsView,
+  PehIpLicensesView,
+  PehCapTableView,
+  PehInvestmentsView,
+  PehRealEstateView,
+  PehContactsView,
+  PehMilestonesView,
+  PehGiftsView,
+  PehIntroductionsView,
+  PehMentorshipView,
+  PehKnowledgeView,
+  PehMeetingsView,
+  PehProjectsView,
+  PehTasksView,
+  PehTimeAuditView,
+  PehCivicView,
+  PehVolunteeringView,
+  PehCharityView,
+  PehCommunityEventsView,
+  PehAdvocacyView,
+  PehGlobalOverviewView,
+  PehInnovationsHubView,
+  PehEcosystemComparisonView,
+} from "./peh/PehAppRenderer";
+
+import {
+  LifeOSPlannerView,
+  LifeOSFinanceView,
+  LifeOSSimpleFinanceView,
+  LifeOSBudgetView,
+  LifeOSWeightView,
+  LifeOSDoctorView,
+  LifeOSHouseholdView,
+  LifeOSWishlistView,
+  LifeOSGroceryView,
+  LifeOSMovieView,
+  LifeOSRecipeView,
+  LifeOSCertificateView,
+  LifeOSTravelView,
+  LifeOSNotesView,
+  LifeOSJournalView,
+  LifeOSHabitsView,
+  LifeOSContactsView,
+  LifeOSSubscriptionsView,
+  LifeOSAssetsView,
+} from "./life-os/LifeOSAppRenderer";
 
 import { useState } from "react";
 import {
@@ -1590,6 +1664,93 @@ function DynamicAppView() {
   const pathname = routerState.location.pathname.replace(/\/$/, "");
   const search = (routerState.location.search || {}) as Record<string, any>;
   const currentAppParam = typeof search?.app === "string" ? search.app : "";
+
+  // PEH / PFS / POO routes from tambah-2
+  const pehMap: Record<string, React.ComponentType> = {
+    "/peh/habits": PehHabitsView,
+    "/peh/journal": PehJournalView,
+    "/peh/goals": PehGoalsView,
+    "/peh/reading": PehReadingView,
+    "/peh/fitness": PehFitnessView,
+    "/peh/sleep": PehSleepView,
+    "/peh/vault": PehVaultView,
+    "/peh/documents": PehDocumentsView,
+    "/peh/subscriptions": PehSubscriptionsView,
+    "/peh/budget": PehBudgetView,
+    "/peh/insurance": PehInsuranceView,
+    "/peh/chores": PehChoresView,
+    "/peh/maintenance": PehMaintenanceView,
+    "/peh/pantry": PehPantryView,
+    "/peh/plants": PehPlantsView,
+    "/peh/vehicles": PehVehiclesView,
+    "/peh/family-tree": PehFamilyTreeView,
+    "/peh/family-health": PehFamilyHealthView,
+    "/peh/family-recipes": PehFamilyRecipesView,
+    "/peh/traditions": PehTraditionsView,
+    "/peh/family-budget": PehFamilyBudgetView,
+    "/peh/pet-care": PehPetCareView,
+    "/peh/workflows": PehWorkflowsView,
+    "/peh/vendors": PehVendorsView,
+    "/peh/incidents": PehIncidentsView,
+    "/peh/procurement": PehProcurementView,
+    "/peh/compliance": PehComplianceView,
+    "/peh/assets": PehAssetsView,
+    "/peh/ip-licenses": PehIpLicensesView,
+    "/peh/cap-table": PehCapTableView,
+    "/peh/investments": PehInvestmentsView,
+    "/peh/real-estate": PehRealEstateView,
+    "/peh/contacts": PehContactsView,
+    "/peh/milestones": PehMilestonesView,
+    "/peh/gifts": PehGiftsView,
+    "/peh/introductions": PehIntroductionsView,
+    "/peh/mentorship": PehMentorshipView,
+    "/peh/knowledge": PehKnowledgeView,
+    "/peh/meetings": PehMeetingsView,
+    "/peh/projects": PehProjectsView,
+    "/peh/tasks": PehTasksView,
+    "/peh/time-audit": PehTimeAuditView,
+    "/peh/civic": PehCivicView,
+    "/peh/volunteering": PehVolunteeringView,
+    "/peh/charity": PehCharityView,
+    "/peh/community-events": PehCommunityEventsView,
+    "/peh/advocacy": PehAdvocacyView,
+    "/peh/global-overview": PehGlobalOverviewView,
+    "/peh/innovations-hub": PehInnovationsHubView,
+    "/peh/ecosystem-comparison": PehEcosystemComparisonView,
+  };
+
+  const PehComponent = pehMap[pathname];
+  if (PehComponent) {
+    return <PehComponent />;
+  }
+
+  // LifeOS routes from tambah-1
+  const lifeMap: Record<string, React.ComponentType> = {
+    "/life/life-planner": LifeOSPlannerView,
+    "/life/finance-os": LifeOSFinanceView,
+    "/life/simple-finance": LifeOSSimpleFinanceView,
+    "/life/budget-tracker": LifeOSBudgetView,
+    "/life/weight-tracker": LifeOSWeightView,
+    "/life/doctor-consultation": LifeOSDoctorView,
+    "/life/household-tracker": LifeOSHouseholdView,
+    "/life/wishlist": LifeOSWishlistView,
+    "/life/grocery-list": LifeOSGroceryView,
+    "/life/movie-tracker": LifeOSMovieView,
+    "/life/recipe-book": LifeOSRecipeView,
+    "/life/certificate-tracker": LifeOSCertificateView,
+    "/life/travel-backpack": LifeOSTravelView,
+    "/life/notes": LifeOSNotesView,
+    "/life/journal": LifeOSJournalView,
+    "/life/habits": LifeOSHabitsView,
+    "/life/contacts": LifeOSContactsView,
+    "/life/subscriptions": LifeOSSubscriptionsView,
+    "/life/assets": LifeOSAssetsView,
+  };
+
+  const LifeComponent = lifeMap[pathname];
+  if (LifeComponent) {
+    return <LifeComponent />;
+  }
 
   // 1. Sharia routes
   if (pathname === "/syariah/indeks") return <CommodityView />;

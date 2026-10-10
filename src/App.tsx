@@ -1,6 +1,8 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PenyediaProfil } from "./lib/profile";
+import { PEHProvider } from "./peh/context/PEHContext";
+import { LifeOSProvider } from "./life-os/context/LifeOSContext";
 import { getRouter } from "./router";
 
 const queryClient = new QueryClient();
@@ -10,7 +12,11 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <PenyediaProfil>
-        <RouterProvider router={router} />
+        <PEHProvider>
+          <LifeOSProvider>
+            <RouterProvider router={router} />
+          </LifeOSProvider>
+        </PEHProvider>
       </PenyediaProfil>
     </QueryClientProvider>
   );

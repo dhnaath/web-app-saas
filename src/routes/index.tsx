@@ -10,6 +10,7 @@ import { FinancialWealthSection } from "@/features/launcher/FinancialWealthSecti
 import { AppModuleSection } from "@/features/launcher/AppModuleSection";
 import { CommodityDashboardSection } from "./commodity-dashboard";
 import { EmptyModePage } from "@/features/launcher/EmptyModePage";
+import { ModeSectionView } from "@/features/launcher/ModeSectionView";
 import { AnimatedSearchIcon } from "@/app/shell/AnimatedSearchIcon";
 import { TypewriterSearchText } from "@/app/shell/TypewriterSearchText";
 import {
@@ -368,12 +369,10 @@ export function Launcher() {
                   }`}
                 >
                   {isActive && (
-                    <EmptyModePage
-                      id={tab.id}
-                      label={tab.label}
-                      badge={tab.badge}
-                      desc={(tab as any).desc || ""}
-                      icon={tab.icon}
+                    <ModeSectionView
+                      modeId={tab.id}
+                      favorites={favorites}
+                      toggleFavorite={toggleFavorite}
                     />
                   )}
                 </div>
