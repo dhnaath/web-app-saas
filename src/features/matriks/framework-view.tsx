@@ -162,30 +162,30 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
       title={frameworkName} 
       subtitle={fwData.teori.manfaat}
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={handleExportWorksheetMD}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-sm"
+            className="p-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-2xs cursor-pointer shrink-0 flex items-center justify-center"
             title={`Unduh Laporan Klien (${frameworkName})`}
+            aria-label="Export Klien"
           >
             <Download size={13} className="text-primary" />
-            <span className="hidden sm:inline">Export Klien</span>
           </button>
           <button
             onClick={handleCopySummary}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-sm"
+            className="p-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-2xs cursor-pointer shrink-0 flex items-center justify-center"
             title={`Salin Ringkasan ${frameworkName}`}
+            aria-label="Salin Ringkasan"
           >
             <Copy size={13} className="text-muted-foreground" />
-            <span className="hidden sm:inline">Salin</span>
           </button>
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-sm"
+            className="p-1.5 rounded-lg text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-colors shadow-2xs cursor-pointer shrink-0 flex items-center justify-center"
             title={`Cetak ${frameworkName}`}
+            aria-label="Cetak"
           >
             <Printer size={13} className="text-muted-foreground" />
-            <span className="hidden sm:inline">Cetak</span>
           </button>
         </div>
       }

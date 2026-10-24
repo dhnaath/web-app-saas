@@ -7,6 +7,7 @@ import {
   AlertOctagon,
   CheckCircle2,
   ChevronRight,
+  List,
 } from "lucide-react";
 import { useEisenhowerMatrix, QUADRANT_DEFS } from "./store";
 import { QuadrantKey, EisenhowerViewMode } from "./types";
@@ -157,26 +158,30 @@ export function EisenhowerApp() {
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header View Switcher Portaled to Main Header */}
         <ShellHeader>
-          <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
+          <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs shrink-0">
             <button
               onClick={() => setViewMode("grid")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
+              title="2x2 Grid View"
+              aria-label="Grid View"
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
                 viewMode === "grid"
                   ? "bg-card text-foreground font-semibold shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              2x2 Grid View
+              <Grid2X2 className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setViewMode("detail")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
+              title="Detail Kuadran"
+              aria-label="Detail Kuadran"
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
                 viewMode === "detail"
                   ? "bg-card text-foreground font-semibold shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Detail Kuadran
+              <List className="w-3.5 h-3.5" />
             </button>
           </div>
         </ShellHeader>

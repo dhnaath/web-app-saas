@@ -312,18 +312,20 @@ export function ScheduleManagerApp() {
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsShiftAssignOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-full text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            title="Tetapkan Shift"
+            aria-label="Tetapkan Shift"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Clock className="w-3.5 h-3.5 text-teal-500" />
-            <span>Tetapkan Shift</span>
           </button>
 
           <button
             onClick={() => setIsExcModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Ajukan Cuti / WFH"
+            aria-label="Ajukan Cuti / WFH"
+            className="p-1.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Ajukan Cuti / WFH</span>
           </button>
         </div>
       </ShellHeader>

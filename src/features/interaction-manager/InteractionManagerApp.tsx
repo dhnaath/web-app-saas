@@ -223,12 +223,45 @@ export function InteractionManagerApp() {
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* View Tab Switchers - Compact Segmented Icon Pills */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "recent", label: `Interaksi Terbaru (${interactions.length})`, icon: Clock },
+              { id: "pending_followups", label: `Pending Follow-ups (${stats.pendingFu})`, icon: CheckSquare },
+              { id: "overdue_followups", label: `Follow-up Terlambat (${stats.overdueCount})`, icon: AlertTriangle },
+              { id: "relationship_health", label: "Kesehatan Relasi", icon: Flame },
+              { id: "stats", label: "Statistik Komunikasi", icon: BarChart3 },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id && (tab.id !== "recent" || !selectedPersonId);
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id as InteractionViewMode);
+                    if (tab.id === "recent") setSelectedPersonId(null);
+                  }}
+                  title={tab.label}
+                  aria-label={tab.label}
+                  className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                    isActive
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
+          </div>
+
           <button
             onClick={() => setIsLogModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Catat Interaksi Baru"
+            aria-label="Catat Interaksi"
+            className="p-1.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Catat Interaksi</span>
           </button>
         </div>
       </ShellHeader>
@@ -256,72 +289,6 @@ export function InteractionManagerApp() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => {
-            setActiveTab("recent");
-            setSelectedPersonId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "recent" && !selectedPersonId
-              ? "bg-sky-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <Clock className="w-4 h-4" />
-          <span>Interaksi Terbaru ({interactions.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("pending_followups")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "pending_followups"
-              ? "bg-sky-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <CheckSquare className="w-4 h-4 text-emerald-400" />
-          <span>Pending Follow-ups ({stats.pendingFu})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("overdue_followups")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "overdue_followups"
-              ? "bg-sky-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          <span>Follow-up Terlambat ({stats.overdueCount})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("relationship_health")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "relationship_health"
-              ? "bg-sky-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <Flame className="w-4 h-4 text-amber-400" />
-          <span>Kesehatan Relasi (Days Since Last)</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats"
-              ? "bg-sky-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-purple-400" />
-          <span>Statistik Komunikasi</span>
-        </button>
       </div>
 
       {/* Main Content Area */}

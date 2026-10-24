@@ -441,14 +441,24 @@ export function AppShell({
   useLayoutEffect(() => {
     const el = headerRef.current;
     if (!el) return;
+    let rafId: number | null = null;
     const update = () => {
-      const h = el.offsetHeight || 60;
-      setHeaderHeight((prev) => (prev !== h ? h : prev));
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (!headerRef.current) return;
+        const h = headerRef.current.offsetHeight || 60;
+        setHeaderHeight((prev) => (prev !== h ? h : prev));
+      });
     };
-    update();
+    const initialH = el.offsetHeight || 60;
+    setHeaderHeight((prev) => (prev !== initialH ? initialH : prev));
+
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(update) : null;
     ro?.observe(el);
-    return () => ro?.disconnect();
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      ro?.disconnect();
+    };
   }, [hasAppHeader, pathname, isTopPanelOpen]);
 
   const [collapsedNavGroups, setCollapsedNavGroups] = useState<Record<string, boolean>>({});
@@ -1265,34 +1275,28 @@ export function AppShell({
               </div>
             </div>
 
-            {/* Bagian Kanan Header: 2 Floating Pills (Pill 1: Elemen Menu App & Aksi Halaman [hanya muncul di modul/fitur], Pill 2: Setting & Sidebar Kanan) */}
+            {/* Bagian Kanan Header: 2 Floating Pills (Pill 1: Wadah Utama ~600px untuk Elemen Aksi & Portal, Pill 2: Pengaturan & Sidebar Kanan) */}
             <div className="flex items-center gap-2">
-              {/* Pill 1: Elemen Menu App & Aksi Halaman (actions & portal) — Dihapus kalau di laman utama, muncul kalau modul app atau fitur terbuka */}
-              {!isHome && (
-                <div className="pointer-events-auto inline-flex items-center gap-2 px-2.5 h-[44px] rounded-full liquid-glass-header-pill transition-all duration-200">
-                  {!actions && !hasAppHeader && (
-                    <div className="relative z-10 flex items-center gap-1.5 px-1 text-xs font-medium text-foreground truncate max-w-[180px] sm:max-w-[260px]">
-                      {ContextCategoryIcon && <ContextCategoryIcon size={14} className="shrink-0 text-primary" />}
-                      <span className="truncate font-semibold">{title || contextMatch?.item.label || "Modul Aktif"}</span>
-                    </div>
-                  )}
-                  {actions && (
-                    <div className="relative z-10 flex items-center gap-1.5 shrink-0">
-                      {actions}
-                    </div>
-                  )}
-                  <div
-                    id="app-header-actions-portal"
-                    className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden overflow-x-auto no-scrollbar"
-                  />
-                </div>
-              )}
-
-              {/* Pill Shape Kosongan (5x panjang pill ~600px) di samping setting & sidebar kanan */}
+              {/* Pill Shape Wadah Utama (600px) tempat elemen aksi, modul, & portal disiapkan */}
               <div
-                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all"
-                aria-hidden="true"
-              />
+                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all flex items-center px-3 gap-2 overflow-hidden"
+              >
+                {!actions && !hasAppHeader && !isHome && (
+                  <div className="relative z-10 flex items-center gap-1.5 px-1 text-xs font-medium text-foreground truncate max-w-[200px] sm:max-w-[280px] shrink-0">
+                    {ContextCategoryIcon && <ContextCategoryIcon size={14} className="shrink-0 text-primary" />}
+                    <span className="truncate font-semibold">{title || contextMatch?.item.label || "Modul Aktif"}</span>
+                  </div>
+                )}
+                {actions && (
+                  <div className="relative z-10 flex items-center gap-1.5 shrink-0">
+                    {actions}
+                  </div>
+                )}
+                <div
+                  id="app-header-actions-portal"
+                  className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden flex-1 overflow-x-auto no-scrollbar"
+                />
+              </div>
 
               {/* Pill 2: Pengaturan (Panel Atas) & Sidebar Kanan (Control Center) */}
               <div className="pointer-events-auto flex items-center gap-1 p-1 rounded-full liquid-glass-header-pill">

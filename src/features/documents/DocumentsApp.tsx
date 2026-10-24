@@ -265,29 +265,32 @@ export function DocumentsApp() {
     <div className="w-full flex-1 flex flex-col font-sans bg-background">
       {/* Action Toolbar Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsTemplateModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Template SOP & NDA"
+            aria-label="Template Dokumen"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <Sparkles className="size-3.5 text-amber-500" />
-            <span className="hidden sm:inline">Template SOP/NDA</span>
           </button>
 
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Statistik Dokumen"
+            aria-label="Statistik"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <BarChart3 className="size-3.5 text-blue-500" />
-            <span className="hidden sm:inline">Statistik</span>
           </button>
 
           <button
             onClick={() => setIsAuditModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Audit Trail Dokumen"
+            aria-label="Audit Trail"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <History className="size-3.5 text-muted-foreground" />
-            <span className="hidden md:inline">Audit Trail</span>
           </button>
 
           <button
@@ -295,10 +298,11 @@ export function DocumentsApp() {
               resetForm();
               setIsCreateModalOpen(true);
             }}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+            title="Buat Dokumen Baru"
+            aria-label="Dokumen Baru"
+            className="p-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="size-3.5" strokeWidth={2.5} />
-            <span>Dokumen Baru</span>
           </button>
         </div>
       </ShellHeader>

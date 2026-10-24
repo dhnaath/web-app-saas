@@ -16,6 +16,10 @@ import {
   EyeOff,
   Link as LinkIcon,
   CalendarDays,
+  Columns,
+  AlignLeft,
+  Calendar,
+  Grid,
   Sparkles,
 } from "lucide-react";
 import { useCalendar } from "./store";
@@ -40,6 +44,7 @@ export function CalendarApp() {
   const [viewMode, setViewMode] = useState<CalendarViewMode>("month");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [quickFilter, setQuickFilter] = useState<string>("all");
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
 
   // Selected event for detail/edit modal
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
@@ -335,6 +340,36 @@ export function CalendarApp() {
             </div>
           </div>
 
+          {/* Quick Presets Filter */}
+          <div className="pt-2 border-t border-border">
+            <span className="text-xs font-semibold text-foreground tracking-tight block mb-1.5">
+              Filter Cepat Event
+            </span>
+            <div className="flex flex-wrap gap-1">
+              {[
+                { id: "all", label: "Semua" },
+                { id: "today", label: "Hari Ini" },
+                { id: "upcoming", label: "Mendatang" },
+                { id: "past", label: "Lewat" },
+                { id: "all_day", label: "Seharian" },
+                { id: "cancelled", label: "Batal" },
+              ].map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setQuickFilter(f.id)}
+                  className={`px-2 py-0.5 rounded text-[11px] transition-colors cursor-pointer ${
+                    quickFilter === f.id
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "bg-muted/60 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Availability / Find a Time button (§8) */}
           <div className="pt-2">
             <button
@@ -363,15 +398,18 @@ export function CalendarApp() {
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={handleToday}
-              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded-lg hover:bg-accent transition-colors cursor-pointer"
+              title="Kembali ke Hari Ini"
+              aria-label="Hari Ini"
+              className="p-1.5 rounded-lg border border-border text-foreground hover:bg-accent transition-colors cursor-pointer shrink-0"
             >
-              Hari Ini
+              <Calendar className="w-3.5 h-3.5" />
             </button>
-            <div className="flex items-center border border-border rounded-lg overflow-hidden">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
               <button
                 onClick={handlePrev}
-                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
+                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer border-r border-border/60"
                 title="Sebelumnya"
+                aria-label="Sebelumnya"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -379,33 +417,68 @@ export function CalendarApp() {
                 onClick={handleNext}
                 className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
                 title="Berikutnya"
+                aria-label="Berikutnya"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
-            {/* View Mode Segmented Controls (§9) */}
-            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
+            <span className="text-xs font-bold text-foreground px-1 truncate max-w-[120px] hidden sm:inline-block">
+              {monthNames[month]} {year}
+            </span>
+
+            {/* View Mode Segmented Controls (§9) - Icon-Only */}
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
               {[
-                { id: "month", label: "Bulan" },
-                { id: "week", label: "Minggu" },
-                { id: "day", label: "Hari" },
-                { id: "agenda", label: "Agenda" },
-                { id: "person", label: "Tim" },
-                { id: "year", label: "Tahun" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as CalendarViewMode)}
-                  className={`px-2 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
-                    viewMode === v.id
-                      ? "bg-background text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "month", label: "Bulan", icon: CalendarDays },
+                { id: "week", label: "Minggu", icon: Columns },
+                { id: "day", label: "Hari", icon: Clock },
+                { id: "agenda", label: "Agenda", icon: AlignLeft },
+                { id: "person", label: "Tim", icon: Users },
+                { id: "year", label: "Tahun", icon: Grid },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as CalendarViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-background text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Search Toggle & Compact Input */}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen((prev) => !prev)}
+                className={`p-1.5 rounded-lg border border-border transition-colors cursor-pointer shrink-0 ${
+                  isSearchOpen || searchQuery ? "bg-primary text-primary-foreground font-bold shadow-xs" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+                title="Cari Event"
+                aria-label="Cari Event"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+              {(isSearchOpen || searchQuery) && (
+                <input
+                  type="text"
+                  placeholder="Cari..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-24 sm:w-32 px-2 py-0.5 text-xs bg-muted/70 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  autoFocus
+                />
+              )}
             </div>
 
             {/* Quick Add Event */}
@@ -414,62 +487,14 @@ export function CalendarApp() {
                 setNewEventDefaultDate(new Date().toISOString().slice(0, 10));
                 setShowNewEventModal(true);
               }}
-              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Tambah Jadwal"
+              aria-label="Tambah Jadwal"
+              className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Tambah Jadwal</span>
             </button>
           </div>
         </ShellHeader>
-
-        {/* Calendar Title & Search Subheader */}
-        <div className="px-6 py-3 border-b border-border bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
-            {viewMode === "day" && currentDate.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-            {viewMode === "week" && `Minggu ${weekDays[0].getDate()} ${monthNames[weekDays[0].getMonth()]} - ${weekDays[6].getDate()} ${monthNames[weekDays[6].getMonth()]} ${year}`}
-            {viewMode === "month" && `${monthNames[month]} ${year}`}
-            {viewMode === "year" && `Tahun ${year}`}
-            {viewMode === "agenda" && `Agenda Mendatang (${year})`}
-            {viewMode === "person" && `Jadwal Berdasarkan Anggota Tim`}
-          </h1>
-
-          {/* Search Input */}
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Cari event/peserta..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-48 md:w-56 pl-8 pr-3 py-1 text-xs bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:bg-card"
-            />
-          </div>
-        </div>
-
-        {/* Quick Filter Bar (§10.2) */}
-        <div className="px-6 py-2 border-b border-border bg-background/60 flex items-center gap-2 overflow-x-auto text-[11px] text-muted-foreground">
-          <span className="font-semibold text-foreground text-xs mr-1">Filter:</span>
-          {[
-            { id: "all", label: "Semua" },
-            { id: "today", label: "Hari Ini" },
-            { id: "upcoming", label: "Mendatang" },
-            { id: "past", label: "Sudah Lewat" },
-            { id: "all_day", label: "Seharian (All-day)" },
-            { id: "cancelled", label: "Dibatalkan" },
-          ].map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setQuickFilter(f.id)}
-              className={`px-2.5 py-0.5 rounded transition-colors ${
-                quickFilter === f.id
-                  ? "bg-foreground text-background font-medium"
-                  : "bg-card border border-border hover:bg-muted text-foreground"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
 
         {/* VIEW 1: MONTH VIEW (§9) */}
         {viewMode === "month" && (

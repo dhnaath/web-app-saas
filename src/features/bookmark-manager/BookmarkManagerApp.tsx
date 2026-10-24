@@ -237,108 +237,126 @@ export function BookmarkManagerApp() {
       )}
 
       {/* Header Actions Portaled to Main Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("all")}
+              title={`Semua (${bookmarks.length})`}
+              aria-label="Semua"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "all"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("folder")}
+              title={`By Folder (${folders.length})`}
+              aria-label="By Folder"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "folder"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <FolderTree className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("tag")}
+              title={`By Tag (${tags.length})`}
+              aria-label="By Tag"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "tag"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <TagIcon className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("unread")}
+              title={`Unread (${stats.unread})`}
+              aria-label="Unread"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "unread"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("broken")}
+              title={`Broken Links (${stats.broken})`}
+              aria-label="Broken Links"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "broken"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("collections")}
+              title={`Collections (${collections.length})`}
+              aria-label="Collections"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "collections"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Share2 className="w-3.5 h-3.5 text-purple-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              title="Statistik & Analisis"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart2 className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+          </div>
+
           <button
             onClick={handleRunCheckAll}
             disabled={isCheckingLinks}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition disabled:opacity-50"
-            title="Pindai apakah seluruh tautan masih aktif"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition disabled:opacity-50 cursor-pointer shrink-0 flex items-center justify-center"
+            title={isCheckingLinks ? "Memeriksa tautan..." : "Pindai apakah seluruh tautan masih aktif (Scan Link Rot)"}
+            aria-label="Scan Link Rot"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isCheckingLinks ? "animate-spin text-sky-400" : ""}`} />
-            <span className="hidden sm:inline">{isCheckingLinks ? "Memeriksa..." : "Scan Link Rot"}</span>
           </button>
 
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
+            title="Buat Folder Baru"
+            aria-label="Folder Baru"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <FolderPlus className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden sm:inline">Folder Baru</span>
           </button>
 
           <button
             onClick={handleOpenAddModal}
-            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
+            title="Simpan Bookmark Baru"
+            aria-label="Simpan Bookmark"
+            className="p-1.5 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Simpan Bookmark</span>
           </button>
         </div>
       </ShellHeader>
-
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Semua ({bookmarks.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("folder")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "folder" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <FolderTree className="w-4 h-4" />
-          <span>By Folder ({folders.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("tag")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "tag" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <TagIcon className="w-4 h-4" />
-          <span>By Tag ({tags.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("unread")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "unread" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BookOpen className="w-4 h-4 text-emerald-400" />
-          <span>Unread ({stats.unread})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("broken")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "broken" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-rose-400 hover:bg-foreground"
-          }`}
-        >
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          <span>Broken Links ({stats.broken})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("collections")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "collections" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Share2 className="w-4 h-4 text-purple-400" />
-          <span>Collections ({collections.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart2 className="w-4 h-4 text-sky-400" />
-          <span>Statistik</span>
-        </button>
-      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 mt-4">

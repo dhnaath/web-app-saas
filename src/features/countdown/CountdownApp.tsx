@@ -22,6 +22,9 @@ import {
   History,
   BarChart3,
   Calendar,
+  Clock,
+  CheckCircle2,
+  Repeat,
 } from "lucide-react";
 import {
   useCountdownStore,
@@ -82,6 +85,7 @@ export function CountdownApp() {
   const [filterTab, setFilterTab] = useState<FilterTab>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [nowTick, setNowTick] = useState<number>(Date.now());
 
   // Modals & Panels
@@ -303,169 +307,150 @@ export function CountdownApp() {
     <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
       {/* 1. TOP HEADER - Standalone Ecosystem #11 Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* View Mode Segmented Controls - Icon-Only */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                viewMode === "grid"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Tampilan Kartu / Grid"
+              aria-label="Grid"
+            >
+              <LayoutGrid className="size-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                viewMode === "list"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Tampilan Tabel / List"
+              aria-label="List"
+            >
+              <ListIcon className="size-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode("category")}
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                viewMode === "category"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Tampilan Berdasarkan Kategori"
+              aria-label="Kategori"
+            >
+              <Columns3 className="size-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode("widget")}
+              className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                viewMode === "widget"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Tampilan Widget Homescreen"
+              aria-label="Widget"
+            >
+              <Layers className="size-3.5" />
+            </button>
+          </div>
+
+          {/* Filter Tab Quick Switcher (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "all", label: "Semua", icon: Timer },
+              { id: "upcoming", label: "Mendatang", icon: Clock },
+              { id: "reached", label: "Tercapai", icon: CheckCircle2 },
+              { id: "pinned", label: "Dipasangi Pin", icon: Pin },
+              { id: "recurring", label: "Berulang", icon: Repeat },
+              { id: "archived", label: "Arsip", icon: Archive },
+            ].map((tab) => {
+              const TabIcon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setFilterTab(tab.id as any)}
+                  className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                    filterTab === tab.id
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  title={tab.label}
+                  aria-label={tab.label}
+                >
+                  <TabIcon className="size-3.5" />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search Toggle & Compact Input */}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen((prev) => !prev)}
+              className={`p-1.5 rounded-lg border border-border transition-colors cursor-pointer shrink-0 ${
+                isSearchOpen || searchQuery ? "bg-primary text-primary-foreground font-bold shadow-xs" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              }`}
+              title="Cari Countdown"
+              aria-label="Cari Countdown"
+            >
+              <Search className="size-3.5" />
+            </button>
+            {(isSearchOpen || searchQuery) && (
+              <input
+                type="text"
+                placeholder="Cari..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-24 sm:w-32 px-2 py-0.5 text-xs bg-muted/70 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                autoFocus
+              />
+            )}
+          </div>
+
           <button
             onClick={() => setIsTemplateModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0 flex items-center justify-center"
             title="Gunakan template siap pakai"
+            aria-label="Template"
           >
             <Sparkles className="size-3.5 text-amber-500" />
-            <span className="hidden sm:inline">Template Siap Pakai</span>
-            <span className="sm:hidden">Template</span>
           </button>
 
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0 flex items-center justify-center"
             title="Metrik & Statistik Ecosystem"
+            aria-label="Statistik"
           >
             <BarChart3 className="size-3.5 text-indigo-500" />
-            <span className="hidden sm:inline">Statistik</span>
           </button>
 
           <button
             onClick={() => setIsHistoryDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0 flex items-center justify-center"
             title="Audit trail & histori perubahan"
+            aria-label="Audit Trail"
           >
             <History className="size-3.5 text-muted-foreground" />
-            <span className="hidden md:inline">Audit Trail</span>
           </button>
 
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+            title="Buat Countdown Baru"
+            aria-label="Countdown Baru"
+            className="p-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="size-3.5" strokeWidth={2.5} />
-            <span>Countdown Baru</span>
           </button>
         </div>
       </ShellHeader>
-
-      {/* 2. SUB-BAR: Filters, Search & View Modes */}
-      <section className="border-b border-border bg-card/40 px-4 sm:px-6 py-2.5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
-          {/* Filter Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs">
-            {(
-              [
-                { id: "all", label: "Semua", count: countdowns.filter((c) => c.status !== "Archived").length },
-                { id: "upcoming", label: "Mendatang", count: statistics.upcoming30Days },
-                { id: "reached", label: "Tercapai", count: statistics.reached },
-                { id: "pinned", label: "Dipasangi Pin", count: countdowns.filter((c) => c.pinned && c.status !== "Archived").length },
-                { id: "recurring", label: "Berulang", count: statistics.recurringCount },
-                { id: "archived", label: "Arsip", count: statistics.archived },
-              ] as const
-            ).map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setFilterTab(tab.id)}
-                className={`px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  filterTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-2xs font-semibold"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                    filterTab === tab.id
-                      ? "bg-primary-foreground/20 text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          {/* Search, Category Selector & View Switcher */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Search */}
-            <div className="relative flex-1 sm:w-56">
-              <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Cari countdown / tag..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="size-3" />
-                </button>
-              )}
-            </div>
-
-            {/* Category Dropdown */}
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
-            >
-              <option value="all">Semua Kategori</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-
-            {/* View Mode Toggle */}
-            <div className="flex items-center p-0.5 rounded-lg border border-border bg-background">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  viewMode === "grid"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Tampilan Kartu / Grid"
-              >
-                <LayoutGrid className="size-3.5" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  viewMode === "list"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Tampilan Tabel / List"
-              >
-                <ListIcon className="size-3.5" />
-              </button>
-              <button
-                onClick={() => setViewMode("category")}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  viewMode === "category"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Tampilan Berdasarkan Kategori"
-              >
-                <Columns3 className="size-3.5" />
-              </button>
-              <button
-                onClick={() => setViewMode("widget")}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  viewMode === "widget"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Tampilan Widget Homescreen"
-              >
-                <Layers className="size-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 3. MAIN CONTENT CONTAINER */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">

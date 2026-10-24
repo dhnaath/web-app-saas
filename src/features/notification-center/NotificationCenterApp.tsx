@@ -281,100 +281,117 @@ export function NotificationCenterApp() {
 
       {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("inbox")}
+              title={`Inbox (${notifications.filter((n) => n.status !== "archived").length})`}
+              aria-label="Inbox"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "inbox"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Inbox className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("unread")}
+              title={`Unread (${stats.unread})`}
+              aria-label="Unread"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "unread"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("by_type")}
+              title="By Type"
+              aria-label="By Type"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "by_type"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Filter className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("by_app")}
+              title="By Source App"
+              aria-label="By App"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "by_app"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <PackageCheck className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("archived")}
+              title={`Archived (${stats.archived})`}
+              aria-label="Archived"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "archived"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Archive className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={() => setActiveTab("preferences")}
+              title="Preferences"
+              aria-label="Preferences"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "preferences"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Settings className="w-3.5 h-3.5 text-indigo-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              title="Statistik & Analisis"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-purple-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => {
               markAllAsRead();
               showToast("Seluruh notifikasi telah ditandai sudah dibaca.");
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
+            title="Tandai Semua Sudah Dibaca"
+            aria-label="Tandai Semua Dibaca"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <CheckCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Tandai Semua Dibaca</span>
           </button>
 
           <button
             onClick={() => setIsSimulateOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
+            title="Simulasi Event Notifikasi Masuk"
+            aria-label="Simulasi Notifikasi"
+            className="p-1.5 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Simulasi Event Masuk</span>
           </button>
         </div>
       </ShellHeader>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("inbox")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "inbox" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Inbox className="w-4 h-4" />
-          <span>Inbox ({notifications.filter((n) => n.status !== "archived").length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("unread")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "unread" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Bell className="w-4 h-4 text-amber-400" />
-          <span>Unread ({stats.unread})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("by_type")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_type" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Filter className="w-4 h-4 text-sky-400" />
-          <span>By Type</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("by_app")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_app" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <PackageCheck className="w-4 h-4 text-emerald-400" />
-          <span>By Source App</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("archived")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "archived" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Archive className="w-4 h-4 text-muted-foreground" />
-          <span>Archived ({stats.archived})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("preferences")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "preferences" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Settings className="w-4 h-4 text-indigo-400" />
-          <span>Preferences</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-purple-400" />
-          <span>Statistik</span>
-        </button>
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 mt-4">

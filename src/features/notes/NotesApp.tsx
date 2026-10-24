@@ -236,37 +236,41 @@ export function NotesApp() {
     <div className="w-full flex-1 flex flex-col font-sans bg-background">
       {/* 1. TOP HEADER Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsTemplateModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Pilih Template Catatan"
+            aria-label="Template"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <Sparkles className="size-3.5 text-amber-500" />
-            <span className="hidden sm:inline">Template</span>
           </button>
 
           <button
             onClick={() => setIsGraphModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Graph View (Visualisasi Jaringan)"
+            aria-label="Graph View"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <Network className="size-3.5 text-indigo-500" />
-            <span className="hidden sm:inline">Graph View</span>
           </button>
 
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Statistik Catatan"
+            aria-label="Statistik"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <BarChart3 className="size-3.5 text-purple-500" />
-            <span className="hidden sm:inline">Statistik</span>
           </button>
 
           <button
             onClick={() => setIsHistoryDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Riwayat Versi Catatan"
+            aria-label="Riwayat"
+            className="p-1.5 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer shrink-0"
           >
             <History className="size-3.5 text-muted-foreground" />
-            <span className="hidden md:inline">Riwayat</span>
           </button>
 
           <button
@@ -274,10 +278,11 @@ export function NotesApp() {
               const n = addNote();
               setSelectedNoteId(n.id);
             }}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+            title="Catatan Baru"
+            aria-label="Catatan Baru"
+            className="p-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="size-3.5" strokeWidth={2.5} />
-            <span>Catatan Baru</span>
           </button>
         </div>
       </ShellHeader>

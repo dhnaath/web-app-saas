@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Plus,
   Send,
+  History,
 } from "lucide-react";
 import { useReminderManager } from "./store";
 import {
@@ -168,34 +169,40 @@ export function ReminderManagerApp() {
         {/* Top Header */}
         <ShellHeader>
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* View Mode Switcher */}
-            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
+            {/* View Mode Switcher - Icon-Only */}
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
               {[
-                { id: "upcoming", label: "Mendatang" },
-                { id: "snoozed", label: "Ditunda" },
-                { id: "location", label: "Lokasi" },
-                { id: "logs", label: "Audit Log" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as ReminderViewMode)}
-                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
-                    viewMode === v.id
-                      ? "bg-background text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "upcoming", label: "Mendatang", icon: Bell },
+                { id: "snoozed", label: "Ditunda", icon: Clock },
+                { id: "location", label: "Lokasi", icon: MapPin },
+                { id: "logs", label: "Audit Log", icon: History },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as ReminderViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-background text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
             </div>
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Buat Pengingat Baru"
+              aria-label="Buat Pengingat"
+              className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Buat Pengingat</span>
             </button>
           </div>
         </ShellHeader>

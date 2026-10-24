@@ -14,7 +14,6 @@ import {
   Crown,
   Globe,
   ArrowRight,
-  ExternalLink,
   Layers,
   Sparkles,
   CheckCircle2,
@@ -1055,34 +1054,34 @@ export const ModeFlipCard = ({
   const cardGradient = gradient || app.accentColor || getGradient(app.name);
 
   return (
-    <div className="w-full [perspective:1000px] min-h-[300px]">
+    <div className="w-full [perspective:1000px] min-h-[220px]">
       <motion.div
-        className="relative w-full h-full min-h-[300px] [transform-style:preserve-3d]"
+        className="relative w-full h-full min-h-[220px] [transform-style:preserve-3d]"
         animate={{
           rotateX: isFlipped && interactionConfig.axis === "x" ? 180 * interactionConfig.dir : 0,
           rotateY: isFlipped && interactionConfig.axis === "y" ? 180 * interactionConfig.dir : 0,
         }}
         transition={{ duration: 0.6, type: "spring", stiffness: 80, damping: 15 }}
       >
-        {/* Front Face - Mengikuti gaya kotak Tools 100 */}
-        <div className="w-full h-full rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group [backface-visibility:hidden]">
+        {/* Front Face - Mengikuti gaya bersih kotak Tools 100 */}
+        <div className="w-full h-full rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-3 group [backface-visibility:hidden]">
           <div>
             <div className="flex items-start justify-between gap-3">
               <Link
                 to={app.to as any}
-                className="flex items-center gap-3.5 group/header min-w-0 flex-1 outline-none"
+                className="flex items-center gap-3 group/header min-w-0 flex-1 outline-none"
               >
                 <div
-                  className={`h-12 w-12 rounded-full flex items-center justify-center text-white shadow-xs shrink-0 ${cardGradient} group-hover/header:scale-105 transition-transform`}
+                  className={`h-11 w-11 rounded-full flex items-center justify-center text-white shadow-xs shrink-0 ${cardGradient} group-hover/header:scale-105 transition-transform`}
                 >
-                  <AppIcon className="h-6 w-6 opacity-90 drop-shadow-sm" strokeWidth={1.75} />
+                  <AppIcon className="h-5 w-5 opacity-90 drop-shadow-sm" strokeWidth={1.75} />
                 </div>
                 <div className="min-w-0">
                   <h4 className="font-bold text-base text-foreground group-hover/header:text-primary transition-colors truncate">
                     {app.name}
                   </h4>
                   {app.badge && (
-                    <span className="text-[11px] text-muted-foreground truncate block mt-0.5 font-medium">
+                    <span className="text-[11px] text-muted-foreground truncate block mt-0.5">
                       {app.badge}
                     </span>
                   )}
@@ -1108,50 +1107,41 @@ export const ModeFlipCard = ({
               </button>
             </div>
 
-            {/* Deskripsi */}
-            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mt-2">
-              {app.shortDesc}
-            </p>
-
             {/* Submenu Fitur Chips */}
             {app.subMenus && app.subMenus.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-border/60">
-                <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center uppercase">
-                  Features ({app.subMenus.length}):
-                </span>
+              <div className="mt-3 pt-2.5 border-t border-border/60">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-bold tracking-wider text-muted-foreground">
+                    Features ({app.subMenus.length}):
+                  </span>
+                </div>
 
-                <div className="flex flex-wrap justify-center gap-1.5 max-h-[140px] overflow-y-auto pr-0.5 [scrollbar-width:thin]">
-                  {app.subMenus.map((sub, idx) => (
-                    <Link
-                      key={idx}
-                      to={app.to as any}
-                      title={sub.label}
-                      className="min-w-[calc((100%-0.75rem)/3)] max-w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip"
-                    >
-                      <AppIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
-                      <span className="text-center leading-snug whitespace-normal">{sub.label}</span>
-                    </Link>
-                  ))}
+                <div className="max-h-[140px] overflow-y-auto no-scrollbar pr-0.5">
+                  <div className="flex flex-wrap justify-center gap-1.5">
+                    {app.subMenus.map((sub, idx) => (
+                      <Link
+                        key={idx}
+                        to={app.to as any}
+                        title={sub.label}
+                        className="min-w-[calc((100%-0.75rem)/3)] max-w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip"
+                      >
+                        <AppIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
+                        <span className="text-center leading-snug whitespace-normal">{sub.label}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Action Bottom Bar */}
-          <div className="border-t border-border/50 pt-3 flex items-center justify-between text-xs">
-            <Link
-              to={app.to as any}
-              className="font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <span>Buka Modul</span>
-              <ArrowRight size={13} />
-            </Link>
-
+          {/* Action Bottom Bar - Clean justify-end with only Related button like Tools 100 */}
+          <div className="border-t border-border/50 pt-3 flex items-center justify-end text-xs">
             <button
               type="button"
               onClick={handleFlip}
               className="px-2.5 py-1 rounded-lg border border-border/70 hover:bg-muted text-muted-foreground hover:text-foreground text-xs font-medium flex items-center gap-1 cursor-pointer transition-colors shadow-2xs group/btn"
-              title="Lihat Rincian"
+              title="Lihat Related"
             >
               <span className="text-[11px]">Related</span>
               <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
@@ -1159,9 +1149,9 @@ export const ModeFlipCard = ({
           </div>
         </div>
 
-        {/* Back Face (Sisi Belakang Flip) */}
+        {/* Back Face (Warna icon app + tombol kembali di ujung bawah kanan persis Tools 100) */}
         <div
-          className={`absolute inset-0 w-full h-full rounded-2xl ${cardGradient} p-5 shadow-lg border border-white/20 flex flex-col justify-between text-white overflow-hidden [backface-visibility:hidden]`}
+          className={`absolute inset-0 w-full h-full rounded-2xl ${cardGradient} p-4 shadow-lg border border-white/20 flex flex-col justify-end items-end overflow-hidden [backface-visibility:hidden]`}
           style={{
             transform:
               interactionConfig.axis === "x"
@@ -1169,64 +1159,15 @@ export const ModeFlipCard = ({
                 : `rotateY(${180 * interactionConfig.dir}deg)`,
           }}
         >
-          <div className="space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-white/20">
-              <div className="flex items-center gap-2.5">
-                <div className="size-8 rounded-lg bg-white/20 backdrop-blur-xs flex items-center justify-center text-white">
-                  <AppIcon className="size-4.5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white truncate">{app.name}</h4>
-                  <span className="text-[10px] text-white/80">{app.badge || "Modul Aktif"}</span>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/20 text-white font-bold border border-white/30 backdrop-blur-xs">
-                {ecosystem}
-              </span>
-            </div>
-
-            <p className="text-xs text-white/90 leading-relaxed">
-              {app.shortDesc}
-            </p>
-
-            {app.subMenus && app.subMenus.length > 0 && (
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold tracking-wider text-white/80 block uppercase">
-                  Fitur Terintegrasi:
-                </span>
-                <div className="flex flex-wrap gap-1 max-h-[90px] overflow-y-auto no-scrollbar">
-                  {app.subMenus.map((sub, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-white/15 text-white border border-white/20"
-                    >
-                      {sub.label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="pt-3 border-t border-white/20 flex items-center justify-between">
-            <Link
-              to={app.to as any}
-              className="px-3 py-1.5 rounded-lg bg-white text-neutral-900 text-xs font-bold hover:bg-neutral-100 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
-            >
-              <span>Buka Aplikasi</span>
-              <ExternalLink size={12} />
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleFlip}
-              className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
-              title="Kembali"
-            >
-              <RotateCcw size={12} />
-              <span className="text-[11px] font-medium">Kembali</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleFlip}
+            className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
+            title="Kembali"
+          >
+            <RotateCcw size={12} />
+            <span className="text-[11px] font-medium">Kembali</span>
+          </button>
         </div>
       </motion.div>
     </div>

@@ -530,18 +530,20 @@ export function PeopleManagerApp() {
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsNewOrgOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-full text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            title="Tambah Organisasi"
+            aria-label="Tambah Organisasi"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
-            <span>+ Organisasi</span>
           </button>
 
           <button
             onClick={() => setIsNewPersonOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Tambah Orang / Kontak"
+            aria-label="Tambah Kontak"
+            className="p-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <UserPlus className="w-3.5 h-3.5" />
-            <span>Tambah Orang</span>
           </button>
         </div>
       </ShellHeader>

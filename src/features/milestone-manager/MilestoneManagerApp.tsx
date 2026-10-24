@@ -220,13 +220,78 @@ export function MilestoneManagerApp() {
 
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("board")}
+              title={`Milestone Board (${milestones.length})`}
+              aria-label="Milestone Board"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "board"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("readiness")}
+              title="Readiness & Critical Blockers"
+              aria-label="Readiness"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "readiness"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <AlertOctagon className="w-3.5 h-3.5 text-rose-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("timeline")}
+              title="Timeline Penanda Vertikal"
+              aria-label="Timeline"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "timeline"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <CalendarDays className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stakeholder")}
+              title="Tampilan Eksekutif & Stakeholder"
+              aria-label="Stakeholder"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stakeholder"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              title="Statistik & Rasio"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => setIsNewMilestoneOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Rumuskan Milestone Baru"
+            aria-label="Rumuskan Milestone"
+            className="p-1.5 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Rumuskan Milestone</span>
           </button>
         </div>
       </ShellHeader>
@@ -256,58 +321,7 @@ export function MilestoneManagerApp() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("board")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "board" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Milestone Board ({milestones.length})</span>
-        </button>
 
-        <button
-          onClick={() => setActiveTab("readiness")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "readiness" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <AlertOctagon className="w-4 h-4 text-rose-400" />
-          <span>Readiness & Critical Blockers</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("timeline")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "timeline" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <CalendarDays className="w-4 h-4 text-sky-400" />
-          <span>Timeline Penanda Vertikal</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stakeholder")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stakeholder" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Users className="w-4 h-4 text-emerald-400" />
-          <span>Tampilan Eksekutif & Stakeholder</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-amber-400" />
-          <span>Statistik & Rasio</span>
-        </button>
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 mt-4">

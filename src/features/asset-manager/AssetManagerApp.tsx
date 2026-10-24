@@ -497,18 +497,20 @@ export function AssetManagerApp() {
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-full text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            title="Buat Folder Baru"
+            aria-label="Folder Baru"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <FolderPlus className="w-3.5 h-3.5 text-amber-500" />
-            <span>Folder Baru</span>
           </button>
 
           <button
             onClick={handleOpenUploadModal}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Upload Asset Baru"
+            aria-label="Upload Asset"
+            className="p-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Upload className="w-3.5 h-3.5" />
-            <span>Upload Asset</span>
           </button>
         </div>
       </ShellHeader>

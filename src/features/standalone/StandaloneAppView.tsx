@@ -199,10 +199,11 @@ export function StandaloneAppView({ appId }: StandaloneAppViewProps) {
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+            title="Tambah Data Baru"
+            aria-label="Tambah Data"
+            className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Tambah Data</span>
           </button>
         </div>
       </ShellHeader>

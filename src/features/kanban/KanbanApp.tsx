@@ -5,6 +5,8 @@ import {
   LayoutGrid,
   AlertTriangle,
   Inbox,
+  Columns,
+  List,
 } from "lucide-react";
 import { useKanbanBoard } from "./store";
 import { KanbanViewMode, SwimlaneBy } from "./types";
@@ -109,23 +111,28 @@ export function KanbanApp() {
         {/* Top Header Actions */}
         <ShellHeader>
           <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center border border-border/80 rounded-full p-0.5 bg-muted/60 text-xs">
+            <div className="flex items-center border border-border/80 rounded-lg p-0.5 bg-muted/60 text-xs">
               {[
-                { id: "board", label: "Papan Kolom" },
-                { id: "compact", label: "Ringkas" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as KanbanViewMode)}
-                  className={`px-3 py-1 rounded-full text-xs transition-colors cursor-pointer ${
-                    viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "board", label: "Papan Kolom", icon: Columns },
+                { id: "compact", label: "Ringkas", icon: List },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as KanbanViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-card text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
             </div>
           </div>
         </ShellHeader>

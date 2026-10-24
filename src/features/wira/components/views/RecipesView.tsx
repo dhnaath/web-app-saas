@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { ShellHeader } from "@/app/shell-header";
 import {
   Utensils,
   Clock,
@@ -489,89 +490,50 @@ export function RecipesView() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
-      {/* Top Level Sub-Feature Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-border">
-        <button
-          onClick={() => handleMainTabChange("recipes")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "recipes"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <ChefHat size={15} />
-          <span>Koleksi Resep</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-foreground/20 font-mono">
-            {recipes.length}
-          </span>
-        </button>
+      {/* Action Toolbar & Sub-Feature Tabs Portaled to Main Header */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Segmented Icon Buttons for Sub-views */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "recipes", label: `Koleksi Resep (${recipes.length})`, icon: ChefHat },
+              { id: "pantry", label: "Pantry Inventory", icon: Package },
+              { id: "cook-log", label: "Cook Log", icon: BookOpen },
+              { id: "expiry", label: "Expiry Alert", icon: AlertTriangle },
+              { id: "leftovers", label: "Leftover Manager", icon: RefreshCw },
+              { id: "meal-planner", label: "Meal Planner", icon: CalendarDays },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeMainTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleMainTabChange(tab.id as RecipeMainTab)}
+                  title={tab.label}
+                  aria-label={tab.label}
+                  className={cn(
+                    "p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0",
+                    isActive
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
+          </div>
 
-        <button
-          onClick={() => handleMainTabChange("pantry")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "pantry"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <Package size={15} />
-          <span>Pantry Inventory</span>
-        </button>
-
-        <button
-          onClick={() => handleMainTabChange("cook-log")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "cook-log"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <BookOpen size={15} />
-          <span>Cook Log</span>
-        </button>
-
-        <button
-          onClick={() => handleMainTabChange("expiry")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "expiry"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <AlertTriangle size={15} />
-          <span>Expiry Alert</span>
-        </button>
-
-        <button
-          onClick={() => handleMainTabChange("leftovers")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "leftovers"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <RefreshCw size={15} />
-          <span>Leftover Manager</span>
-        </button>
-
-        <button
-          onClick={() => handleMainTabChange("meal-planner")}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
-            activeMainTab === "meal-planner"
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <CalendarDays size={15} />
-          <span>Meal Planner</span>
-        </button>
-      </div>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            title="Tambah Resep Baru"
+            aria-label="Tambah Resep Baru"
+            className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </ShellHeader>
 
       {activeMainTab === "pantry" && <KitchenPantryView />}
       {activeMainTab === "cook-log" && <CookingLogView />}

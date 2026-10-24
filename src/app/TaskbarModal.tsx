@@ -15,9 +15,10 @@ import {
   Briefcase,
   Home,
   Check,
-  ExternalLink,
 } from "lucide-react";
 import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
+import { useProgressiveBlurSetting } from "@/hooks/useProgressiveBlurSetting";
 
 interface TaskbarModalProps {
   isOpen: boolean;
@@ -51,6 +52,7 @@ const DEFAULT_TASKS: QuickTask[] = [
 
 export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
   const navigate = useNavigate();
+  const { config: blurConfig, blurLevels } = useProgressiveBlurSetting();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const [activeTab, setActiveTab] = useState<"switcher" | "tasks">("switcher");
@@ -213,7 +215,7 @@ export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+              <div className="px-2 pt-1 pb-1.5">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
@@ -325,32 +327,6 @@ export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
                       );
                     })}
                   </div>
-
-                  {/* Quick action bar */}
-                  <div className="pt-2 border-t border-neutral-200/60 dark:border-zinc-800/60 mt-2 flex items-center justify-between px-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onClose();
-                        navigate({ to: "/task-manager" as any });
-                      }}
-                      className="inline-flex items-center gap-1 text-[10.5px] font-medium text-primary hover:underline"
-                    >
-                      <span>Task Manager</span>
-                      <ExternalLink className="size-3" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onClose();
-                        navigate({ to: "/" as any });
-                      }}
-                      className="text-[10px] text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
-                    >
-                      Kembali ke Launcher
-                    </button>
-                  </div>
                 </div>
               )}
 
@@ -449,11 +425,16 @@ export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
                 </div>
               )}
 
-              {/* Footer info */}
-              <div className="pt-2 px-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-neutral-400">
-                <span>Taskbar Switcher</span>
-                <span className="font-mono">Esc untuk menutup</span>
-              </div>
+              {/* Progressive Blur (respects master setting) */}
+              {blurConfig.enabled && (
+                <ProgressiveBlur
+                  direction="bottom"
+                  height={24}
+                  blurLevels={blurLevels.length > 0 ? blurLevels.slice(0, 4) : [0.5, 1, 2, 4]}
+                  tint={blurConfig.tint ? "linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))" : false}
+                  className="absolute bottom-0 inset-x-0 pointer-events-none"
+                />
+              )}
             </motion.div>
           </div>
         </>

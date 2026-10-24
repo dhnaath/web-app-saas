@@ -175,72 +175,78 @@ export function TaskManagerApp() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* View Switcher Tabs portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1 bg-muted/70 p-0.5 rounded-lg border border-border/60 overflow-x-auto text-xs font-semibold">
+        <div className="flex items-center gap-0.5 bg-muted/70 p-0.5 rounded-lg border border-border/60 text-xs font-semibold shrink-0">
           <button
             onClick={() => setViewMode("list")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="List"
+            aria-label="List"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "list"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <ListTodo className="size-3.5" />
-            <span className="hidden sm:inline">List</span>
           </button>
           <button
             onClick={() => setViewMode("board")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="Board"
+            aria-label="Board"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "board"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Kanban className="size-3.5" />
-            <span className="hidden sm:inline">Board</span>
           </button>
           <button
             onClick={() => setViewMode("calendar")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="Kalender"
+            aria-label="Kalender"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "calendar"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Calendar className="size-3.5" />
-            <span className="hidden sm:inline">Kalender</span>
           </button>
           <button
             onClick={() => setViewMode("timeline")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="Timeline"
+            aria-label="Timeline"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "timeline"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <GitBranch className="size-3.5" />
-            <span className="hidden sm:inline">Timeline</span>
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="Tabel"
+            aria-label="Tabel"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "table"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <TableIcon className="size-3.5" />
-            <span className="hidden sm:inline">Tabel</span>
           </button>
           <button
             onClick={() => setViewMode("priority")}
-            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
+            title="Eisenhower Matrix"
+            aria-label="Eisenhower Matrix"
+            className={`p-1.5 rounded-md transition-all flex items-center justify-center text-xs ${
               viewMode === "priority"
                 ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <AlertTriangle className="size-3.5" />
-            <span className="hidden sm:inline">Eisenhower</span>
           </button>
         </div>
       </ShellHeader>

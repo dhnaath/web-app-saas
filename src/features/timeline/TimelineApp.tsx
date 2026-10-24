@@ -5,6 +5,8 @@ import {
   CalendarDays,
   AlertTriangle,
   CheckCircle2,
+  GitBranch,
+  Zap,
 } from "lucide-react";
 import { useTimelineManager } from "./store";
 import { TimelineViewMode, GroupBy } from "./types";
@@ -161,21 +163,26 @@ export function TimelineApp() {
           <div className="flex items-center gap-1.5 shrink-0">
             <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs">
               {[
-                { id: "gantt", label: "Gantt Chart" },
-                { id: "critical_path", label: "Jalur Kritis (CPM)" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as TimelineViewMode)}
-                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer ${
-                    viewMode === v.id
-                      ? "bg-background text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "gantt", label: "Gantt Chart", icon: GitBranch },
+                { id: "critical_path", label: "Jalur Kritis (CPM)", icon: Zap },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as TimelineViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-background text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
             </div>
           </div>
         </ShellHeader>
