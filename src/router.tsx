@@ -119,6 +119,7 @@ import {
 } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
 import { Launcher } from "./routes/index";
+import { NationalIndicesDashboard } from "./routes/national-indices";
 import CreditApp from "./features/credit/App";
 import CuratedApp from "./features/curated/App";
 import { TaskManagerApp } from "./features/task-manager/TaskManagerApp";
@@ -1416,6 +1417,18 @@ const commodityDashboardRoute = createRoute({
   component: CommodityView,
 });
 
+const nationalIndicesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/10-indeks",
+  component: NationalIndicesDashboard,
+});
+
+const nationalIndicesAltRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/indeks-pembangunan",
+  component: NationalIndicesDashboard,
+});
+
 const incotermsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/incoterms",
@@ -1765,6 +1778,7 @@ function DynamicAppView() {
   if (pathname === "/investasi") return <InvestmentAppView />;
   if (pathname === "/valuasi") return <ValuationView />;
   if (pathname === "/100-komoditas" || pathname === "/commodity-dashboard") return <CommodityView />;
+  if (pathname === "/10-indeks" || pathname === "/indeks-pembangunan") return <NationalIndicesDashboard />;
   if (pathname === "/incoterms") return <IncotermsView />;
   if (pathname === "/water") return <WaterView />;
 
@@ -2004,6 +2018,8 @@ const routeTree = rootRoute.addChildren([
   valuasiRoute,
   komoditas100Route,
   commodityDashboardRoute,
+  nationalIndicesRoute,
+  nationalIndicesAltRoute,
   incotermsRoute,
   waterRoute,
   assetMatrixRoute,

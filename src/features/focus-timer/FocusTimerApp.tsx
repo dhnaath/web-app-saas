@@ -8,6 +8,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Link as LinkIcon,
+  History,
+  CheckSquare,
 } from "lucide-react";
 import { useFocusTimer } from "./store";
 import { FocusMode, FocusTimerViewMode } from "./types";
@@ -178,23 +180,28 @@ export function FocusTimerApp() {
         <ShellHeader>
           <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
             {[
-              { id: "timer", label: "Timer Aktif" },
-              { id: "history", label: "Riwayat Sesi" },
-              { id: "by_linked", label: "Per Task" },
-              { id: "interruptions", label: "Log Interupsi" },
-            ].map((v) => (
-              <button
-                key={v.id}
-                onClick={() => setViewMode(v.id as FocusTimerViewMode)}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
-                  viewMode === v.id
-                    ? "bg-card text-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {v.label}
-              </button>
-            ))}
+              { id: "timer", label: "Timer Aktif", icon: Timer },
+              { id: "history", label: "Riwayat Sesi", icon: History },
+              { id: "by_linked", label: "Per Task", icon: CheckSquare },
+              { id: "interruptions", label: "Log Interupsi", icon: AlertTriangle },
+            ].map((v) => {
+              const Icon = v.icon;
+              return (
+                <button
+                  key={v.id}
+                  onClick={() => setViewMode(v.id as FocusTimerViewMode)}
+                  title={v.label}
+                  aria-label={v.label}
+                  className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                    viewMode === v.id
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
           </div>
         </ShellHeader>
 

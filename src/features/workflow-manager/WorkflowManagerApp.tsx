@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useWorkflowStore } from "./store";
 import { useShellSections } from "@/app/shell-sections";
+import { ShellHeader } from "@/app/shell-header";
 
 type ViewTab = "designer" | "instances" | "instance_detail" | "sla_breach" | "stats";
 
@@ -140,6 +141,49 @@ export function WorkflowManagerApp() {
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
+      {/* Header Actions in Floating Pill */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* View Tab Switchers - Compact Segmented Icon Pills */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "designer", label: "Workflow Designer", icon: Workflow },
+              { id: "instances", label: `Active Pipelines (${stats.activeInstances})`, icon: Activity },
+              { id: "instance_detail", label: "Audit Trail", icon: ListTree },
+              { id: "sla_breach", label: `SLA Breach (${stats.breachedCount})`, icon: ShieldAlert },
+              { id: "stats", label: "Process Analytics", icon: BarChart3 },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as ViewTab)}
+                  title={tab.label}
+                  aria-label={tab.label}
+                  className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                    isActive
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => setIsNewDefModalOpen(true)}
+            title="Buat Blueprint Workflow Baru"
+            aria-label="New Blueprint"
+            className="p-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </ShellHeader>
+
       {/* Top Header */}
       <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -158,59 +202,6 @@ export function WorkflowManagerApp() {
             )}
           </h1>
         </div>
-
-        {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
-          <button
-            onClick={() => setActiveTab("designer")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "designer" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Workflow Designer
-          </button>
-          <button
-            onClick={() => setActiveTab("instances")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "instances" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Active Pipelines ({stats.activeInstances})
-          </button>
-          <button
-            onClick={() => setActiveTab("instance_detail")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "instance_detail" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Audit Trail
-          </button>
-          <button
-            onClick={() => setActiveTab("sla_breach")}
-            className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 ${
-              activeTab === "sla_breach" ? "bg-rose-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
-            SLA Breach ({stats.breachedCount})
-          </button>
-          <button
-            onClick={() => setActiveTab("stats")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "stats" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Process Analytics
-          </button>
-        </div>
-
-        <button
-          onClick={() => setIsNewDefModalOpen(true)}
-          className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          New Blueprint
-        </button>
       </div>
 
       {/* Main Content Area */}

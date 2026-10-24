@@ -357,18 +357,20 @@ export function ResourceManagerApp() {
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => setIsNewAllocOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-full text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            title="Alokasikan Waktu & Sumber Daya"
+            aria-label="Alokasikan"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border/80 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>Alokasikan</span>
           </button>
 
           <button
             onClick={() => setIsNewResOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Tambah Sumber Daya Baru"
+            aria-label="Tambah Sumber Daya"
+            className="p-1.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Sumber Daya</span>
           </button>
         </div>
       </ShellHeader>

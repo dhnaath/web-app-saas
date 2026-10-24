@@ -177,13 +177,66 @@ export function ExpenseTrackerApp() {
 
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("all")}
+              title={`Semua Pengeluaran (${expenses.length})`}
+              aria-label="Semua Pengeluaran"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "all"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Receipt className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("by_category")}
+              title="Kategori Biaya"
+              aria-label="Kategori Biaya"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "by_category"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <PieChart className="w-3.5 h-3.5 text-purple-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("merchants")}
+              title="Direktori Merchant & Vendor"
+              aria-label="Merchant & Vendor"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "merchants"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Store className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("tax_deductible")}
+              title={`Pajak & Deductible (${expenses.filter((e) => e.isTaxDeductible).length})`}
+              aria-label="Tax-Deductible"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "tax_deductible"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Catat Pengeluaran Baru"
+            aria-label="Catat Pengeluaran"
+            className="p-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Catat Pengeluaran</span>
           </button>
         </div>
       </ShellHeader>
@@ -260,56 +313,7 @@ export function ExpenseTrackerApp() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 mt-4 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all"
-              ? "bg-rose-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <Receipt className="w-4 h-4" />
-          <span>Semua Pengeluaran ({expenses.length})</span>
-        </button>
 
-        <button
-          onClick={() => setActiveTab("by_category")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_category"
-              ? "bg-rose-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <PieChart className="w-4 h-4 text-purple-400" />
-          <span>Kategori Biaya</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("merchants")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "merchants"
-              ? "bg-rose-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <Store className="w-4 h-4 text-amber-400" />
-          <span>Direktori Merchant & Vendor</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("tax_deductible")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "tax_deductible"
-              ? "bg-rose-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>Pajak & Deductible ({expenses.filter((e) => e.isTaxDeductible).length})</span>
-        </button>
-      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 mt-4">

@@ -9,6 +9,7 @@ import { ValueTreatedSection } from "@/features/launcher/ValueTreatedSection";
 import { FinancialWealthSection } from "@/features/launcher/FinancialWealthSection";
 import { AppModuleSection } from "@/features/launcher/AppModuleSection";
 import { CommodityDashboardSection } from "./commodity-dashboard";
+import { NationalIndicesSection } from "@/features/launcher/NationalIndicesSection";
 import { EmptyModePage } from "@/features/launcher/EmptyModePage";
 import { ModeSectionView } from "@/features/launcher/ModeSectionView";
 import { AnimatedSearchIcon } from "@/app/shell/AnimatedSearchIcon";
@@ -19,6 +20,7 @@ import {
   Coins,
   LayoutGrid,
   TrendingUp,
+  BarChart3,
   User,
   Users,
   GraduationCap,
@@ -61,6 +63,7 @@ export const LAUNCHER_TABS = [
   { id: "financial", label: "Finansial & Wealth", icon: Coins, badge: "5 Tahapan" },
   { id: "app_module", label: "App Module", icon: LayoutGrid, badge: "47 Modul" },
   { id: "commodity", label: "100 Komoditas", icon: TrendingUp, badge: "Nasional" },
+  { id: "national_indices", label: "10 Indeks", icon: BarChart3, badge: "Pembangunan" },
 
   // 10 Halaman Mode Tambahan (Sementara Kosong Siap Dikonfigurasi)
   { id: "mode_personal", modeId: "personal", label: "Mode Personal", icon: User, badge: "Self", desc: "Keseharian, Catatan & Habit" },
@@ -357,9 +360,16 @@ export function Launcher() {
               )}
             </div>
 
+            {/* Slide 5: 10 Indeks Pembangunan Nasional */}
+            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 5 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
+              {activeTabIdx === 5 && (
+                <NationalIndicesSection isEmbedded={true} />
+              )}
+            </div>
+
             {/* 10 Mode Halaman Tambahan (Sementara Kosong) */}
             {LAUNCHER_TABS.filter((t) => (t as any).modeId).map((tab, mIdx) => {
-              const slideIdx = 5 + mIdx;
+              const slideIdx = 6 + mIdx;
               const isActive = activeTabIdx === slideIdx;
               return (
                 <div

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
+import { useProgressiveBlurSetting } from "@/hooks/useProgressiveBlurSetting";
 import {
   CheckSquare,
   DollarSign,
@@ -25,6 +26,7 @@ export function QuickCaptureModal({
   onClose,
   onSuccess,
 }: QuickCaptureModalProps) {
+  const { config: blurConfig, blurLevels } = useProgressiveBlurSetting();
   const [tab, setTab] = useState<CaptureTab>("task");
 
   // Task form state
@@ -423,13 +425,15 @@ export function QuickCaptureModal({
             </button>
           </div>
         </form>
-        <ProgressiveBlur
-          direction="bottom"
-          height={24}
-          blurLevels={[0.5, 1, 2, 4]}
-          tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.8))"
-          className="absolute bottom-[48px] inset-x-0 pointer-events-none"
-        />
+        {blurConfig.enabled && (
+          <ProgressiveBlur
+            direction="bottom"
+            height={24}
+            blurLevels={blurLevels.length > 0 ? blurLevels.slice(0, 4) : [0.5, 1, 2, 4]}
+            tint={blurConfig.tint ? "linear-gradient(to bottom, transparent, hsl(var(--card) / 0.8))" : false}
+            className="absolute bottom-[48px] inset-x-0 pointer-events-none"
+          />
+        )}
         </div>
             </motion.div>
           </div>

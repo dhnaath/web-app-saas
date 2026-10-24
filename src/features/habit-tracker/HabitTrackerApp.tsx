@@ -7,6 +7,10 @@ import {
   Check,
   Plus,
   RotateCcw,
+  Calendar,
+  Grid,
+  Trophy,
+  BarChart3,
 } from "lucide-react";
 import { useHabitTracker } from "./store";
 import {
@@ -185,34 +189,40 @@ export function HabitTrackerApp() {
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header Controls Portaled to Main Header */}
         <ShellHeader>
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center gap-1.5 shrink-0">
             <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
               {[
-                { id: "today", label: "Hari Ini" },
-                { id: "heatmap", label: "Heatmap" },
-                { id: "streak_board", label: "Peringkat" },
-                { id: "summary", label: "Ringkasan" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as HabitViewMode)}
-                  className={`px-2.5 py-1 rounded-md transition-colors ${
-                    viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "today", label: "Hari Ini", icon: Calendar },
+                { id: "heatmap", label: "Heatmap", icon: Grid },
+                { id: "streak_board", label: "Peringkat", icon: Trophy },
+                { id: "summary", label: "Ringkasan", icon: BarChart3 },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as HabitViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-card text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
             </div>
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5"
+              title="Kebiasaan Baru"
+              aria-label="Kebiasaan Baru"
+              className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Kebiasaan Baru</span>
             </button>
           </div>
         </ShellHeader>

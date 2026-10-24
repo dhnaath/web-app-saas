@@ -17,6 +17,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan, type NavItem } from "@/config/nav";
 import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
+import { useProgressiveBlurSetting } from "@/hooks/useProgressiveBlurSetting";
 
 interface RecentModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ interface RecentModalProps {
 
 export function RecentModal({ isOpen, onClose }: RecentModalProps) {
   const navigate = useNavigate();
+  const { config: blurConfig, blurLevels } = useProgressiveBlurSetting();
   const { recentApps, removeRecentApp, clearRecentApps, addRecentApp } = useRecentApps();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [search, setSearch] = useState("");
@@ -108,7 +110,7 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="px-2 pt-1 pb-2 border-b border-neutral-200/60 dark:border-zinc-800/60">
+              <div className="px-2 pt-1 pb-1.5">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className="size-7 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
@@ -257,19 +259,15 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
                     })
                   )}
                 </div>
-                <ProgressiveBlur
-                  direction="bottom"
-                  height={24}
-                  blurLevels={[0.5, 1, 2, 4]}
-                  tint="linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))"
-                  className="absolute bottom-0 inset-x-0 pointer-events-none"
-                />
-              </div>
-
-              {/* Footer info */}
-              <div className="pt-2 px-2 border-t border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-neutral-400">
-                <span>Tekan Esc untuk menutup</span>
-                <span className="font-mono">Riwayat Apps</span>
+                {blurConfig.enabled && (
+                  <ProgressiveBlur
+                    direction="bottom"
+                    height={24}
+                    blurLevels={blurLevels.length > 0 ? blurLevels.slice(0, 4) : [0.5, 1, 2, 4]}
+                    tint={blurConfig.tint ? "linear-gradient(to bottom, transparent, hsl(var(--card) / 0.85))" : false}
+                    className="absolute bottom-0 inset-x-0 pointer-events-none"
+                  />
+                )}
               </div>
             </motion.div>
           </div>

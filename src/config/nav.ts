@@ -11,6 +11,7 @@ import {
   Gauge,
   MessagesSquare,
   Activity,
+  BarChart3,
   LineChart,
   AlertTriangle,
   AlertOctagon,
@@ -165,6 +166,7 @@ export const navKonsultan: NavGroup[] = [
     parentCategory: "Finance",
     items: [
       { to: "/100-komoditas", label: "100 Komoditas", icon: Package },
+      { to: "/10-indeks", label: "10 Indeks Pembangunan", icon: BarChart3 },
     ],
   },
   {

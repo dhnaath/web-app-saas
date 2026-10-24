@@ -188,113 +188,120 @@ export function ApprovalManagerApp() {
 
       {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <button
-            onClick={() => setIsNewDelegateOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
-          >
-            <UserCheck className="w-3.5 h-3.5 text-sky-400" />
-            <span className="hidden sm:inline">Delegasi Cuti</span>
-          </button>
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => {
+                setActiveTab("my_pending");
+                setSelectedRequestId(null);
+              }}
+              title={`My Pending (${stats.pending})`}
+              aria-label="My Pending"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "my_pending"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("all_requests");
+                setSelectedRequestId(null);
+              }}
+              title={`Semua Permintaan (${requests.length})`}
+              aria-label="Semua Permintaan"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "all_requests"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("flow_designer");
+                setSelectedRequestId(null);
+              }}
+              title={`Template Flow (${flows.length})`}
+              aria-label="Template Flow"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "flow_designer"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <GitBranch className="w-3.5 h-3.5 text-purple-400" />
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("escalated");
+                setSelectedRequestId(null);
+              }}
+              title={`Escalated SLA (${stats.slaBreaches})`}
+              aria-label="Escalated SLA"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "escalated"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("delegates");
+                setSelectedRequestId(null);
+              }}
+              title={`Delegates (${delegates.length})`}
+              aria-label="Delegates"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "delegates"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <UserCheck className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("stats");
+                setSelectedRequestId(null);
+              }}
+              title="Statistik & Analisis"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart2 className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+          </div>
 
           <button
-            onClick={() => setIsFlowDesignerOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
+            onClick={() => setIsNewDelegateOpen(true)}
+            title="Delegasi Cuti"
+            aria-label="Delegasi Cuti"
+            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center justify-center"
           >
-            <GitBranch className="w-3.5 h-3.5 text-purple-400" />
-            <span className="hidden sm:inline">Flow Designer</span>
+            <UserCheck className="w-3.5 h-3.5 text-sky-400" />
           </button>
 
           <button
             onClick={() => setIsNewRequestOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
+            title="Ajukan Approval Baru"
+            aria-label="Ajukan Approval"
+            className="p-1.5 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Ajukan Approval</span>
           </button>
         </div>
       </ShellHeader>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => {
-            setActiveTab("my_pending");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "my_pending" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Clock className="w-4 h-4 text-amber-400" />
-          <span>My Pending ({stats.pending})</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("all_requests");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all_requests" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Semua Permintaan ({requests.length})</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("flow_designer");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "flow_designer" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <GitBranch className="w-4 h-4 text-purple-400" />
-          <span>Template Flow ({flows.length})</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("escalated");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "escalated" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-rose-400 hover:bg-foreground"
-          }`}
-        >
-          <ShieldAlert className="w-4 h-4 text-rose-400" />
-          <span>Escalated SLA ({stats.slaBreaches})</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("delegates");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "delegates" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <UserCheck className="w-4 h-4 text-sky-400" />
-          <span>Delegates ({delegates.length})</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setActiveTab("stats");
-            setSelectedRequestId(null);
-          }}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart2 className="w-4 h-4 text-emerald-400" />
-          <span>Statistik</span>
-        </button>
-      </div>
 
       {/* Main Container */}
       <div className="flex-1 mt-4">

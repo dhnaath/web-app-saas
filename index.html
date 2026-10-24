@@ -3,6 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function() {
+        if (typeof window !== 'undefined') {
+          if (typeof window.ResizeObserver !== 'undefined') {
+            var NativeRO = window.ResizeObserver;
+            window.ResizeObserver = class ResizeObserver extends NativeRO {
+              constructor(callback) {
+                super(function(entries, observer) {
+                  window.requestAnimationFrame(function() {
+                    try {
+                      callback(entries, observer);
+                    } catch (e) {}
+                  });
+                });
+              }
+            };
+          }
+          var isROError = function(e) {
+            var m = (e && e.message) || (e && e.error && e.error.message) || String(e || '');
+            return m.indexOf('ResizeObserver loop') !== -1;
+          };
+          window.addEventListener('error', function(event) {
+            if (isROError(event)) {
+              event.stopImmediatePropagation();
+              event.preventDefault();
+              return true;
+            }
+          }, true);
+          var origOnError = window.onerror;
+          window.onerror = function(msg, url, line, col, err) {
+            if (isROError(msg) || isROError(err)) return true;
+            if (typeof origOnError === 'function') return origOnError(msg, url, line, col, err);
+            return false;
+          };
+        }
+      })();
+    </script>
     <title>All in One</title>
     <meta
       name="description"

@@ -220,78 +220,90 @@ export function TimeTrackerApp() {
 
       {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("timer")}
+              title={`Timer & Riwayat (${entries.length})`}
+              aria-label="Timer & Riwayat"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "timer"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Timer className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("weekly_timesheet")}
+              title="Timesheet Mingguan"
+              aria-label="Timesheet Mingguan"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "weekly_timesheet"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("pending_approvals")}
+              title={`Antrean Persetujuan (${timesheets.filter((t) => t.status === "submitted").length})`}
+              aria-label="Antrean Persetujuan"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "pending_approvals"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("billing_summary")}
+              title="Ringkasan Billing & Tarif"
+              aria-label="Billing"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "billing_summary"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              title="Statistik Utilisasi"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => setFocusModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-cyan-500 border border-border rounded-lg text-xs font-semibold transition"
+            className="p-1.5 bg-card hover:bg-accent text-cyan-500 border border-border rounded-lg text-xs font-semibold transition cursor-pointer shrink-0 flex items-center justify-center"
             title="Tarik sesi selesai dari Focus Timer #07"
+            aria-label="Impor Sesi Focus Timer"
           >
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">Impor Sesi Focus Timer</span>
           </button>
 
           <button
             onClick={() => setManualModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
+            title="Log Waktu Manual"
+            aria-label="Log Waktu Manual"
+            className="p-1.5 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Log Waktu Manual</span>
           </button>
         </div>
       </ShellHeader>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("timer")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "timer" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Timer className="w-4 h-4" />
-          <span>Timer & Riwayat ({entries.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("weekly_timesheet")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "weekly_timesheet" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Calendar className="w-4 h-4 text-cyan-400" />
-          <span>Timesheet Mingguan</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("pending_approvals")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "pending_approvals" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <UserCheck className="w-4 h-4 text-emerald-400" />
-          <span>Antrean Persetujuan ({timesheets.filter((t) => t.status === "submitted").length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("billing_summary")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "billing_summary" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <DollarSign className="w-4 h-4 text-emerald-400" />
-          <span>Ringkasan Billing & Tarif</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-amber-400" />
-          <span>Statistik Utilisasi</span>
-        </button>
-      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 mt-4">

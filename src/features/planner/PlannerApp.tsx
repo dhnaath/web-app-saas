@@ -15,6 +15,9 @@ import {
   X,
   Trash2,
   MoveRight,
+  Calendar,
+  CalendarDays,
+  Columns3,
 } from "lucide-react";
 import { usePlanner } from "./store";
 import { TimeBlock, PlannerViewMode } from "./types";
@@ -200,53 +203,65 @@ export function PlannerApp() {
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded-lg hover:bg-accent transition-colors cursor-pointer"
+              title="Hari Ini"
+              aria-label="Hari Ini"
+              className="p-1.5 border border-border text-foreground rounded-lg hover:bg-accent transition-colors cursor-pointer shrink-0"
             >
-              Hari Ini
+              <Calendar className="w-3.5 h-3.5" />
             </button>
-            <div className="flex items-center border border-border rounded-lg overflow-hidden">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
               <button
                 onClick={handlePrevDay}
-                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
+                title="Hari Sebelumnya"
+                aria-label="Hari Sebelumnya"
+                className="p-1.5 hover:bg-accent text-muted-foreground transition-colors cursor-pointer shrink-0"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={handleNextDay}
-                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
+                title="Hari Berikutnya"
+                aria-label="Hari Berikutnya"
+                className="p-1.5 hover:bg-accent text-muted-foreground transition-colors cursor-pointer shrink-0"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* View Tabs */}
-            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
+            {/* View Tabs - Icon-Only Segmented Pills */}
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
               {[
-                { id: "daily", label: "Daily" },
-                { id: "weekly", label: "Weekly" },
-                { id: "rituals", label: "Rituals" },
-                { id: "carryover", label: "Carryover" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as PlannerViewMode)}
-                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
-                    viewMode === v.id
-                      ? "bg-background text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
+                { id: "daily", label: "Rencana Harian (Daily)", icon: CalendarDays },
+                { id: "weekly", label: "Rencana Mingguan (Weekly)", icon: Columns3 },
+                { id: "rituals", label: "Ritual Rutin", icon: Sparkles },
+                { id: "carryover", label: "Carryover Tugas", icon: RotateCcw },
+              ].map((v) => {
+                const Icon = v.icon;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setViewMode(v.id as PlannerViewMode)}
+                    title={v.label}
+                    aria-label={v.label}
+                    className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                      viewMode === v.id
+                        ? "bg-background text-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                );
+              })}
             </div>
 
             <button
               onClick={() => setShowAddBlockModal(true)}
-              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Tambah Blok Waktu"
+              aria-label="Tambah Blok Waktu"
+              className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Tambah Blok</span>
             </button>
           </div>
         </ShellHeader>

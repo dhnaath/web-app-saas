@@ -182,20 +182,23 @@ export function HalamanCatatan() {
       title="Catatan"
       subtitle="Notulen rapat, temuan lapangan, metodologi, dan template kerja konsultan"
       actions={
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <label className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-2 sm:px-2.5 rounded-lg text-xs font-medium border border-border/70 bg-card/60 hover:bg-accent text-foreground transition-colors whitespace-nowrap shadow-2xs">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <label
+            title="Impor Catatan (.json)"
+            aria-label="Impor"
+            className="cursor-pointer inline-flex items-center justify-center p-1.5 rounded-lg text-xs font-medium border border-border/70 bg-card/60 hover:bg-accent text-foreground transition-colors shadow-2xs shrink-0"
+          >
             <Upload size={13} />
-            <span className="hidden sm:inline">Impor</span>
             <input type="file" accept=".json" onChange={importJSON} className="hidden" />
           </label>
 
           <button
             onClick={exportJSON}
-            className="inline-flex items-center gap-1.5 h-8 px-2 sm:px-2.5 rounded-lg text-xs font-medium border border-border/70 bg-card/60 hover:bg-accent text-foreground transition-colors whitespace-nowrap shadow-2xs cursor-pointer"
-            title="Ekspor Catatan"
+            className="inline-flex items-center justify-center p-1.5 rounded-lg text-xs font-medium border border-border/70 bg-card/60 hover:bg-accent text-foreground transition-colors shadow-2xs cursor-pointer shrink-0"
+            title="Ekspor Catatan (.json)"
+            aria-label="Ekspor"
           >
             <Download size={13} />
-            <span className="hidden sm:inline">Ekspor</span>
           </button>
 
           <button
@@ -203,11 +206,11 @@ export function HalamanCatatan() {
               setEditingNote(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all whitespace-nowrap shadow-2xs cursor-pointer"
+            title="Tambah Catatan Baru"
+            aria-label="Catatan Baru"
+            className="inline-flex items-center justify-center p-1.5 rounded-lg text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-2xs cursor-pointer shrink-0"
           >
             <Plus size={14} />
-            <span className="hidden sm:inline">Catatan Baru</span>
-            <span className="sm:hidden">Catatan</span>
           </button>
         </div>
       }

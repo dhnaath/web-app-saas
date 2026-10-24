@@ -292,8 +292,8 @@ export function ProjectManagerApp() {
           {/* Top Project Header Bar (Portaled to ShellHeader) */}
           <ShellHeader>
             <div className="flex items-center gap-1.5 shrink-0">
-              {/* Navigation Tabs (7 Views per §10) - Compact Header Segmented Pills */}
-              <div className="flex items-center gap-0.5 bg-muted/70 p-0.5 rounded-lg border border-border/60 overflow-x-auto text-xs font-medium no-scrollbar">
+              {/* Navigation Tabs (7 Views per §10) - Compact Header Segmented Icon Pills */}
+              <div className="flex items-center gap-0.5 bg-muted/70 p-0.5 rounded-lg border border-border/60 text-xs font-medium shrink-0">
                 {[
                   { id: "overview", label: "Ringkasan", icon: TrendingUp },
                   { id: "board", label: "Board", icon: FolderKanban },
@@ -309,26 +309,28 @@ export function ProjectManagerApp() {
                     <button
                       key={tab.id}
                       onClick={() => setViewMode(tab.id as ProjectViewMode)}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
+                      title={tab.label}
+                      aria-label={tab.label}
+                      className={`flex items-center justify-center p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
                         isActive
                           ? "bg-background text-foreground font-semibold shadow-xs"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span className="hidden lg:inline">{tab.label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Primary Add Task to Project */}
+              {/* Primary Add Task to Project (Icon Only) */}
               <button
                 onClick={() => setShowNewTaskModal(true)}
-                className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+                title="Tugas Baru"
+                aria-label="Tugas Baru"
+                className="p-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center justify-center shrink-0 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Tugas Baru</span>
               </button>
             </div>
           </ShellHeader>

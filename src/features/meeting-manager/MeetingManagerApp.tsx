@@ -22,6 +22,7 @@ import {
 import { useMeetingStore } from "./store";
 import { ActionItemStatus, AgendaStatus, ParticipantRole } from "./types";
 import { useShellSections } from "@/app/shell-sections";
+import { ShellHeader } from "@/app/shell-header";
 
 type ViewTab = "detail" | "upcoming" | "actions" | "decisions" | "series" | "stats";
 
@@ -160,6 +161,50 @@ export function MeetingManagerApp() {
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
+      {/* Header Actions in Floating Pill */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* View Tab Switchers - Compact Segmented Icon Pills */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "detail", label: "Meeting Workspace", icon: FileText },
+              { id: "upcoming", label: `All Meetings (${meetings.length})`, icon: Calendar },
+              { id: "actions", label: `Action Items (${stats.totalActions})`, icon: ListTodo },
+              { id: "decisions", label: "Decision Log", icon: BookmarkCheck },
+              { id: "series", label: "Series", icon: Layers },
+              { id: "stats", label: "Analytics", icon: BarChart3 },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as ViewTab)}
+                  title={tab.label}
+                  aria-label={tab.label}
+                  className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                    isActive
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => setIsNewMeetingOpen(true)}
+            title="Jadwalkan Meeting Baru"
+            aria-label="Schedule Meeting"
+            className="p-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </ShellHeader>
+
       {/* Top Header Bar */}
       <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -184,66 +229,6 @@ export function MeetingManagerApp() {
             )}
           </h1>
         </div>
-
-        {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
-          <button
-            onClick={() => setActiveTab("detail")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "detail" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Meeting Workspace
-          </button>
-          <button
-            onClick={() => setActiveTab("upcoming")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "upcoming" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            All Meetings ({meetings.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("actions")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "actions" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Action Items ({stats.totalActions})
-          </button>
-          <button
-            onClick={() => setActiveTab("decisions")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "decisions" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Decision Log
-          </button>
-          <button
-            onClick={() => setActiveTab("series")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "series" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Series
-          </button>
-          <button
-            onClick={() => setActiveTab("stats")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Analytics
-          </button>
-        </div>
-
-        <button
-          onClick={() => setIsNewMeetingOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Schedule Meeting
-        </button>
       </div>
 
       {/* Main Container */}

@@ -13,6 +13,7 @@ import {
 import { useStatisticsStore } from "./store";
 import { AlertSeverity, AlertCondition } from "./types";
 import { useShellSections } from "@/app/shell-sections";
+import { ShellHeader } from "@/app/shell-header";
 
 type ViewTab = "cockpit" | "catalog" | "correlations" | "alerts" | "report";
 
@@ -100,6 +101,49 @@ export function StatisticsApp() {
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
+      {/* Header Actions in Floating Pill */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* View Tab Switchers - Compact Segmented Icon Pills */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            {[
+              { id: "cockpit", label: "Executive Cockpit", icon: LayoutGrid },
+              { id: "catalog", label: `Metric Catalog (${metrics.length})`, icon: BarChart3 },
+              { id: "correlations", label: "Correlations & Trends", icon: LineChart },
+              { id: "alerts", label: `Alerts (${alertRules.length})`, icon: BellRing },
+              { id: "report", label: "Snapshot Export", icon: Download },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as ViewTab)}
+                  title={tab.label}
+                  aria-label={tab.label}
+                  className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                    isActive
+                      ? "bg-background text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => setIsNewAlertOpen(true)}
+            title="Buat Aturan Alert Baru"
+            aria-label="Set Alert Rule"
+            className="p-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </ShellHeader>
+
       {/* Top Header */}
       <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -116,59 +160,6 @@ export function StatisticsApp() {
             </span>
           </h1>
         </div>
-
-        {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
-          <button
-            onClick={() => setActiveTab("cockpit")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "cockpit" ? "bg-emerald-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Executive Cockpit
-          </button>
-          <button
-            onClick={() => setActiveTab("catalog")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "catalog" ? "bg-emerald-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Metric Catalog ({metrics.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("correlations")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "correlations" ? "bg-emerald-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Correlations & Trends
-          </button>
-          <button
-            onClick={() => setActiveTab("alerts")}
-            className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 ${
-              activeTab === "alerts" ? "bg-emerald-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            <BellRing className="w-3.5 h-3.5" />
-            Alerts ({alertRules.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("report")}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "report" ? "bg-emerald-600 text-white shadow-sm" : "text-foreground hover:text-white"
-            }`}
-          >
-            Snapshot Export
-          </button>
-        </div>
-
-        <button
-          onClick={() => setIsNewAlertOpen(true)}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm"
-        >
-          <BellRing className="w-4 h-4" />
-          Set Alert Rule
-        </button>
       </div>
 
       {/* Main Content Area */}

@@ -193,13 +193,78 @@ export function SubscriptionManagerApp() {
 
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("active")}
+              title={`Langganan Aktif (${metrics.activeCount})`}
+              aria-label="Langganan Aktif"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "active"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("renewals")}
+              title="Jadwal Renewal"
+              aria-label="Renewal"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "renewals"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("trials")}
+              title={`Masa Trial (${metrics.activeTrials.length})`}
+              aria-label="Trial"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "trials"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("analytics")}
+              title="Analisis Beban Biaya"
+              aria-label="Analisis Biaya"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "analytics"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              title={`Riwayat Tagihan (${billingHistory.length})`}
+              aria-label="Riwayat Tagihan"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "history"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <History className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Tambah Langganan Baru"
+            aria-label="Tambah Langganan"
+            className="p-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Langganan</span>
           </button>
         </div>
       </ShellHeader>
@@ -278,68 +343,7 @@ export function SubscriptionManagerApp() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 mt-4 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("active")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "active"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <CreditCard className="w-4 h-4" />
-          <span>Langganan Aktif ({metrics.activeCount})</span>
-        </button>
 
-        <button
-          onClick={() => setActiveTab("renewals")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "renewals"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <Calendar className="w-4 h-4 text-amber-400" />
-          <span>Jadwal Perpanjangan & Renewal</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("trials")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "trials"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          <span>Masa Uji Coba / Trial ({metrics.activeTrials.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("analytics")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "analytics"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-emerald-400" />
-          <span>Analisis Beban Biaya</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("history")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "history"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-card"
-          }`}
-        >
-          <History className="w-4 h-4 text-sky-400" />
-          <span>Riwayat Tagihan ({billingHistory.length})</span>
-        </button>
-      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 mt-4">

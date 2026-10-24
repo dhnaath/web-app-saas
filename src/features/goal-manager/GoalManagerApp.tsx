@@ -245,13 +245,66 @@ export function GoalManagerApp() {
 
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Tab Switchers (Icon-Only) */}
+          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+            <button
+              onClick={() => setActiveTab("board")}
+              title={`Goal Board (${goals.length})`}
+              aria-label="Goal Board"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "board"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveTab("tree")}
+              title="Hierarki & Sub-Goals"
+              aria-label="Hierarki"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "tree"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <FolderTree className="w-3.5 h-3.5 text-teal-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("progress_trend")}
+              title={`Riwayat Check-In & Tren (${checkIns.length})`}
+              aria-label="Riwayat Check-In"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "progress_trend"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <TrendingUp className="w-3.5 h-3.5 text-sky-400" />
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              title="Statistik Capaian"
+              aria-label="Statistik"
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+                activeTab === "stats"
+                  ? "bg-background text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+            </button>
+          </div>
+
           <button
             onClick={() => setIsNewGoalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-full text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            title="Rumuskan Goal Baru"
+            aria-label="Rumuskan Goal"
+            className="p-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Rumuskan Goal</span>
           </button>
         </div>
       </ShellHeader>
@@ -281,48 +334,7 @@ export function GoalManagerApp() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
-        <button
-          onClick={() => setActiveTab("board")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "board" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Goal Board ({goals.length})</span>
-        </button>
 
-        <button
-          onClick={() => setActiveTab("tree")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "tree" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <FolderTree className="w-4 h-4 text-teal-400" />
-          <span>Hierarki & Sub-Goals</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("progress_trend")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "progress_trend" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <TrendingUp className="w-4 h-4 text-sky-400" />
-          <span>Riwayat Check-In & Tren ({checkIns.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("stats")}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
-          }`}
-        >
-          <BarChart3 className="w-4 h-4 text-amber-400" />
-          <span>Statistik Capaian</span>
-        </button>
-      </div>
 
       {/* Main View Area */}
       <div className="flex-1 mt-4">
