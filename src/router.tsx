@@ -29,6 +29,7 @@ import { StandaloneAppView } from "./features/standalone/StandaloneAppView";
 import { STANDALONE_APPS } from "./features/standalone/standaloneAppsData";
 import { ValueTreatedPage } from "./features/value-treated/ValueTreatedPage";
 import { AppModuleSection } from "./features/launcher/AppModuleSection";
+import { WorkProductivityPage } from "./features/work-productivity/WorkProductivityPage";
 import { useFavorites } from "./hooks/useFavorites";
 import {
   PehHabitsView,
@@ -1137,6 +1138,26 @@ const milestonesRoute = createRoute({
   component: MilestoneManagerView,
 });
 
+function WorkProductivityView() {
+  return (
+    <AppShell title="Work and Productivity" subtitle="Semua (9) • Execution (3), Partners (2), Control (3), Ownership (1)">
+      <WorkProductivityPage />
+    </AppShell>
+  );
+}
+
+const workProductivityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/work-productivity",
+  component: WorkProductivityView,
+});
+
+const workRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/work",
+  component: WorkProductivityView,
+});
+
 function TimeTrackerView() {
   return (
     <AppShell title="Time Tracker" subtitle="Catatan Waktu Resmi/Legal-Grade • Timesheet & Billing">
@@ -1990,6 +2011,8 @@ const routeTree = rootRoute.addChildren([
   goalsRoute,
   milestoneManagerRoute,
   milestonesRoute,
+  workProductivityRoute,
+  workRoute,
   timeTrackerRoute,
   timesheetRoute,
   timesheetsRoute,

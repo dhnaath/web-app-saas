@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useFavorites } from "@/hooks/useFavorites";
+import { WorkProductivityPage } from "@/features/work-productivity/WorkProductivityPage";
 import {
   User,
   GraduationCap,
@@ -98,19 +99,6 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
           { id: "timeline", label: "Lini Masa Entri" },
           { id: "mood", label: "Peta Suasana Hati" },
           { id: "topics", label: "Tag & Topik" },
-        ],
-      },
-      {
-        id: "goals",
-        name: "Target & Milestone",
-        shortDesc: "Peta jalan sasaran jangka pendek & panjang dengan tahapan checkpoint terukur.",
-        icon: Layers,
-        to: "/peh/goals",
-        badge: "Roadmap",
-        subMenus: [
-          { id: "active", label: "Sasaran Aktif" },
-          { id: "milestones", label: "Tahapan Checkpoint" },
-          { id: "archive", label: "Arsip Sasaran" },
         ],
       },
       {
@@ -297,18 +285,6 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
         subMenus: [
           { id: "entries", label: "Koleksi Konsep" },
           { id: "tags", label: "Topik & Kategori" },
-        ],
-      },
-      {
-        id: "projects",
-        name: "Pipeline Produksi Konten",
-        shortDesc: "Papan kanban tahapan naskah, syuting, editing, dan publikasi lintas platform.",
-        icon: Layers,
-        to: "/peh/projects",
-        badge: "Pipeline",
-        subMenus: [
-          { id: "active", label: "Konten Berjalan" },
-          { id: "done", label: "Rilis Publikasi" },
         ],
       },
       {
@@ -705,110 +681,24 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
   mode_employment: {
     id: "mode_employment",
     modeId: "employment",
-    label: "Mode Employment",
-    badge: "Career",
-    desc: "Eksekusi profesional, alur kerja pipeline, audit kepatuhan, pengadaan, dan evaluasi rekanan.",
+    label: "Work and Productivity",
+    badge: "9 Modul",
+    desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
     icon: Briefcase,
     ecosystem: "POO",
     ecosystemLabel: "Productivity, Operations & Ownership",
-    apps: [
-      {
-        id: "workflows",
-        name: "Alur Kerja & Pipeline",
-        shortDesc: "Pipeline proses operasional, tahapan status eksekusi, dan standarisasi alur antar-divisi.",
-        icon: Layers,
-        to: "/peh/workflows",
-        badge: "Pipeline",
-        subMenus: [
-          { id: "active", label: "Pipeline Berjalan" },
-          { id: "templates", label: "Template Standard" },
-        ],
-      },
-      {
-        id: "vendors",
-        name: "Vendor & Mitra Layanan",
-        shortDesc: "Direktori rekanan pihak ketiga, evaluasi SLA performa, dan jatuh tempo perpanjangan kontrak.",
-        icon: Building,
-        to: "/peh/vendors",
-        badge: "Rekanan",
-        subMenus: [
-          { id: "directory", label: "Direktori Vendor" },
-          { id: "slas", label: "Evaluasi Skor SLA" },
-        ],
-      },
-      {
-        id: "incidents",
-        name: "Log Masalah & Insiden",
-        shortDesc: "Pencatatan gangguan sistem/operasional, eskalasi penanganan, dan Root Cause Analysis (RCA).",
-        icon: ShieldCheck,
-        to: "/peh/incidents",
-        badge: "RCA Masalah",
-        subMenus: [
-          { id: "open", label: "Insiden Terbuka" },
-          { id: "postmortem", label: "Analisis Akar Masalah" },
-        ],
-      },
-      {
-        id: "procurement",
-        name: "Pengadaan & Purchase Orders",
-        shortDesc: "Permintaan belanja alat modal, Purchase Orders (PO), dan matriks otorisasi anggaran.",
-        icon: DollarSign,
-        to: "/peh/procurement",
-        badge: "PO Belanja",
-        subMenus: [
-          { id: "orders", label: "Daftar PO Aktif" },
-          { id: "matrix", label: "Matriks Otorisasi" },
-        ],
-      },
-      {
-        id: "compliance",
-        name: "Kepatuhan & Audit Regulasi",
-        shortDesc: "Matriks standar legalitas, kesiapan audit sertifikasi ISO/hukum, dan radar izin jatuh tempo.",
-        icon: ShieldCheck,
-        to: "/peh/compliance",
-        badge: "Audit & Izin",
-        subMenus: [
-          { id: "audit", label: "Skor Kesiapan Audit" },
-          { id: "expiry", label: "Radar Jatuh Tempo Izin" },
-        ],
-      },
-      {
-        id: "meetings",
-        name: "Notulensi & Keputusan Rapat",
-        shortDesc: "Pencatatan hasil rapat eksekutif, log konsensus final, dan tindak lanjut tugas (action items).",
-        icon: Clock,
-        to: "/peh/meetings",
-        badge: "Notulensi",
-        subMenus: [
-          { id: "notes", label: "Daftar Notulensi" },
-          { id: "decisions", label: "Log Keputusan Final" },
-        ],
-      },
-      {
-        id: "certificates_pro",
-        name: "Sertifikasi Profesi & Legalitas",
-        shortDesc: "Pelacak masa berlaku sertifikasi profesional, lisensi keahlian, dan radar renewal.",
-        icon: ShieldCheck,
-        to: "/life/certificate-tracker",
-        badge: "Keahlian",
-        subMenus: [
-          { id: "pro", label: "Sertifikasi Ahli" },
-          { id: "status", label: "Jatuh Tempo" },
-        ],
-      },
-      {
-        id: "budget_rule",
-        name: "Budget Tracker 50/30/20",
-        shortDesc: "Evaluasi proporsi anggaran pendapatan operasional dan disiplin alokasi keuangan.",
-        icon: PieChart,
-        to: "/life/budget-tracker",
-        badge: "Alokasi",
-        subMenus: [
-          { id: "needs", label: "Needs 50%" },
-          { id: "wants", label: "Wants 30%" },
-        ],
-      },
-    ],
+    apps: [],
+  },
+  work_productivity: {
+    id: "work_productivity",
+    modeId: "work_productivity",
+    label: "Work and Productivity",
+    badge: "9 Modul",
+    desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
+    icon: Briefcase,
+    ecosystem: "POO",
+    ecosystemLabel: "Productivity, Operations & Ownership",
+    apps: [],
   },
 
   mode_owner: {
@@ -867,18 +757,6 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
         subMenus: [
           { id: "licenses", label: "Semua Hak Cipta & IP" },
           { id: "domains", label: "Domain & Hosting" },
-        ],
-      },
-      {
-        id: "cap_table",
-        name: "Struktur Saham & Cap Table",
-        shortDesc: "Tabel permodalan pemilik, alokasi porsi persentase lembar saham, dan jadwal vesting.",
-        icon: BarChart3,
-        to: "/peh/cap-table",
-        badge: "Ekuitas Usaha",
-        subMenus: [
-          { id: "stakeholders", label: "Pemegang Saham" },
-          { id: "vesting", label: "Perjanjian & Vesting" },
         ],
       },
       {
@@ -1186,6 +1064,15 @@ export function ModeSectionView({
   const { favorites: hookFavorites, toggleFavorite: hookToggleFavorite } = useFavorites();
   const favorites = externalFavorites ?? hookFavorites;
   const toggleFavorite = externalToggleFavorite ?? hookToggleFavorite;
+
+  if (
+    modeId === "mode_employment" ||
+    modeId === "employment" ||
+    modeId === "work_productivity" ||
+    modeId === "mode_work_productivity"
+  ) {
+    return <WorkProductivityPage isEmbedded={true} />;
+  }
 
   const config = MODE_CONFIGS[modeId];
   if (!config) return null;

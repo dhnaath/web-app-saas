@@ -103,6 +103,9 @@ import {
   TrendingUp,
   Truck,
   Type,
+  Target,
+  AlertOctagon,
+  PieChart,
   UserCheck,
   Users,
   Users2,
@@ -136,8 +139,30 @@ export interface UnifiedAppModuleDef {
   features?: StandaloneSubFeature[];
 }
 
-// 1. Raw Productivity Apps (29 Apps)
+// 1. Raw Productivity Apps (30 Apps)
 const RAW_PRODUCTIVITY_APPS = [
+  // 0. Work and Productivity (Dedicated Hub)
+  {
+    id: "work-productivity",
+    to: "/work-productivity",
+    title: "Work and Productivity",
+    subtitle: "Hub eksekutif kerja & produktivitas: Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1).",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: Briefcase,
+    badge: "9 Modul",
+    features: [
+      { title: "Target & Milestone", to: "/peh/milestones", icon: Target },
+      { title: "Alur Kerja & Pipeline", to: "/peh/workflows", icon: Workflow },
+      { title: "Pipeline Produksi Konten", to: "/peh/projects", icon: Layers },
+      { title: "Vendor & Mitra Layanan", to: "/peh/vendors", icon: Building2 },
+      { title: "Pengadaan & Purchase Orders", to: "/peh/procurement", icon: ShoppingBag },
+      { title: "Notulensi & Keputusan Rapat", to: "/peh/meetings", icon: FileCheck },
+      { title: "Log Masalah & Insiden", to: "/peh/incidents", icon: AlertOctagon },
+      { title: "Kepatuhan & Audit Regulasi", to: "/peh/compliance", icon: ShieldCheck },
+      { title: "Struktur Saham & Cap Table", to: "/peh/cap-table", icon: PieChart },
+    ],
+  },
   // 1. Execution (Standalone) + 13 Fitur
   {
     id: "execution",

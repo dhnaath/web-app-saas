@@ -177,17 +177,17 @@ export function ExpenseTrackerApp() {
 
       {/* Header Actions in Floating Pill */}
       <ShellHeader>
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Tab Switchers (Icon-Only) */}
-          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Tab Switchers (Icon-Only Segmented Pill) */}
+          <div className="flex items-center gap-1 border border-border/70 rounded-full p-1 bg-muted/60 dark:bg-zinc-800/80 backdrop-blur-xs text-xs shrink-0 shadow-2xs h-[36px]">
             <button
               onClick={() => setActiveTab("all")}
               title={`Semua Pengeluaran (${expenses.length})`}
               aria-label="Semua Pengeluaran"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "all"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <Receipt className="w-3.5 h-3.5" />
@@ -196,10 +196,10 @@ export function ExpenseTrackerApp() {
               onClick={() => setActiveTab("by_category")}
               title="Kategori Biaya"
               aria-label="Kategori Biaya"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "by_category"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <PieChart className="w-3.5 h-3.5 text-purple-400" />
@@ -208,10 +208,10 @@ export function ExpenseTrackerApp() {
               onClick={() => setActiveTab("merchants")}
               title="Direktori Merchant & Vendor"
               aria-label="Merchant & Vendor"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "merchants"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <Store className="w-3.5 h-3.5 text-amber-400" />
@@ -220,10 +220,10 @@ export function ExpenseTrackerApp() {
               onClick={() => setActiveTab("tax_deductible")}
               title={`Pajak & Deductible (${expenses.filter((e) => e.isTaxDeductible).length})`}
               aria-label="Tax-Deductible"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "tax_deductible"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -234,9 +234,9 @@ export function ExpenseTrackerApp() {
             onClick={() => setIsModalOpen(true)}
             title="Catat Pengeluaran Baru"
             aria-label="Catat Pengeluaran"
-            className="p-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+            className="size-9 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0 flex items-center justify-center"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
       </ShellHeader>

@@ -40,12 +40,12 @@
         }
       })();
     </script>
-    <title>All in One</title>
+    <title>DNA Consulting</title>
     <meta
       name="description"
       content="Frontend workspace all-in-one: klien, proyek, tugas, keuangan, dan alat produktivitas."
     />
-    <meta property="og:title" content="All in One" />
+    <meta property="og:title" content="DNA Consulting" />
     <meta
       property="og:description"
       content="Frontend workspace all-in-one: klien, proyek, tugas, keuangan, dan alat produktivitas."
@@ -564,7 +564,7 @@
         height: 44px !important;
         min-height: 44px !important;
         max-height: 44px !important;
-        padding: 0 10px !important;
+        padding: 4px !important;
         border-radius: 9999px !important;
         background: rgba(255, 255, 255, 0.85) !important;
         background-color: rgba(255, 255, 255, 0.85) !important;
@@ -572,7 +572,7 @@
         -webkit-backdrop-filter: blur(16px) !important;
         border: 1px solid rgba(255, 255, 255, 0.65) !important;
         box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-        gap: 8px !important;
+        gap: 6px !important;
         transition: all 0.2s ease !important;
       }
 
@@ -589,6 +589,9 @@
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
       }
 
       /* ==========================================================================
@@ -600,12 +603,14 @@
         display: inline-flex !important;
         align-items: center !important;
         border-radius: 9999px !important;
-        padding: 2.5px !important;
+        padding: 3px !important;
+        margin: 0 !important;
         gap: 2px !important;
-        height: 32px !important;
+        height: 36px !important;
         background: rgba(0, 0, 0, 0.05) !important;
         background-color: rgba(0, 0, 0, 0.05) !important;
         border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        box-sizing: border-box !important;
       }
 
       .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
@@ -619,8 +624,9 @@
       div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button,
       div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions > div > div button {
         border-radius: 9999px !important;
-        height: 27px !important;
-        padding: 0 10px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        padding: 0 8px !important;
         font-size: 11.5px !important;
         font-weight: 500 !important;
         display: inline-flex !important;
@@ -629,6 +635,7 @@
         transition: all 0.15s ease !important;
         border: none !important;
         cursor: pointer !important;
+        box-sizing: border-box !important;
       }
 
       /* Tombol Segmented Aktif */
@@ -653,13 +660,17 @@
       /* Tombol Aksi Mandiri / Tambahan di dalam Header Portal */
       div#root > div > main#mainContent > header div#app-header-actions-portal button:not(div > div > div button) {
         border-radius: 9999px !important;
-        height: 32px !important;
-        padding: 0 12px !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+        margin: 0 !important;
         font-size: 11.5px !important;
         font-weight: 500 !important;
         display: inline-flex !important;
         align-items: center !important;
-        gap: 5px !important;
+        justify-content: center !important;
+        gap: 0 !important;
       }
 
       /* ==========================================================================
@@ -670,7 +681,7 @@
         height: 44px !important;
         min-height: 44px !important;
         max-height: 44px !important;
-        padding: 0 12px !important;
+        padding: 4px !important;
         border-radius: 9999px !important;
         display: inline-flex !important;
         align-items: center !important;
@@ -683,6 +694,8 @@
         align-items: center !important;
         gap: 6px !important;
         height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
       /* CSS Selector 5: Icon box di dalam portal jika ada */
