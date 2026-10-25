@@ -73,7 +73,7 @@ export const LAUNCHER_TABS = [
   { id: "mode_leisure", modeId: "leisure", label: "Mode Leisure", icon: Coffee, badge: "Relax", desc: "Rekreasi, Hiburan, Hobi & Liburan" },
   { id: "mode_household", modeId: "household", label: "Mode Household", icon: Sofa, badge: "Living", desc: "Domestik & Manajemen Rumah" },
   { id: "mode_relatives", modeId: "relatives", label: "Mode Relatives", icon: Users, badge: "Family", desc: "Keluarga Besar & Silaturahmi" },
-  { id: "mode_employment", modeId: "employment", label: "Mode Employment", icon: Briefcase, badge: "Career", desc: "Pekerjaan, Tugas & Proyek" },
+  { id: "mode_employment", modeId: "employment", label: "Work and Productivity", icon: Briefcase, badge: "9 Modul", desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)" },
   { id: "mode_owner", modeId: "owner", label: "Mode Owner", icon: Crown, badge: "Equity", desc: "Kepemilikan Bisnis & Portofolio" },
   { id: "mode_public", modeId: "public", label: "Mode Public", icon: Globe, badge: "External", desc: "Ranah Publik & Dinamika Luar" },
 ];
@@ -86,9 +86,13 @@ export function Launcher() {
         const modeFromUrl = urlParams.get("mode");
         if (modeFromUrl) {
           const mappedMode =
-            modeFromUrl === "productivity" ||
-            modeFromUrl === "personal" ||
-            modeFromUrl === "people"
+            modeFromUrl === "work" ||
+            modeFromUrl === "work-productivity" ||
+            modeFromUrl === "work_productivity"
+              ? "mode_employment"
+              : modeFromUrl === "productivity" ||
+                modeFromUrl === "personal" ||
+                modeFromUrl === "people"
               ? "app_module"
               : modeFromUrl;
           const idx = LAUNCHER_TABS.findIndex(
@@ -99,9 +103,13 @@ export function Launcher() {
         const tabFromUrl = urlParams.get("tab");
         if (tabFromUrl) {
           const mappedTab =
-            tabFromUrl === "productivity" ||
-            tabFromUrl === "personal" ||
-            tabFromUrl === "people"
+            tabFromUrl === "work" ||
+            tabFromUrl === "work-productivity" ||
+            tabFromUrl === "work_productivity"
+              ? "mode_employment"
+              : tabFromUrl === "productivity" ||
+                tabFromUrl === "personal" ||
+                tabFromUrl === "people"
               ? "app_module"
               : tabFromUrl;
           const idx = LAUNCHER_TABS.findIndex((t) => t.id === mappedTab);

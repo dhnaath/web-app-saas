@@ -553,6 +553,7 @@ export const navKonsultan: NavGroup[] = [
     isStandalone: true,
     parentCategory: "Productivity",
     items: [
+      { to: "/work-productivity", label: "Work & Productivity", icon: Briefcase, badge: "9 Modul" },
       { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
       { to: "/kalender", label: "Calendar", icon: CalendarDays },
       { to: "/proyek", label: "Project Manager", icon: FolderKanban },

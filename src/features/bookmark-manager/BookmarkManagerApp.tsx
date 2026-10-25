@@ -239,17 +239,17 @@ export function BookmarkManagerApp() {
       {/* Header Actions Portaled to Main Header */}
       {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Tab Switchers (Icon-Only) */}
-          <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0 py-0.5">
+          {/* Tab Switchers (Icon-Only Segmented Pill) */}
+          <div className="flex items-center gap-1 border border-border/70 rounded-full p-1 bg-muted/60 dark:bg-zinc-800/80 backdrop-blur-xs text-xs shrink-0 shadow-2xs">
             <button
               onClick={() => setActiveTab("all")}
               title={`Semua (${bookmarks.length})`}
               aria-label="Semua"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "all"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -258,10 +258,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("folder")}
               title={`By Folder (${folders.length})`}
               aria-label="By Folder"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "folder"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <FolderTree className="w-3.5 h-3.5" />
@@ -270,10 +270,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("tag")}
               title={`By Tag (${tags.length})`}
               aria-label="By Tag"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "tag"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <TagIcon className="w-3.5 h-3.5" />
@@ -282,10 +282,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("unread")}
               title={`Unread (${stats.unread})`}
               aria-label="Unread"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "unread"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
@@ -294,10 +294,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("broken")}
               title={`Broken Links (${stats.broken})`}
               aria-label="Broken Links"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "broken"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
@@ -306,10 +306,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("collections")}
               title={`Collections (${collections.length})`}
               aria-label="Collections"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "collections"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <Share2 className="w-3.5 h-3.5 text-purple-400" />
@@ -318,10 +318,10 @@ export function BookmarkManagerApp() {
               onClick={() => setActiveTab("stats")}
               title="Statistik & Analisis"
               aria-label="Statistik"
-              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer shrink-0 ${
+              className={`size-7.5 rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center justify-center ${
                 activeTab === "stats"
                   ? "bg-background text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               }`}
             >
               <BarChart2 className="w-3.5 h-3.5 text-sky-400" />
@@ -331,7 +331,7 @@ export function BookmarkManagerApp() {
           <button
             onClick={handleRunCheckAll}
             disabled={isCheckingLinks}
-            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition disabled:opacity-50 cursor-pointer shrink-0 flex items-center justify-center"
+            className="size-8 rounded-full bg-card hover:bg-accent text-foreground border border-border/80 text-xs font-medium transition disabled:opacity-50 cursor-pointer shrink-0 flex items-center justify-center shadow-2xs"
             title={isCheckingLinks ? "Memeriksa tautan..." : "Pindai apakah seluruh tautan masih aktif (Scan Link Rot)"}
             aria-label="Scan Link Rot"
           >
@@ -342,7 +342,7 @@ export function BookmarkManagerApp() {
             onClick={() => setIsNewFolderOpen(true)}
             title="Buat Folder Baru"
             aria-label="Folder Baru"
-            className="p-1.5 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center justify-center"
+            className="size-8 rounded-full bg-card hover:bg-accent text-foreground border border-border/80 text-xs font-medium transition cursor-pointer shrink-0 flex items-center justify-center shadow-2xs"
           >
             <FolderPlus className="w-3.5 h-3.5 text-amber-400" />
           </button>
@@ -351,7 +351,7 @@ export function BookmarkManagerApp() {
             onClick={handleOpenAddModal}
             title="Simpan Bookmark Baru"
             aria-label="Simpan Bookmark"
-            className="p-1.5 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
+            className="size-8 rounded-full bg-primary text-primary-foreground hover:opacity-90 text-xs font-semibold shadow-xs transition cursor-pointer shrink-0 flex items-center justify-center"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>

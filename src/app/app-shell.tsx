@@ -220,17 +220,22 @@ export const APP_MODES: ModeItem[] = [
   },
   {
     id: "employment",
-    label: "Employment",
-    badge: "Career",
-    desc: "Pekerjaan, Tugas & Proyek",
+    label: "Work and Productivity",
+    badge: "9 Modul",
+    desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
     icon: Briefcase,
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     links: [
-      { to: "/proyek-personal", label: "Personal Projects", icon: FolderKanban },
-      { to: "/proyek", label: "Project Manager", icon: Briefcase },
-      { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
-      { to: "/kalender", label: "Calendar", icon: CalendarDays },
-      { to: "/pomodoro", label: "Focus Timer", icon: Timer },
+      { to: "/work-productivity", label: "Work & Productivity Hub", icon: Briefcase },
+      { to: "/peh/milestones", label: "Target & Milestone", icon: Target },
+      { to: "/peh/workflows", label: "Alur Kerja & Pipeline", icon: CheckCircle2 },
+      { to: "/peh/projects", label: "Pipeline Produksi Konten", icon: FolderKanban },
+      { to: "/peh/vendors", label: "Vendor & Mitra Layanan", icon: Building },
+      { to: "/peh/procurement", label: "Pengadaan & Purchase Orders", icon: DollarSign },
+      { to: "/peh/meetings", label: "Notulensi & Keputusan Rapat", icon: CheckSquare },
+      { to: "/peh/incidents", label: "Log Masalah & Insiden", icon: ShieldAlert },
+      { to: "/peh/compliance", label: "Kepatuhan & Audit Regulasi", icon: ShieldAlert },
+      { to: "/peh/cap-table", label: "Struktur Saham & Cap Table", icon: LayoutGrid },
     ],
   },
   {
@@ -1279,10 +1284,10 @@ export function AppShell({
             <div className="flex items-center gap-2">
               {/* Pill Shape Wadah Utama (600px) tempat elemen aksi, modul, & portal disiapkan */}
               <div
-                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all flex items-center px-3 gap-2 overflow-hidden"
+                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all flex items-center p-1 gap-1.5 overflow-hidden"
               >
                 {!actions && !hasAppHeader && !isHome && (
-                  <div className="relative z-10 flex items-center gap-1.5 px-1 text-xs font-medium text-foreground truncate max-w-[200px] sm:max-w-[280px] shrink-0">
+                  <div className="relative z-10 flex items-center gap-1.5 px-3 text-xs font-medium text-foreground truncate max-w-[200px] sm:max-w-[280px] shrink-0">
                     {ContextCategoryIcon && <ContextCategoryIcon size={14} className="shrink-0 text-primary" />}
                     <span className="truncate font-semibold">{title || contextMatch?.item.label || "Modul Aktif"}</span>
                   </div>
@@ -1294,7 +1299,7 @@ export function AppShell({
                 )}
                 <div
                   id="app-header-actions-portal"
-                  className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden flex-1 overflow-x-auto no-scrollbar"
+                  className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden flex-1 overflow-x-auto no-scrollbar h-full"
                 />
               </div>
 
@@ -1365,7 +1370,7 @@ export function AppShell({
 
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar relative z-10 ${
-            pathname === "/" ? "px-4 pb-[68px] sm:px-6 sm:pb-[68px]" : "pb-[80px]"
+            pathname === "/" ? "px-4 pb-[68px] sm:px-6 sm:pb-[68px]" : "px-3 sm:px-6 pb-[80px]"
           }`}
           style={{ paddingTop: headerHeight }}
         >

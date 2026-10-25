@@ -48,7 +48,7 @@ export function ShellHeader({ children }: { children: ReactNode }) {
   }
 
   return createPortal(
-    <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 shell-header-portal-actions">
+    <div className="flex items-center gap-1.5 shrink-0 shell-header-portal-actions h-full">
       {children}
     </div>,
     portalTarget
