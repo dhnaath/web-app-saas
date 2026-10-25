@@ -30,6 +30,11 @@ import { STANDALONE_APPS } from "./features/standalone/standaloneAppsData";
 import { ValueTreatedPage } from "./features/value-treated/ValueTreatedPage";
 import { AppModuleSection } from "./features/launcher/AppModuleSection";
 import { WorkProductivityPage } from "./features/work-productivity/WorkProductivityPage";
+import { PersonalLifePage } from "./features/personal-life/PersonalLifePage";
+import { BusinessOperationsCustomersPage } from "./features/business-operations/BusinessOperationsCustomersPage";
+import { KnowledgeAndLearningPage } from "./features/knowledge-learning/KnowledgeAndLearningPage";
+import { HomeLeisurePage } from "./features/home-leisure/HomeLeisurePage";
+import { FamilyCommunityPage } from "./features/family-community/FamilyCommunityPage";
 import { useFavorites } from "./hooks/useFavorites";
 import {
   PehHabitsView,
@@ -1158,6 +1163,127 @@ const workRoute = createRoute({
   component: WorkProductivityView,
 });
 
+function PersonalLifeView() {
+  return (
+    <AppShell
+      title="Personal Life"
+      subtitle="Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)"
+    >
+      <PersonalLifePage />
+    </AppShell>
+  );
+}
+
+const personalLifeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/personal-life",
+  component: PersonalLifeView,
+});
+
+const personalLifeHubRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/personal-life-hub",
+  component: PersonalLifeView,
+});
+
+function BusinessOperationsCustomersView() {
+  return (
+    <AppShell
+      title="Business Operations and Customers"
+      subtitle="Semua (7) · Supply (2) · Customers (3) · Back Office (2)"
+    >
+      <BusinessOperationsCustomersPage />
+    </AppShell>
+  );
+}
+
+const businessOperationsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/business-operations",
+  component: BusinessOperationsCustomersView,
+});
+
+const businessOperationsCustomersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/business-operations-and-customers",
+  component: BusinessOperationsCustomersView,
+});
+
+const businessOpsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/business-ops",
+  component: BusinessOperationsCustomersView,
+});
+
+function KnowledgeAndLearningView() {
+  return (
+    <AppShell
+      title="Knowledge and Learning"
+      subtitle="Semua (7) · Documents (3) · Learning (2) · Creative (2)"
+    >
+      <KnowledgeAndLearningPage />
+    </AppShell>
+  );
+}
+
+const knowledgeAndLearningRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/knowledge-and-learning",
+  component: KnowledgeAndLearningView,
+});
+
+const knowledgeLearningRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/knowledge-learning",
+  component: KnowledgeAndLearningView,
+});
+
+function HomeLeisureView() {
+  return (
+    <AppShell
+      title="Home and Leisure"
+      subtitle="Semua (6) · Home (2) · Vehicle (2) · Leisure (2)"
+    >
+      <HomeLeisurePage />
+    </AppShell>
+  );
+}
+
+const homeAndLeisureRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/home-and-leisure",
+  component: HomeLeisureView,
+});
+
+const homeLeisureRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/home-leisure",
+  component: HomeLeisureView,
+});
+
+function FamilyCommunityView() {
+  return (
+    <AppShell
+      title="Family and Community"
+      subtitle="Semua (9) · Family (3) · Relationships (2) · Neighborhood (3) · Giving (1)"
+    >
+      <FamilyCommunityPage />
+    </AppShell>
+  );
+}
+
+const familyAndCommunityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/family-and-community",
+  component: FamilyCommunityView,
+});
+
+const familyCommunityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/family-community",
+  component: FamilyCommunityView,
+});
+
 function TimeTrackerView() {
   return (
     <AppShell title="Time Tracker" subtitle="Catatan Waktu Resmi/Legal-Grade • Timesheet & Billing">
@@ -2013,6 +2139,17 @@ const routeTree = rootRoute.addChildren([
   milestonesRoute,
   workProductivityRoute,
   workRoute,
+  personalLifeRoute,
+  personalLifeHubRoute,
+  businessOperationsRoute,
+  businessOperationsCustomersRoute,
+  businessOpsRoute,
+  knowledgeAndLearningRoute,
+  knowledgeLearningRoute,
+  homeAndLeisureRoute,
+  homeLeisureRoute,
+  familyAndCommunityRoute,
+  familyCommunityRoute,
   timeTrackerRoute,
   timesheetRoute,
   timesheetsRoute,

@@ -50,7 +50,7 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Target & Milestone",
     category: "execution",
     categoryLabel: "Execution",
-    shortDesc: "Peta jalan sasaran jangka pendek & panjang dengan tahapan checkpoint terukur, bobot progres, dan evaluasi hasil.",
+    shortDesc: "Peta jalan sasaran jangka pendek & panjang dengan tahapan checkpoint terukur, bobot progres, dan integrasi task & kanban.",
     to: "/peh/milestones",
     icon: Target,
     badge: "Milestone",
@@ -59,9 +59,10 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
     badgeText: "Execution",
     subMenus: [
-      { id: "active", label: "Sasaran Aktif" },
-      { id: "milestones", label: "Tahapan Checkpoint" },
-      { id: "archive", label: "Arsip Sasaran" },
+      { id: "active", label: "Sasaran Aktif", to: "/peh/milestones" },
+      { id: "milestones", label: "Tahapan Checkpoint", to: "/milestone-manager" },
+      { id: "tasks", label: "Task Manager", to: "/task-manager" },
+      { id: "kanban", label: "Kanban Board", to: "/kanban" },
     ],
   },
   {
@@ -69,7 +70,7 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Alur Kerja & Pipeline",
     category: "execution",
     categoryLabel: "Execution",
-    shortDesc: "Proses bertahap (onboarding, approval, delivery) dengan pemantauan siklus, SLA waktu, dan pipeline multi-stage.",
+    shortDesc: "Proses bertahap (onboarding, approval, delivery) dengan pemantauan siklus, SLA waktu, timeline, dan deliverable manager.",
     to: "/peh/workflows",
     icon: Workflow,
     badge: "Pipeline",
@@ -78,9 +79,10 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border-indigo-500/30",
     badgeText: "Execution",
     subMenus: [
-      { id: "pipelines", label: "Pipeline Aktif" },
-      { id: "active-runs", label: "Tahapan Proses" },
-      { id: "templates", label: "Alur Standar" },
+      { id: "pipelines", label: "Pipeline Aktif", to: "/peh/workflows" },
+      { id: "project-mgr", label: "Project Manager", to: "/proyek" },
+      { id: "workflow-mgr", label: "Workflow Manager", to: "/workflow-manager" },
+      { id: "deliverables", label: "Deliverable Manager", to: "/deliverable-manager" },
     ],
   },
   {
@@ -88,7 +90,7 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Pipeline Produksi Konten",
     category: "execution",
     categoryLabel: "Execution",
-    shortDesc: "Papan kanban tahapan naskah, perancangan ide kreatif, syuting, editing, dan jadwal rilis publikasi lintas platform.",
+    shortDesc: "Papan kanban tahapan naskah, perancangan ide kreatif, syuting, editing, matriks prioritas, dan jadwal rilis publikasi.",
     to: "/peh/projects",
     icon: Layers,
     badge: "Kreatif",
@@ -97,9 +99,10 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30",
     badgeText: "Execution",
     subMenus: [
-      { id: "active", label: "Konten Berjalan" },
-      { id: "done", label: "Rilis Publikasi" },
-      { id: "kanban", label: "Papan Produksi" },
+      { id: "active", label: "Konten Berjalan", to: "/peh/projects" },
+      { id: "eisenhower", label: "Eisenhower Matrix", to: "/eisenhower" },
+      { id: "timeline", label: "Timeline Gantt", to: "/timeline" },
+      { id: "time-clock", label: "Time Clock", to: "/lainnya?app=time-clock" },
     ],
   },
 
@@ -109,18 +112,19 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Vendor & Mitra Layanan",
     category: "partners",
     categoryLabel: "Partners",
-    shortDesc: "Kontrak penyedia layanan, komitmen SLA, nilai kontrak berkala, direktori rekanan, dan jatuh tempo perpanjangan.",
+    shortDesc: "Direktori komprehensif mitra bisnis, rekam jejak performa vendor, daftar ratecard tarif standar, dan ketersediaan kapasitas.",
     to: "/peh/vendors",
     icon: Building2,
-    badge: "Vendor",
+    badge: "Partners",
     accentGradient: "from-amber-500 to-orange-600",
     accentBorder: "border-amber-500/30 hover:border-amber-500/60",
     badgeBg: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
     badgeText: "Partners",
     subMenus: [
-      { id: "directory", label: "Direktori Vendor" },
-      { id: "contracts", label: "Jatuh Tempo Kontrak" },
-      { id: "slas", label: "Evaluasi Rating SLA" },
+      { id: "vendor-dir", label: "Direktori Vendor", to: "/peh/vendors" },
+      { id: "service-rates", label: "Service Rates", to: "/lainnya?app=services-ratecard" },
+      { id: "resource-mgr", label: "Resource Manager", to: "/resource-manager" },
+      { id: "people-mgr", label: "People Manager", to: "/people-manager" },
     ],
   },
   {
@@ -128,18 +132,18 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Pengadaan & Purchase Orders",
     category: "partners",
     categoryLabel: "Partners",
-    shortDesc: "Alur permintaan barang operasional kantor, ambang persetujuan anggaran belanja, nomor PO, dan status logistik penerimaan.",
+    shortDesc: "Siklus pengadaan barang & jasa korporasi, registrasi purchase orders (PO), verifikasi anggaran, dan alur persetujuan bertingkat.",
     to: "/peh/procurement",
     icon: ShoppingBag,
-    badge: "Purchase Orders",
+    badge: "Procurement",
     accentGradient: "from-orange-500 to-red-600",
     accentBorder: "border-orange-500/30 hover:border-orange-500/60",
     badgeBg: "bg-orange-500/15 text-orange-600 dark:text-orange-400 border-orange-500/30",
     badgeText: "Partners",
     subMenus: [
-      { id: "po-requests", label: "Daftar Permintaan (PO)" },
-      { id: "threshold-matrix", label: "Matriks Otorisasi Belanja" },
-      { id: "deliveries", label: "Penerimaan & Lunas" },
+      { id: "po-list", label: "Purchase Orders (PO)", to: "/peh/procurement" },
+      { id: "approval-mgr", label: "Approval Manager", to: "/approval-manager" },
+      { id: "forms", label: "Form Pengadaan", to: "/forms" },
     ],
   },
 
@@ -158,9 +162,10 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
     badgeText: "Control",
     subMenus: [
-      { id: "meeting-list", label: "Daftar Notulensi" },
-      { id: "decisions", label: "Log Keputusan Final" },
-      { id: "action-items", label: "Action Items & PIC" },
+      { id: "meeting-list", label: "Daftar Notulensi", to: "/peh/meetings" },
+      { id: "meeting-mgr", label: "Meeting Manager", to: "/meeting-manager" },
+      { id: "decisions", label: "Log Keputusan Final", to: "/peh/meetings" },
+      { id: "collaboration", label: "Kolaborasi Tim", to: "/collaboration" },
     ],
   },
   {
@@ -177,9 +182,10 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30",
     badgeText: "Control",
     subMenus: [
-      { id: "active-issues", label: "Insiden Terbuka" },
-      { id: "resolved", label: "Terselesaikan" },
-      { id: "post-mortem", label: "Akar Masalah (RCA)" },
+      { id: "active-issues", label: "Insiden Terbuka", to: "/peh/incidents" },
+      { id: "ticket-desk", label: "Ticket Desk", to: "/lainnya?app=ticket-desk" },
+      { id: "incident-log", label: "Incident Log", to: "/lainnya?app=incident-log" },
+      { id: "notifications", label: "Notification Center", to: "/notification-center" },
     ],
   },
   {
@@ -196,9 +202,9 @@ export const WORK_APPS: WorkAppItem[] = [
     badgeBg: "bg-teal-500/15 text-teal-600 dark:text-teal-400 border-teal-500/30",
     badgeText: "Control",
     subMenus: [
-      { id: "compliance-matrix", label: "Matriks Kepatuhan" },
-      { id: "readiness-score", label: "Skor Kesiapan Audit" },
-      { id: "expiry-radar", label: "Radar Jatuh Tempo Izin" },
+      { id: "compliance-matrix", label: "Matriks Kepatuhan", to: "/peh/compliance" },
+      { id: "readiness-score", label: "Skor Kesiapan Audit", to: "/peh/compliance" },
+      { id: "handover", label: "Handover Notes", to: "/lainnya?app=handover-notes" },
     ],
   },
 
@@ -208,18 +214,18 @@ export const WORK_APPS: WorkAppItem[] = [
     name: "Struktur Saham & Cap Table",
     category: "ownership",
     categoryLabel: "Ownership",
-    shortDesc: "Tabel permodalan kepemilikan saham, alokasi persentase ekuitas pendiri/investor, opsi ESOP, dan jadwal vesting saham.",
+    shortDesc: "Tabel kepemilikan modal saham pendiri & investor, pembagian dividen, vesting schedule ekuitas, dan simulasi putaran pendanaan.",
     to: "/peh/cap-table",
     icon: PieChart,
-    badge: "Cap Table",
-    accentGradient: "from-purple-500 to-violet-600",
+    badge: "Ownership",
+    accentGradient: "from-purple-500 to-indigo-600",
     accentBorder: "border-purple-500/30 hover:border-purple-500/60",
     badgeBg: "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30",
     badgeText: "Ownership",
     subMenus: [
-      { id: "stakeholders", label: "Pemegang Saham" },
-      { id: "classes", label: "Alokasi Porsi (%)" },
-      { id: "vesting", label: "Perjanjian & Vesting" },
+      { id: "shareholders", label: "Pemegang Saham", to: "/peh/cap-table" },
+      { id: "dilution", label: "Simulasi Dilusi", to: "/peh/cap-table" },
+      { id: "valuation", label: "Valuasi Ekuitas", to: "/valuasi" },
     ],
   },
 ];
@@ -302,27 +308,28 @@ export function WorkProductivityPage({ isEmbedded = false }: { isEmbedded?: bool
                 Work and Productivity
               </h1>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Pusat orkestrasi operasional terpadu: pantau eksekusi proyek & target, kelola jaringan vendor & pengadaan, tegakkan kontrol & audit regulasi, serta pantau struktur ekuitas perusahaan.
+                Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1).
+                Pusat orkestrasi operasional terpadu: pantau eksekusi proyek & target sasaran, kelola kemitraan vendor & pengadaan PO, tegakkan kontrol & audit regulasi, serta pantau kepemilikan saham cap table.
               </p>
             </div>
 
             {/* Quick Stat Pill Highlights */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Execution</span>
-                <span className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-0.5">3 Modul</span>
+              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col min-w-[100px]">
+                <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-wider">Execution</span>
+                <span className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-0.5">3 Modul</span>
               </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Partners</span>
-                <span className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-0.5">2 Modul</span>
+              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col min-w-[100px]">
+                <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-wider">Partners</span>
+                <span className="text-lg font-bold text-amber-600 dark:text-amber-400 mt-0.5">2 Modul</span>
               </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Control</span>
-                <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">3 Modul</span>
+              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col min-w-[100px]">
+                <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-wider">Control</span>
+                <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">3 Modul</span>
               </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Ownership</span>
-                <span className="text-xl font-bold text-purple-600 dark:text-purple-400 mt-0.5">1 Modul</span>
+              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col min-w-[100px]">
+                <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-wider">Ownership</span>
+                <span className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-0.5">1 Modul</span>
               </div>
             </div>
           </div>
