@@ -3,6 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { WorkProductivityPage } from "@/features/work-productivity/WorkProductivityPage";
+import { PersonalLifePage } from "@/features/personal-life/PersonalLifePage";
+import { BusinessOperationsCustomersPage } from "@/features/business-operations/BusinessOperationsCustomersPage";
+import { KnowledgeAndLearningPage } from "@/features/knowledge-learning/KnowledgeAndLearningPage";
+import { HomeLeisurePage } from "@/features/home-leisure/HomeLeisurePage";
+import { FamilyCommunityPage } from "@/features/family-community/FamilyCommunityPage";
 import {
   User,
   GraduationCap,
@@ -1072,6 +1077,65 @@ export function ModeSectionView({
     modeId === "mode_work_productivity"
   ) {
     return <WorkProductivityPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_personal" ||
+    modeId === "personal" ||
+    modeId === "mode_personal_life" ||
+    modeId === "personal_life" ||
+    modeId === "personal-life"
+  ) {
+    return <PersonalLifePage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_owner" ||
+    modeId === "owner" ||
+    modeId === "mode_business_operations" ||
+    modeId === "business_operations" ||
+    modeId === "business-operations" ||
+    modeId === "business_operations_and_customers" ||
+    modeId === "business-operations-and-customers"
+  ) {
+    return <BusinessOperationsCustomersPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_student" ||
+    modeId === "student" ||
+    modeId === "mode_creator" ||
+    modeId === "creator" ||
+    modeId === "knowledge_and_learning" ||
+    modeId === "knowledge-and-learning" ||
+    modeId === "knowledge_learning" ||
+    modeId === "knowledge"
+  ) {
+    return <KnowledgeAndLearningPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_household" ||
+    modeId === "household" ||
+    modeId === "mode_leisure" ||
+    modeId === "leisure" ||
+    modeId === "home_leisure" ||
+    modeId === "home-leisure" ||
+    modeId === "home-and-leisure"
+  ) {
+    return <HomeLeisurePage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_relatives" ||
+    modeId === "relatives" ||
+    modeId === "mode_public" ||
+    modeId === "public" ||
+    modeId === "family_community" ||
+    modeId === "family-community" ||
+    modeId === "family-and-community"
+  ) {
+    return <FamilyCommunityPage isEmbedded={true} />;
   }
 
   const config = MODE_CONFIGS[modeId];

@@ -25,10 +25,12 @@ import {
   Users,
   GraduationCap,
   Palette,
+  Heart,
   HeartPulse,
   Coffee,
   Sofa,
   Briefcase,
+  Store,
   Crown,
   Globe,
   Search,
@@ -61,21 +63,17 @@ export const LAUNCHER_TABS = [
   { id: "tools100", label: "100 MBA Tools", icon: Layers, badge: "8 Pilar" },
   { id: "valuetreated", label: "Value Treated", icon: Gem, badge: "10 Disiplin" },
   { id: "financial", label: "Finansial & Wealth", icon: Coins, badge: "5 Tahapan" },
-  { id: "app_module", label: "App Module", icon: LayoutGrid, badge: "47 Modul" },
+  { id: "app_module", label: "App Module", icon: LayoutGrid, badge: "6 Workspace" },
   { id: "commodity", label: "100 Komoditas", icon: TrendingUp, badge: "Nasional" },
   { id: "national_indices", label: "10 Indeks", icon: BarChart3, badge: "Pembangunan" },
 
-  // 10 Halaman Mode Tambahan (Sementara Kosong Siap Dikonfigurasi)
-  { id: "mode_personal", modeId: "personal", label: "Mode Personal", icon: User, badge: "Self", desc: "Keseharian, Catatan & Habit" },
-  { id: "mode_student", modeId: "student", label: "Mode Student", icon: GraduationCap, badge: "Study", desc: "Akademik, Riset & Pembelajaran" },
-  { id: "mode_creator", modeId: "creator", label: "Mode Creator", icon: Palette, badge: "Media", desc: "Konten, Desain & Media Kreatif" },
-  { id: "mode_wellbeing", modeId: "wellbeing", label: "Mode Wellbeing", icon: HeartPulse, badge: "Health", desc: "Kebugaran Fisik, Mental & Keseimbangan Hidup" },
-  { id: "mode_leisure", modeId: "leisure", label: "Mode Leisure", icon: Coffee, badge: "Relax", desc: "Rekreasi, Hiburan, Hobi & Liburan" },
-  { id: "mode_household", modeId: "household", label: "Mode Household", icon: Sofa, badge: "Living", desc: "Domestik & Manajemen Rumah" },
-  { id: "mode_relatives", modeId: "relatives", label: "Mode Relatives", icon: Users, badge: "Family", desc: "Keluarga Besar & Silaturahmi" },
+  // 6 Halaman Master Workspace & Mode Terintegrasi
   { id: "mode_employment", modeId: "employment", label: "Work and Productivity", icon: Briefcase, badge: "9 Modul", desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)" },
-  { id: "mode_owner", modeId: "owner", label: "Mode Owner", icon: Crown, badge: "Equity", desc: "Kepemilikan Bisnis & Portofolio" },
-  { id: "mode_public", modeId: "public", label: "Mode Public", icon: Globe, badge: "External", desc: "Ranah Publik & Dinamika Luar" },
+  { id: "mode_owner", modeId: "owner", label: "Business Operations and Customers", icon: Store, badge: "7 Modul", desc: "Semua (7) · Supply (2) · Customers (3) · Back Office (2)" },
+  { id: "mode_student", modeId: "student", label: "Knowledge and Learning", icon: GraduationCap, badge: "7 Modul", desc: "Semua (7) · Documents (3) · Learning (2) · Creative (2)" },
+  { id: "mode_personal", modeId: "personal", label: "Personal Life", icon: Heart, badge: "5 Modul", desc: "Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)" },
+  { id: "mode_household", modeId: "household", label: "Home and Leisure", icon: Sofa, badge: "6 Modul", desc: "Semua (6) · Home (2) · Vehicle (2) · Leisure (2)" },
+  { id: "mode_relatives", modeId: "relatives", label: "Family and Community", icon: Users, badge: "9 Modul", desc: "Semua (9) · Family (3) · Relationships (2) · Neighborhood (3) · Giving (1)" },
 ];
 
 export function Launcher() {
@@ -90,6 +88,21 @@ export function Launcher() {
             modeFromUrl === "work-productivity" ||
             modeFromUrl === "work_productivity"
               ? "mode_employment"
+              : modeFromUrl === "personal-life" ||
+                modeFromUrl === "personal_life"
+              ? "mode_personal"
+              : modeFromUrl === "business-operations" ||
+                modeFromUrl === "business-operations-and-customers" ||
+                modeFromUrl === "business_operations" ||
+                modeFromUrl === "business"
+              ? "mode_owner"
+              : modeFromUrl === "knowledge-and-learning" ||
+                modeFromUrl === "knowledge-learning" ||
+                modeFromUrl === "knowledge" ||
+                modeFromUrl === "learning" ||
+                modeFromUrl === "student" ||
+                modeFromUrl === "creator"
+              ? "mode_student"
               : modeFromUrl === "productivity" ||
                 modeFromUrl === "personal" ||
                 modeFromUrl === "people"
@@ -107,6 +120,21 @@ export function Launcher() {
             tabFromUrl === "work-productivity" ||
             tabFromUrl === "work_productivity"
               ? "mode_employment"
+              : tabFromUrl === "personal-life" ||
+                tabFromUrl === "personal_life"
+              ? "mode_personal"
+              : tabFromUrl === "business-operations" ||
+                tabFromUrl === "business-operations-and-customers" ||
+                tabFromUrl === "business_operations" ||
+                tabFromUrl === "business"
+              ? "mode_owner"
+              : tabFromUrl === "knowledge-and-learning" ||
+                tabFromUrl === "knowledge-learning" ||
+                tabFromUrl === "knowledge" ||
+                tabFromUrl === "learning" ||
+                tabFromUrl === "student" ||
+                tabFromUrl === "creator"
+              ? "mode_student"
               : tabFromUrl === "productivity" ||
                 tabFromUrl === "personal" ||
                 tabFromUrl === "people"

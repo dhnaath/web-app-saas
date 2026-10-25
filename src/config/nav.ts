@@ -62,6 +62,7 @@ import {
   Gamepad2,
   Podcast,
   PenTool,
+  Palette,
   Camera,
   Type,
   Code,
@@ -549,6 +550,21 @@ export const navKonsultan: NavGroup[] = [
   // 3. PRODUCTIVITY, OPERATIONS & OWNERSHIP (STANDALONE + GROUPED UTILITIES)
   // ============================================================================
   {
+    title: "Business Operations and Customers",
+    isStandalone: true,
+    parentCategory: "Business",
+    items: [
+      { to: "/business-operations", label: "Business Operations and Customers", icon: Store, badge: "7 Modul" },
+      { to: "/peh/vendors", label: "Vendors and Procurement", icon: Truck },
+      { to: "/katalog-produk", label: "Products and Stock", icon: Package },
+      { to: "/klien", label: "Client Records", icon: Briefcase },
+      { to: "/portal", label: "Client Communication", icon: MessagesSquare },
+      { to: "/lainnya?app=queue-line", label: "Service Flow", icon: Clock },
+      { to: "/expense-tracker", label: "Spending and Assets", icon: Receipt },
+      { to: "/statistics", label: "Data and Access", icon: LineChart },
+    ],
+  },
+  {
     title: "Productivity",
     isStandalone: true,
     parentCategory: "Productivity",
@@ -569,31 +585,21 @@ export const navKonsultan: NavGroup[] = [
       { to: "/workflow-manager", label: "Workflow Manager", icon: Workflow },
       { to: "/forms", label: "Forms", icon: FileText },
       { to: "/collaboration", label: "Collaboration", icon: ShieldCheck },
-      { to: "/statistics", label: "Statistics", icon: LineChart },
-      { to: "/search-manager", label: "Search Manager", icon: Search },
       { to: "/notification-center", label: "Notification Center", icon: BellRing },
       { to: "/approval-manager", label: "Approval Manager", icon: FileCheck2 },
-      { to: "/asset-manager", label: "Asset Manager", icon: HardDrive },
       { to: "/template-manager", label: "Template Manager", icon: FileCode2 },
       { to: "/goal-manager", label: "Goal Manager", icon: Target },
       { to: "/milestone-manager", label: "Milestone & Roadmap", icon: Flag },
       { to: "/time-tracker", label: "Time Tracker", icon: Timer },
-      { to: "/resource-manager", label: "Resource Manager", icon: Layers },
-      { to: "/interaction-manager", label: "Interaction Manager", icon: MessageSquare },
       { to: "/schedule-manager", label: "Schedule Manager", icon: CalendarDays },
-      { to: "/subscription-manager", label: "Subscription Manager", icon: CreditCard },
-      { to: "/expense-tracker", label: "Expense Tracker", icon: Receipt },
       { to: "/lainnya?app=retro", label: "Review & Retrospective", icon: RefreshCw },
       { to: "/lainnya?app=canvas", label: "Whiteboard & Canvas", icon: LayoutGrid },
       { to: "/lainnya?app=wiki", label: "Knowledge Base (Wiki)", icon: BookOpen },
       { to: "/lainnya?app=workload", label: "Workload & Capacity", icon: Scale },
       { to: "/lainnya?app=sop", label: "SOP & Prosedur Baku", icon: ShieldCheck },
       { to: "/lainnya?app=templates", label: "Template Dokumen Kerja", icon: FileText },
-      { to: "/lainnya?app=vendors", label: "Vendor & Pemasok", icon: Truck },
-      { to: "/lainnya?app=services-ratecard", label: "Daftar Tarif & Jasa", icon: ScrollText },
       { to: "/lainnya?app=mailroom", label: "Letter Log", icon: Mail },
       { to: "/lainnya?app=minutes", label: "Risalah Rapat (Minutes)", icon: ScrollText },
-      { to: "/lainnya?app=access-matrix", label: "Access & Key Directory", icon: Shield },
     ],
   },
   {
@@ -601,27 +607,22 @@ export const navKonsultan: NavGroup[] = [
     isStandalone: true,
     parentCategory: "Productivity",
     items: [
-      { to: "/katalog-produk", label: "Katalog Produk", icon: Package },
-      { to: "/inventory", label: "Inventory", icon: Archive },
-      { to: "/portal/pesan", label: "Pesan Klien", icon: MessagesSquare },
       { to: "/reports", label: "Laporan Khusus", icon: NotebookText },
     ],
   },
   {
-    title: "Knowledge",
+    title: "Knowledge and Learning",
     isStandalone: true,
-    parentCategory: "Productivity",
+    parentCategory: "Knowledge and Learning",
     items: [
-      { to: "/notes", label: "Notes", icon: FileText },
-      { to: "/documents", label: "Documents", icon: FileCheck },
-      { to: "/database", label: "Database", icon: Database },
-      { to: "/web-clipper", label: "Web Clipper", icon: Scissors },
-      { to: "/research-manager", label: "Research Manager", icon: Compass },
-      { to: "/knowledge-base", label: "Knowledge Base", icon: BookOpen },
-      { to: "/wiki", label: "Wiki Engine", icon: BookOpen },
-      { to: "/catatan", label: "Quick Notes", icon: NotebookText },
-      { to: "/bookmarks", label: "Bookmark Manager", icon: Bookmark },
-      { to: "/incoterms", label: "Incoterms Guide", icon: Navigation },
+      { to: "/knowledge-and-learning", label: "Knowledge and Learning", icon: GraduationCap, badge: "7 Modul" },
+      { to: "/notes", label: "Notes and Documents", icon: FileText },
+      { to: "/knowledge-base", label: "Knowledge Library", icon: BookOpen },
+      { to: "/research-manager", label: "Research and Reading", icon: Compass },
+      { to: "/courses", label: "Courses and Study", icon: GraduationCap },
+      { to: "/languages", label: "Skills and Credentials", icon: Globe },
+      { to: "/ideas", label: "Ideas and Design", icon: Palette },
+      { to: "/writing", label: "Writing and Code", icon: Code },
     ],
   },
 
@@ -629,118 +630,66 @@ export const navKonsultan: NavGroup[] = [
   // 4. PERSONAL, ESSENTIALS & HOUSEHOLD (GROUPED LIFESTYLE, VEHICLE & ESSENTIALS)
   // ============================================================================
   {
+    title: "Personal Life",
+    isStandalone: true,
+    parentCategory: "Personal Life",
+    items: [
+      { to: "/personal-life", label: "Personal Life", icon: Heart, badge: "5 Modul" },
+      { to: "/habit-tracker", label: "Habits and Planning", icon: Flame },
+      { to: "/journal", label: "Journaling", icon: BookOpen },
+      { to: "/health?tab=workouts", label: "Fitness and Sleep", icon: Dumbbell },
+      { to: "/health", label: "Health Records", icon: HeartPulse },
+      { to: "/passwords", label: "Personal Tools", icon: Key },
+    ],
+  },
+  {
     title: "Personal",
     isStandalone: true,
     parentCategory: "Personal",
     items: [
-      { to: "/proyek-personal", label: "Personal Projects", icon: Briefcase },
       { to: "/vault", label: "Vault", icon: Vault },
       { to: "/vault?tab=ktp", label: "ID Vault", icon: Shield },
       { to: "/vault?tab=certificates", label: "Certificate Vault", icon: Award },
-      { to: "/passwords", label: "Passwords", icon: Key },
       { to: "/wallet?tab=price-compare", label: "Price Compare", icon: TrendingDown },
-      { to: "/wallet?tab=wishlist", label: "Wishlist", icon: ShoppingBag },
       { to: "/wallet?tab=warranty", label: "Warranty Receipts MVP", icon: ShieldCheck },
       { to: "/pocket", label: "Pocket", icon: Pocket },
       { to: "/pouch", label: "Pouch", icon: ShoppingBag },
       { to: "/wallet", label: "Cash Book", icon: Wallet },
-      { to: "/kalkulator", label: "Utilities", icon: Calculator },
     ],
   },
   {
-    title: "Wellbeing",
-    isStandalone: false,
-    parentCategory: "Personal",
+    title: "Home and Leisure",
+    isStandalone: true,
+    parentCategory: "Home and Leisure",
     items: [
-      { to: "/habit-tracker", label: "Habit Tracker MVP", icon: Flame },
-      { to: "/journal", label: "Daily Journal", icon: BookOpen },
-      { to: "/journal?tab=gratitude", label: "Gratitude Journal", icon: Heart },
-      { to: "/journal?tab=mood", label: "Mood Tracker MVP", icon: Smile },
-      { to: "/health", label: "Health Tracker", icon: Heart },
-      { to: "/health?tab=workouts", label: "Workouts", icon: Dumbbell },
-      { to: "/health?tab=water", label: "Water Intake", icon: Droplet },
-      { to: "/health?tab=medical-records", label: "Medical Records", icon: Stethoscope },
-      { to: "/health?tab=vitals", label: "Vitals Tracker", icon: HeartPulse },
-      { to: "/health?tab=body-metrics", label: "Body Metrics", icon: Scale },
-      { to: "/health?tab=sleep", label: "Sleep Quality MVP", icon: Moon },
-      { to: "/health?tab=skincare", label: "Skincare Log", icon: Sparkles },
-      { to: "/lainnya?app=med-reminder", label: "Med Reminder", icon: Pill },
-    ],
-  },
-  {
-    title: "Essentials",
-    isStandalone: false,
-    parentCategory: "Personal",
-    items: [
-      { to: "/shopping", label: "Shopping List", icon: ShoppingCart },
-    ],
-  },
-  {
-    title: "Household",
-    isStandalone: false,
-    parentCategory: "Personal",
-    items: [
-      { to: "/recipes", label: "Recipes", icon: Utensils },
-      { to: "/recipes?tab=pantry", label: "Pantry Inventory", icon: Archive },
-      { to: "/recipes?tab=cook-log", label: "Cook Log", icon: BookOpen },
-      { to: "/recipes?tab=expiry", label: "Expiry Alert", icon: AlertTriangle },
-      { to: "/recipes?tab=leftovers", label: "Leftover Manager", icon: RefreshCw },
-      { to: "/recipes?tab=meal-planner", label: "Meal Planner", icon: CalendarDays },
-      { to: "/trunk", label: "Trunk", icon: Luggage },
-      { to: "/lainnya?app=home-chores", label: "Clean Schedule", icon: CheckSquare },
-      { to: "/lainnya?app=utility-tracker", label: "Utility Meter", icon: Zap },
-      { to: "/lainnya?app=appliance-care", label: "Appliance Service", icon: Wrench },
-      { to: "/lainnya?app=home-inventory", label: "Home Inventory", icon: Home },
-      { to: "/lainnya?app=item-disposal", label: "Item Disposal", icon: Trash2 },
-    ],
-  },
-  {
-    title: "Mobility",
-    isStandalone: false,
-    parentCategory: "Personal",
-    items: [
-      { to: "/lainnya?app=vehicle-identity", label: "Vehicle Registry", icon: Car },
-      { to: "/lainnya?app=mileage-fuel", label: "Fuel Log", icon: Fuel },
-      { to: "/lainnya?app=vehicle-service", label: "Service History", icon: Wrench },
-      { to: "/lainnya?app=parts-lifecycle", label: "Parts Lifecycle", icon: Wrench },
-      { to: "/lainnya?app=vehicle-renewals", label: "Vehicle Renewals", icon: CalendarDays },
-      { to: "/lainnya?app=vehicle-logbook", label: "Vehicle Logbook", icon: BookOpen },
+      { to: "/home-and-leisure", label: "Home and Leisure", icon: Home, badge: "6 Modul" },
+      { to: "/lainnya?app=home-chores", label: "Household Care", icon: CheckSquare },
+      { to: "/recipes", label: "Kitchen and Shopping", icon: Utensils },
+      { to: "/lainnya?app=vehicle-identity", label: "Vehicle Records", icon: Car },
+      { to: "/lainnya?app=mileage-fuel", label: "Vehicle Care", icon: Fuel },
+      { to: "/trips", label: "Travel and Weather", icon: Plane },
+      { to: "/movies", label: "Entertainment", icon: Film },
     ],
   },
 
   // ============================================================================
-  // 5. PEOPLE, FAMILY, AND SOCIETY (GROUPED CIVIC, FAMILY & MEDIA)
+  // 5. PEOPLE, FAMILY, AND SOCIETY (GROUPED FAMILY, NEIGHBORHOOD & GIVING)
   // ============================================================================
   {
-    title: "Family",
+    title: "Family and Community",
     isStandalone: true,
-    parentCategory: "Society",
+    parentCategory: "Family and Community",
     items: [
-      { to: "/lainnya?app=family-tree", label: "Family Tree", icon: GitFork },
-      { to: "/lainnya?app=family-rules", label: "House Rules", icon: Scale },
-      { to: "/lainnya?app=family-archive", label: "Family Archive", icon: Archive },
-      { to: "/lainnya?app=medical-family", label: "Medical Profile", icon: HeartHandshake },
-      { to: "/lainnya?app=disaster-prep", label: "Disaster Prep", icon: ShieldAlert },
-      { to: "/lainnya?app=emergency-hub", label: "Emergency Contacts", icon: PhoneCall },
-      { to: "/lainnya?app=circle-groups", label: "Relation Circles", icon: Network },
-      { to: "/lainnya?app=catchup-cadence", label: "Catchup Reminder", icon: PhoneCall },
-      { to: "/lainnya?app=meeting-timeline", label: "Meeting Timeline", icon: CalendarDays },
-      { to: "/lainnya?app=borrowed-items", label: "Borrow Log MVP", icon: ArrowRightLeft },
-      { to: "/lainnya?app=gift-tracker", label: "Gift Tracker", icon: Gift },
-      { to: "/lainnya?app=reunion-planner", label: "Reunion Planner", icon: PartyPopper },
-      { to: "/lainnya?app=family-anniversary", label: "Anniversary Tracker", icon: CalendarDays },
-      { to: "/lainnya?app=carpool-plan", label: "Carpool Plan", icon: Car },
-      { to: "/people-manager", label: "People Manager", icon: Users },
-    ],
-  },
-  {
-    title: "Owner",
-    isStandalone: false,
-    parentCategory: "Society",
-    items: [
-      { to: "/klien", label: "Clients Directory", icon: Briefcase },
-      { to: "/portal", label: "Collab Portal", icon: Building2 },
-      { to: "/lainnya?app=custom-reports", label: "Custom Reports", icon: FileBarChart },
+      { to: "/family-and-community", label: "Family and Community", icon: Users, badge: "9 Modul" },
+      { to: "/lainnya?app=family-tree", label: "Family Records", icon: GitFork },
+      { to: "/lainnya?app=emergency-hub", label: "Family Safety", icon: ShieldAlert },
+      { to: "/peh/family-budget", label: "Family Life", icon: Heart },
+      { to: "/lainnya?app=circle-groups", label: "Staying in Touch", icon: Network },
+      { to: "/lainnya?app=gift-tracker", label: "Celebrations", icon: Gift },
+      { to: "/lainnya?app=rt-rw-directory", label: "Neighbors and Board", icon: Users },
+      { to: "/lainnya?app=public-services-guide", label: "Civic Services", icon: Compass },
+      { to: "/lainnya?app=civic-calendar", label: "Civic Agenda", icon: CalendarDays },
+      { to: "/zakat", label: "Giving and Impact", icon: Coins },
     ],
   },
   {
@@ -749,15 +698,8 @@ export const navKonsultan: NavGroup[] = [
     parentCategory: "Productivity",
     items: [
       { to: "/lainnya?app=quality-check", label: "Quality Check", icon: CheckCircle2 },
-      { to: "/lainnya?app=batch-track", label: "Batch Track", icon: Boxes },
-      { to: "/lainnya?app=cold-chain", label: "Cold Chain", icon: Snowflake },
       { to: "/lainnya?app=incident-log", label: "Incident Log", icon: AlertTriangle },
       { to: "/lainnya?app=ticket-desk", label: "Ticket Desk", icon: Ticket },
-      { to: "/lainnya?app=queue-line", label: "Queue Line", icon: Clock },
-      { to: "/lainnya?app=book-slot", label: "Book Slot", icon: CalendarCheck },
-      { to: "/lainnya?app=visitor-log", label: "Visitor Log", icon: UserCheck },
-      { to: "/lainnya?app=loyalty-point", label: "Loyalty Point", icon: Award },
-      { to: "/lainnya?app=feedback-loop", label: "Feedback Loop", icon: ThumbsUp },
     ],
   },
   {
@@ -767,70 +709,6 @@ export const navKonsultan: NavGroup[] = [
     items: [
       { to: "/lainnya?app=time-clock", label: "Time Clock", icon: Clock },
       { to: "/lainnya?app=handover-notes", label: "Handover Notes", icon: FileText },
-    ],
-  },
-  {
-    title: "Community",
-    isStandalone: false,
-    parentCategory: "Society",
-    items: [
-      { to: "/lainnya?app=rt-rw-directory", label: "Neighbor Directory", icon: Users },
-      { to: "/lainnya?app=community-announcements", label: "Community Board", icon: Megaphone },
-      { to: "/lainnya?app=membership-card", label: "Membership Card", icon: CreditCard },
-      { to: "/lainnya?app=meeting-resolutions", label: "Meeting Resolutions", icon: ScrollText },
-      { to: "/lainnya?app=public-services-guide", label: "Services Guide", icon: Compass },
-      { to: "/lainnya?app=civic-calendar", label: "Civic Calendar", icon: CalendarDays },
-      { to: "/lainnya?app=civil-registry", label: "Civil Registry", icon: FileCheck },
-      { to: "/lainnya?app=tax-civic", label: "Civic Tax", icon: Receipt },
-      { to: "/komunitas-warga", label: "Neighbor Community", icon: Home },
-    ],
-  },
-  {
-    title: "Social",
-    isStandalone: false,
-    parentCategory: "Society",
-    items: [
-      { to: "/zakat", label: "Giving", icon: Coins },
-      { to: "/lainnya?app=donation-tracker", label: "Donation Log", icon: Coins },
-      { to: "/lainnya?app=volunteer-log", label: "Volunteer Log", icon: Heart },
-    ],
-  },
-  {
-    title: "Leisure",
-    isStandalone: false,
-    parentCategory: "Creative & Media",
-    items: [
-      { to: "/trips", label: "Trip Planner", icon: Plane },
-      { to: "/weather", label: "Weather", icon: CloudSun },
-      { to: "/movies", label: "Movies", icon: Film },
-      { to: "/games", label: "Games", icon: Gamepad2 },
-      { to: "/podcasts", label: "Podcasts", icon: Podcast },
-      { to: "/music", label: "Music", icon: Music },
-    ],
-  },
-  {
-    title: "Creative",
-    isStandalone: false,
-    parentCategory: "Creative & Media",
-    items: [
-      { to: "/ideas", label: "Ideas Board", icon: Lightbulb },
-      { to: "/design", label: "Design Studio", icon: PenTool },
-      { to: "/photography", label: "Photography", icon: Camera },
-      { to: "/writing", label: "Writing Editor", icon: Type },
-      { to: "/code", label: "Code Dev", icon: Code },
-    ],
-  },
-  {
-    title: "Learning",
-    isStandalone: false,
-    parentCategory: "Academy & Tools",
-    items: [
-      { to: "/courses", label: "Courses", icon: GraduationCap },
-      { to: "/flashcards", label: "Flashcards", icon: Layers },
-      { to: "/exams", label: "Exams", icon: FileCheck },
-      { to: "/languages", label: "Languages", icon: Globe },
-      { to: "/lainnya?app=training-track", label: "Training Track", icon: Award },
-      { to: "/reading", label: "Reading List MVP", icon: Book },
     ],
   },
 ];
@@ -846,19 +724,29 @@ export const otherNavGroups: NavGroup[] = [
     .filter((g) => g.parentCategory === "Finance" || g.parentCategory === "Phase Side")
     .map((g) => ({ ...g, sectionCategory: "Keuangan & Pasar" })),
 
-  // Kesehatan & Gaya Hidup Pribadi (2 Groups)
+  // Kesehatan & Gaya Hidup Pribadi
   ...navKonsultan
-    .filter((g) => g.title === "Essentials" || g.title === "Personal")
+    .filter((g) => g.title === "Personal Life" || g.title === "Personal")
     .map((g) => ({ ...g, sectionCategory: "Kesehatan & Personal" })),
 
-  // Media Kreatif & Akademi Pembelajaran (3 Groups)
+  // Home & Rekreasi (Home and Leisure Hub)
   ...navKonsultan
-    .filter((g) => g.parentCategory === "Creative & Media" || g.parentCategory === "Academy & Tools")
+    .filter((g) => g.title === "Home and Leisure" || g.parentCategory === "Home and Leisure")
+    .map((g) => ({ ...g, sectionCategory: "Rumah & Rekreasi" })),
+
+  // Keluarga & Komunitas Warga (Family and Community Hub)
+  ...navKonsultan
+    .filter((g) => g.title === "Family and Community" || g.parentCategory === "Family and Community")
+    .map((g) => ({ ...g, sectionCategory: "Keluarga & Komunitas" })),
+
+  // Media Kreatif & Akademi Pembelajaran (Knowledge and Learning Hub)
+  ...navKonsultan
+    .filter((g) => g.title === "Knowledge and Learning" || g.parentCategory === "Knowledge and Learning" || g.parentCategory === "Creative & Media")
     .map((g) => ({ ...g, sectionCategory: "Kreatif & Akademi" })),
 
-  // Knowledge & Bisnis Lanjutan (2 Groups)
+  // Knowledge & Bisnis Lanjutan
   ...navKonsultan
-    .filter((g) => g.title === "Knowledge" || g.title === "Business")
+    .filter((g) => g.title === "Business" || g.title === "Business Operations and Customers")
     .map((g) => ({ ...g, sectionCategory: "Knowledge & Bisnis" })),
 ];
 
