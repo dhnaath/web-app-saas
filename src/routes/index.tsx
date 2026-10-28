@@ -7,9 +7,7 @@ import { getLastLauncherPage, setLastLauncherPage } from "@/utils/launcherCatego
 import { Tools100Section } from "@/features/launcher/Tools100Section";
 import { ValueTreatedSection } from "@/features/launcher/ValueTreatedSection";
 import { FinancialWealthSection } from "@/features/launcher/FinancialWealthSection";
-import { AppModuleSection } from "@/features/launcher/AppModuleSection";
 import { CommodityDashboardSection } from "./commodity-dashboard";
-import { NationalIndicesSection } from "@/features/launcher/NationalIndicesSection";
 import { EmptyModePage } from "@/features/launcher/EmptyModePage";
 import { ModeSectionView } from "@/features/launcher/ModeSectionView";
 import { AnimatedSearchIcon } from "@/app/shell/AnimatedSearchIcon";
@@ -17,6 +15,7 @@ import { TypewriterSearchText } from "@/app/shell/TypewriterSearchText";
 import {
   Layers,
   Gem,
+  Scale,
   Coins,
   LayoutGrid,
   TrendingUp,
@@ -25,13 +24,15 @@ import {
   Users,
   GraduationCap,
   Palette,
-  Heart,
   HeartPulse,
   Coffee,
   Sofa,
   Briefcase,
   Store,
   Crown,
+  Heart,
+  Landmark,
+  Home,
   Globe,
   Search,
   ChevronLeft,
@@ -59,21 +60,22 @@ export function getGradient(title: string): string {
 }
 
 export const LAUNCHER_TABS = [
-  // Halaman Inti Launcher
-  { id: "tools100", label: "100 MBA Tools", icon: Layers, badge: "8 Pilar" },
+  // 3 Halaman Inti Utama
+  { id: "tools", label: "100 Tools Mini MBA", icon: Layers, badge: "8 Pilar MBA", desc: "100 instrumen analisis, framework Mini MBA & kanvas strategis 8 pilar" },
   { id: "valuetreated", label: "Value Treated", icon: Gem, badge: "10 Disiplin" },
-  { id: "financial", label: "Finansial & Wealth", icon: Coins, badge: "5 Tahapan" },
-  { id: "app_module", label: "App Module", icon: LayoutGrid, badge: "6 Workspace" },
-  { id: "commodity", label: "100 Komoditas", icon: TrendingUp, badge: "Nasional" },
-  { id: "national_indices", label: "10 Indeks", icon: BarChart3, badge: "Pembangunan" },
+  { id: "commodity", label: "100 Komoditas & Indeks Harga", icon: TrendingUp, badge: "Makro & Nasional" },
 
-  // 6 Halaman Master Workspace & Mode Terintegrasi
-  { id: "mode_employment", modeId: "employment", label: "Work and Productivity", icon: Briefcase, badge: "9 Modul", desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)" },
-  { id: "mode_owner", modeId: "owner", label: "Business Operations and Customers", icon: Store, badge: "7 Modul", desc: "Semua (7) · Supply (2) · Customers (3) · Back Office (2)" },
-  { id: "mode_student", modeId: "student", label: "Knowledge and Learning", icon: GraduationCap, badge: "7 Modul", desc: "Semua (7) · Documents (3) · Learning (2) · Creative (2)" },
-  { id: "mode_personal", modeId: "personal", label: "Personal Life", icon: Heart, badge: "5 Modul", desc: "Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)" },
-  { id: "mode_household", modeId: "household", label: "Home and Leisure", icon: Sofa, badge: "6 Modul", desc: "Semua (6) · Home (2) · Vehicle (2) · Leisure (2)" },
-  { id: "mode_relatives", modeId: "relatives", label: "Family and Community", icon: Users, badge: "9 Modul", desc: "Semua (9) · Family (3) · Relationships (2) · Neighborhood (3) · Giving (1)" },
+  // 10 Laman Fix Workspace Terintegrasi
+  { id: "financial", modeId: "financial", label: "Financial Planning and Wealth Management", icon: Coins, badge: "5 Tahapan", desc: "Perencanaan Finansial, Wealth Spectrum, Valuasi & Suksesi" },
+  { id: "mode_business", modeId: "business", label: "Business Administration and Operations Management", icon: Store, badge: "7 Modul", desc: "Semua (7) · Supply (2) · Customers (3) · Back Office (2)" },
+  { id: "mode_employment", modeId: "employment", label: "Productivity Workspace and Workflow Systems", icon: Briefcase, badge: "9 Modul", desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)" },
+  { id: "mode_creative", modeId: "creative", label: "Creative Workspace and Media Production", icon: Palette, badge: "6 Modul", desc: "Semua (6) · Studio (2) · Publishing (1) · Media (2) · Interactive (1)" },
+  { id: "mode_research", modeId: "research", label: "Research Foundations and Reference Frameworks", icon: GraduationCap, badge: "6 Modul", desc: "Semua (6) · Frameworks (2) · Reference (2) · Research (2)" },
+  { id: "mode_sharia", modeId: "sharia", label: "Islamic Principles and Sharia Values", icon: Scale, badge: "16 Modul", desc: "Semua (16) · Akad Sosial (5) · Akad Bisnis (5) · Zakat & Wakaf (3) · Audit Muamalah (3)" },
+  { id: "mode_personal", modeId: "personal", label: "Personal Life and Profile Management", icon: Heart, badge: "5 Modul", desc: "Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)" },
+  { id: "mode_family", modeId: "family", label: "Family Records and Household Planning", icon: Home, badge: "6 Modul", desc: "Semua (6) · Family (3) · Household (2) · Vehicles (1)" },
+  { id: "mode_public_affairs", modeId: "public_affairs", label: "Public Relations and Policy Affairs", icon: Landmark, badge: "6 Modul", desc: "Semua (6) · Civic (3) · Policy (2) · Media (1)" },
+  { id: "mode_networks", modeId: "networks", label: "Contact Directory and Social Networks", icon: Users, badge: "6 Modul", desc: "Semua (6) · Directory (2) · Relations (2) · Networks (2)" },
 ];
 
 export function Launcher() {
@@ -81,66 +83,34 @@ export function Launcher() {
     if (typeof window !== "undefined") {
       try {
         const urlParams = new URLSearchParams(window.location.search);
+        const resolveParam = (val: string) => {
+          if (!val) return -1;
+          const v = val.toLowerCase().trim();
+          if (v === "tools" || v === "100-tools" || v === "mini-mba" || v === "mba" || v === "pilar") return LAUNCHER_TABS.findIndex((t) => t.id === "tools");
+          if (v === "valuetreated" || v === "value-treated" || v === "value_treated" || v === "disiplin") return LAUNCHER_TABS.findIndex((t) => t.id === "valuetreated");
+          if (v === "commodity" || v === "100-komoditas" || v === "komoditas" || v === "indeks" || v === "national_indices" || v === "10-indeks") return LAUNCHER_TABS.findIndex((t) => t.id === "commodity");
+          if (v === "financial" || v === "finance" || v === "financial-planning" || v === "wealth") return LAUNCHER_TABS.findIndex((t) => t.id === "financial" || (t as any).modeId === "financial");
+          if (v === "business" || v === "business-administration" || v === "business-operations" || v === "owner") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_business" || (t as any).modeId === "business");
+          if (v === "productivity" || v === "work" || v === "work-productivity" || v === "employment") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_employment" || (t as any).modeId === "employment");
+          if (v === "creative" || v === "creative-workspace" || v === "media") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_creative" || (t as any).modeId === "creative");
+          if (v === "research" || v === "research-frameworks" || v === "frameworks" || v === "student" || v === "knowledge") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_research" || (t as any).modeId === "research");
+          if (v === "sharia" || v === "sharia-values" || v === "islamic-principles" || v === "syariah") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_sharia" || (t as any).modeId === "sharia");
+          if (v === "personal" || v === "personal-life" || v === "profile") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_personal" || (t as any).modeId === "personal");
+          if (v === "family" || v === "family-records" || v === "household" || v === "home-leisure") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_family" || (t as any).modeId === "family");
+          if (v === "public" || v === "public-affairs" || v === "policy" || v === "public-relations") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_public_affairs" || (t as any).modeId === "public_affairs");
+          if (v === "networks" || v === "contact-directory" || v === "social-networks" || v === "contacts" || v === "relatives") return LAUNCHER_TABS.findIndex((t) => t.id === "mode_networks" || (t as any).modeId === "networks");
+
+          return LAUNCHER_TABS.findIndex((t) => t.id === v || (t as any).modeId === v);
+        };
+
         const modeFromUrl = urlParams.get("mode");
         if (modeFromUrl) {
-          const mappedMode =
-            modeFromUrl === "work" ||
-            modeFromUrl === "work-productivity" ||
-            modeFromUrl === "work_productivity"
-              ? "mode_employment"
-              : modeFromUrl === "personal-life" ||
-                modeFromUrl === "personal_life"
-              ? "mode_personal"
-              : modeFromUrl === "business-operations" ||
-                modeFromUrl === "business-operations-and-customers" ||
-                modeFromUrl === "business_operations" ||
-                modeFromUrl === "business"
-              ? "mode_owner"
-              : modeFromUrl === "knowledge-and-learning" ||
-                modeFromUrl === "knowledge-learning" ||
-                modeFromUrl === "knowledge" ||
-                modeFromUrl === "learning" ||
-                modeFromUrl === "student" ||
-                modeFromUrl === "creator"
-              ? "mode_student"
-              : modeFromUrl === "productivity" ||
-                modeFromUrl === "personal" ||
-                modeFromUrl === "people"
-              ? "app_module"
-              : modeFromUrl;
-          const idx = LAUNCHER_TABS.findIndex(
-            (t) => t.id === mappedMode || (t as any).modeId === mappedMode
-          );
+          const idx = resolveParam(modeFromUrl);
           if (idx !== -1) return idx;
         }
         const tabFromUrl = urlParams.get("tab");
         if (tabFromUrl) {
-          const mappedTab =
-            tabFromUrl === "work" ||
-            tabFromUrl === "work-productivity" ||
-            tabFromUrl === "work_productivity"
-              ? "mode_employment"
-              : tabFromUrl === "personal-life" ||
-                tabFromUrl === "personal_life"
-              ? "mode_personal"
-              : tabFromUrl === "business-operations" ||
-                tabFromUrl === "business-operations-and-customers" ||
-                tabFromUrl === "business_operations" ||
-                tabFromUrl === "business"
-              ? "mode_owner"
-              : tabFromUrl === "knowledge-and-learning" ||
-                tabFromUrl === "knowledge-learning" ||
-                tabFromUrl === "knowledge" ||
-                tabFromUrl === "learning" ||
-                tabFromUrl === "student" ||
-                tabFromUrl === "creator"
-              ? "mode_student"
-              : tabFromUrl === "productivity" ||
-                tabFromUrl === "personal" ||
-                tabFromUrl === "people"
-              ? "app_module"
-              : tabFromUrl;
-          const idx = LAUNCHER_TABS.findIndex((t) => t.id === mappedTab);
+          const idx = resolveParam(tabFromUrl);
           if (idx !== -1) return idx;
         }
       } catch {}
@@ -345,68 +315,8 @@ export function Launcher() {
         {/* Swipe Carousel Area */}
         <div className="overflow-hidden cursor-grab active:cursor-grabbing transition-[height] duration-300" ref={emblaRef}>
           <div className="flex touch-pan-y items-start">
-            {/* Slide 0: 100 MBA Tools */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 0 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 0 && (
-                <Tools100Section
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  getGradient={getGradient}
-                />
-              )}
-            </div>
-
-            {/* Slide 1: Value Treated (10 Disiplin Fundamental) */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 1 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 1 && (
-                <ValueTreatedSection
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  getGradient={getGradient}
-                />
-              )}
-            </div>
-
-            {/* Slide 2: Finansial & Wealth */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 2 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 2 && (
-                <FinancialWealthSection
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  getGradient={getGradient}
-                />
-              )}
-            </div>
-
-            {/* Slide 3: App Module (Gabungan Productivity, Personal, People) */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 3 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 3 && (
-                <AppModuleSection
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  getGradient={getGradient}
-                />
-              )}
-            </div>
-
-            {/* Slide 4: 100 Komoditas */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 4 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 4 && (
-                <CommodityDashboardSection isEmbedded={true} />
-              )}
-            </div>
-
-            {/* Slide 5: 10 Indeks Pembangunan Nasional */}
-            <div className={`flex-[0_0_100%] min-w-0 pr-1 ${activeTabIdx === 5 ? "h-auto opacity-100" : "h-0 max-h-0 min-h-0 overflow-hidden invisible pointer-events-none"}`}>
-              {activeTabIdx === 5 && (
-                <NationalIndicesSection isEmbedded={true} />
-              )}
-            </div>
-
-            {/* 10 Mode Halaman Tambahan (Sementara Kosong) */}
-            {LAUNCHER_TABS.filter((t) => (t as any).modeId).map((tab, mIdx) => {
-              const slideIdx = 6 + mIdx;
-              const isActive = activeTabIdx === slideIdx;
+            {LAUNCHER_TABS.map((tab, idx) => {
+              const isActive = activeTabIdx === idx;
               return (
                 <div
                   key={tab.id}
@@ -415,11 +325,33 @@ export function Launcher() {
                   }`}
                 >
                   {isActive && (
-                    <ModeSectionView
-                      modeId={tab.id}
-                      favorites={favorites}
-                      toggleFavorite={toggleFavorite}
-                    />
+                    tab.id === "tools" ? (
+                      <Tools100Section
+                        favorites={favorites}
+                        toggleFavorite={toggleFavorite}
+                        getGradient={getGradient}
+                      />
+                    ) : tab.id === "valuetreated" ? (
+                      <ValueTreatedSection
+                        favorites={favorites}
+                        toggleFavorite={toggleFavorite}
+                        getGradient={getGradient}
+                      />
+                    ) : tab.id === "commodity" ? (
+                      <CommodityDashboardSection isEmbedded={true} />
+                    ) : tab.id === "financial" ? (
+                      <FinancialWealthSection
+                        favorites={favorites}
+                        toggleFavorite={toggleFavorite}
+                        getGradient={getGradient}
+                      />
+                    ) : (
+                      <ModeSectionView
+                        modeId={(tab as any).modeId || tab.id}
+                        favorites={favorites}
+                        toggleFavorite={toggleFavorite}
+                      />
+                    )
                   )}
                 </div>
               );

@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useFavorites } from "@/hooks/useFavorites";
-import { WorkProductivityPage } from "@/features/work-productivity/WorkProductivityPage";
-import { PersonalLifePage } from "@/features/personal-life/PersonalLifePage";
-import { BusinessOperationsCustomersPage } from "@/features/business-operations/BusinessOperationsCustomersPage";
-import { KnowledgeAndLearningPage } from "@/features/knowledge-learning/KnowledgeAndLearningPage";
-import { HomeLeisurePage } from "@/features/home-leisure/HomeLeisurePage";
-import { FamilyCommunityPage } from "@/features/family-community/FamilyCommunityPage";
+import { WorkProductivityPage } from "../work-productivity/WorkProductivityPage";
+import { PersonalLifePage } from "../personal-life/PersonalLifePage";
+import { BusinessOperationsCustomersPage } from "../business-operations/BusinessOperationsCustomersPage";
+import { KnowledgeAndLearningPage } from "../knowledge-learning/KnowledgeAndLearningPage";
+import { HomeLeisurePage } from "../home-leisure/HomeLeisurePage";
+import { FamilyCommunityPage } from "../family-community/FamilyCommunityPage";
+import { IslamicPrinciplesShariaValuesPage } from "../syariah/IslamicPrinciplesShariaValuesPage";
+import { CreativeWorkspaceMediaPage } from "../creative-workspace/CreativeWorkspaceMediaPage";
+import { ResearchFrameworksPage } from "../research-frameworks/ResearchFrameworksPage";
+import { FamilyRecordsHouseholdPage } from "../family-records/FamilyRecordsHouseholdPage";
+import { PublicRelationsPolicyAffairsPage } from "../public-affairs/PublicRelationsPolicyAffairsPage";
+import { ContactDirectoryNetworksPage } from "../social-networks/ContactDirectoryNetworksPage";
 import {
   User,
   GraduationCap,
@@ -104,6 +110,19 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
           { id: "timeline", label: "Lini Masa Entri" },
           { id: "mood", label: "Peta Suasana Hati" },
           { id: "topics", label: "Tag & Topik" },
+        ],
+      },
+      {
+        id: "goals",
+        name: "Target & Milestone",
+        shortDesc: "Peta jalan sasaran jangka pendek & panjang dengan tahapan checkpoint terukur.",
+        icon: Layers,
+        to: "/peh/goals",
+        badge: "Roadmap",
+        subMenus: [
+          { id: "active", label: "Sasaran Aktif" },
+          { id: "milestones", label: "Tahapan Checkpoint" },
+          { id: "archive", label: "Arsip Sasaran" },
         ],
       },
       {
@@ -290,6 +309,18 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
         subMenus: [
           { id: "entries", label: "Koleksi Konsep" },
           { id: "tags", label: "Topik & Kategori" },
+        ],
+      },
+      {
+        id: "projects",
+        name: "Pipeline Produksi Konten",
+        shortDesc: "Papan kanban tahapan naskah, syuting, editing, dan publikasi lintas platform.",
+        icon: Layers,
+        to: "/peh/projects",
+        badge: "Pipeline",
+        subMenus: [
+          { id: "active", label: "Konten Berjalan" },
+          { id: "done", label: "Rilis Publikasi" },
         ],
       },
       {
@@ -686,24 +717,110 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
   mode_employment: {
     id: "mode_employment",
     modeId: "employment",
-    label: "Work and Productivity",
-    badge: "9 Modul",
-    desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
+    label: "Mode Employment",
+    badge: "Career",
+    desc: "Eksekusi profesional, alur kerja pipeline, audit kepatuhan, pengadaan, dan evaluasi rekanan.",
     icon: Briefcase,
     ecosystem: "POO",
     ecosystemLabel: "Productivity, Operations & Ownership",
-    apps: [],
-  },
-  work_productivity: {
-    id: "work_productivity",
-    modeId: "work_productivity",
-    label: "Work and Productivity",
-    badge: "9 Modul",
-    desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
-    icon: Briefcase,
-    ecosystem: "POO",
-    ecosystemLabel: "Productivity, Operations & Ownership",
-    apps: [],
+    apps: [
+      {
+        id: "workflows",
+        name: "Alur Kerja & Pipeline",
+        shortDesc: "Pipeline proses operasional, tahapan status eksekusi, dan standarisasi alur antar-divisi.",
+        icon: Layers,
+        to: "/peh/workflows",
+        badge: "Pipeline",
+        subMenus: [
+          { id: "active", label: "Pipeline Berjalan" },
+          { id: "templates", label: "Template Standard" },
+        ],
+      },
+      {
+        id: "vendors",
+        name: "Vendor & Mitra Layanan",
+        shortDesc: "Direktori rekanan pihak ketiga, evaluasi SLA performa, dan jatuh tempo perpanjangan kontrak.",
+        icon: Building,
+        to: "/peh/vendors",
+        badge: "Rekanan",
+        subMenus: [
+          { id: "directory", label: "Direktori Vendor" },
+          { id: "slas", label: "Evaluasi Skor SLA" },
+        ],
+      },
+      {
+        id: "incidents",
+        name: "Log Masalah & Insiden",
+        shortDesc: "Pencatatan gangguan sistem/operasional, eskalasi penanganan, dan Root Cause Analysis (RCA).",
+        icon: ShieldCheck,
+        to: "/peh/incidents",
+        badge: "RCA Masalah",
+        subMenus: [
+          { id: "open", label: "Insiden Terbuka" },
+          { id: "postmortem", label: "Analisis Akar Masalah" },
+        ],
+      },
+      {
+        id: "procurement",
+        name: "Pengadaan & Purchase Orders",
+        shortDesc: "Permintaan belanja alat modal, Purchase Orders (PO), dan matriks otorisasi anggaran.",
+        icon: DollarSign,
+        to: "/peh/procurement",
+        badge: "PO Belanja",
+        subMenus: [
+          { id: "orders", label: "Daftar PO Aktif" },
+          { id: "matrix", label: "Matriks Otorisasi" },
+        ],
+      },
+      {
+        id: "compliance",
+        name: "Kepatuhan & Audit Regulasi",
+        shortDesc: "Matriks standar legalitas, kesiapan audit sertifikasi ISO/hukum, dan radar izin jatuh tempo.",
+        icon: ShieldCheck,
+        to: "/peh/compliance",
+        badge: "Audit & Izin",
+        subMenus: [
+          { id: "audit", label: "Skor Kesiapan Audit" },
+          { id: "expiry", label: "Radar Jatuh Tempo Izin" },
+        ],
+      },
+      {
+        id: "meetings",
+        name: "Notulensi & Keputusan Rapat",
+        shortDesc: "Pencatatan hasil rapat eksekutif, log konsensus final, dan tindak lanjut tugas (action items).",
+        icon: Clock,
+        to: "/peh/meetings",
+        badge: "Notulensi",
+        subMenus: [
+          { id: "notes", label: "Daftar Notulensi" },
+          { id: "decisions", label: "Log Keputusan Final" },
+        ],
+      },
+      {
+        id: "certificates_pro",
+        name: "Sertifikasi Profesi & Legalitas",
+        shortDesc: "Pelacak masa berlaku sertifikasi profesional, lisensi keahlian, dan radar renewal.",
+        icon: ShieldCheck,
+        to: "/life/certificate-tracker",
+        badge: "Keahlian",
+        subMenus: [
+          { id: "pro", label: "Sertifikasi Ahli" },
+          { id: "status", label: "Jatuh Tempo" },
+        ],
+      },
+      {
+        id: "budget_rule",
+        name: "Budget Tracker 50/30/20",
+        shortDesc: "Evaluasi proporsi anggaran pendapatan operasional dan disiplin alokasi keuangan.",
+        icon: PieChart,
+        to: "/life/budget-tracker",
+        badge: "Alokasi",
+        subMenus: [
+          { id: "needs", label: "Needs 50%" },
+          { id: "wants", label: "Wants 30%" },
+        ],
+      },
+    ],
   },
 
   mode_owner: {
@@ -762,6 +879,18 @@ export const MODE_CONFIGS: Record<string, ModeDefinition> = {
         subMenus: [
           { id: "licenses", label: "Semua Hak Cipta & IP" },
           { id: "domains", label: "Domain & Hosting" },
+        ],
+      },
+      {
+        id: "cap_table",
+        name: "Struktur Saham & Cap Table",
+        shortDesc: "Tabel permodalan pemilik, alokasi porsi persentase lembar saham, dan jadwal vesting.",
+        icon: BarChart3,
+        to: "/peh/cap-table",
+        badge: "Ekuitas Usaha",
+        subMenus: [
+          { id: "stakeholders", label: "Pemegang Saham" },
+          { id: "vesting", label: "Perjanjian & Vesting" },
         ],
       },
       {
@@ -1084,7 +1213,8 @@ export function ModeSectionView({
     modeId === "personal" ||
     modeId === "mode_personal_life" ||
     modeId === "personal_life" ||
-    modeId === "personal-life"
+    modeId === "personal-life" ||
+    modeId === "personal-life-and-profile-management"
   ) {
     return <PersonalLifePage isEmbedded={true} />;
   }
@@ -1092,50 +1222,91 @@ export function ModeSectionView({
   if (
     modeId === "mode_owner" ||
     modeId === "owner" ||
+    modeId === "mode_business" ||
+    modeId === "business" ||
     modeId === "mode_business_operations" ||
     modeId === "business_operations" ||
     modeId === "business-operations" ||
-    modeId === "business_operations_and_customers" ||
-    modeId === "business-operations-and-customers"
+    modeId === "business_administration" ||
+    modeId === "business-administration" ||
+    modeId === "business-administration-and-operations-management"
   ) {
     return <BusinessOperationsCustomersPage isEmbedded={true} />;
   }
 
   if (
+    modeId === "mode_creative" ||
+    modeId === "creative" ||
+    modeId === "creative_workspace" ||
+    modeId === "creative-workspace" ||
+    modeId === "creative-workspace-and-media-production"
+  ) {
+    return <CreativeWorkspaceMediaPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_research" ||
+    modeId === "research" ||
+    modeId === "research_frameworks" ||
+    modeId === "research-frameworks" ||
+    modeId === "research-foundations-and-reference-frameworks" ||
     modeId === "mode_student" ||
     modeId === "student" ||
-    modeId === "mode_creator" ||
-    modeId === "creator" ||
-    modeId === "knowledge_and_learning" ||
-    modeId === "knowledge-and-learning" ||
-    modeId === "knowledge_learning" ||
-    modeId === "knowledge"
+    modeId === "knowledge" ||
+    modeId === "knowledge-and-learning"
   ) {
-    return <KnowledgeAndLearningPage isEmbedded={true} />;
+    return <ResearchFrameworksPage isEmbedded={true} />;
   }
 
   if (
+    modeId === "mode_family" ||
+    modeId === "family" ||
+    modeId === "family_records" ||
+    modeId === "family-records" ||
+    modeId === "family-records-and-household-planning" ||
     modeId === "mode_household" ||
     modeId === "household" ||
-    modeId === "mode_leisure" ||
-    modeId === "leisure" ||
-    modeId === "home_leisure" ||
-    modeId === "home-leisure" ||
-    modeId === "home-and-leisure"
+    modeId === "home-leisure"
   ) {
-    return <HomeLeisurePage isEmbedded={true} />;
+    return <FamilyRecordsHouseholdPage isEmbedded={true} />;
   }
 
   if (
-    modeId === "mode_relatives" ||
-    modeId === "relatives" ||
+    modeId === "mode_public_affairs" ||
+    modeId === "public_affairs" ||
+    modeId === "public-affairs" ||
     modeId === "mode_public" ||
     modeId === "public" ||
-    modeId === "family_community" ||
-    modeId === "family-community" ||
-    modeId === "family-and-community"
+    modeId === "policy" ||
+    modeId === "public-relations-and-policy-affairs"
   ) {
-    return <FamilyCommunityPage isEmbedded={true} />;
+    return <PublicRelationsPolicyAffairsPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_networks" ||
+    modeId === "networks" ||
+    modeId === "contact_directory" ||
+    modeId === "contact-directory" ||
+    modeId === "social_networks" ||
+    modeId === "social-networks" ||
+    modeId === "contact-directory-and-social-networks" ||
+    modeId === "mode_relatives" ||
+    modeId === "relatives" ||
+    modeId === "family-community"
+  ) {
+    return <ContactDirectoryNetworksPage isEmbedded={true} />;
+  }
+
+  if (
+    modeId === "mode_sharia" ||
+    modeId === "sharia" ||
+    modeId === "sharia-values" ||
+    modeId === "islamic-principles" ||
+    modeId === "islamic-principles-and-sharia-values" ||
+    modeId === "islamic_principles"
+  ) {
+    return <IslamicPrinciplesShariaValuesPage isEmbedded={true} />;
   }
 
   const config = MODE_CONFIGS[modeId];
@@ -1145,51 +1316,12 @@ export function ModeSectionView({
 
   return (
     <div className="w-full max-w-[1440px] mx-auto py-4 px-2 sm:px-4 space-y-6 animate-in fade-in duration-300">
-      {/* Header Mode Banner */}
-      <div className="relative rounded-3xl p-5 sm:p-7 liquid-glass-card border border-white/40 dark:border-white/10 shadow-sm overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-primary/15 text-primary border border-primary/25">
-                {config.ecosystem} • {config.badge}
-              </span>
-              <span className="text-xs text-muted-foreground font-medium">
-                {config.ecosystemLabel}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-2xs">
-                <Icon className="size-5.5" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                {config.label}
-              </h2>
-            </div>
-
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-              {config.desc}
-            </p>
-          </div>
-
-          {/* Quick Hub Links */}
-          <div className="flex items-center gap-2 self-start md:self-center shrink-0">
-            <Link
-              to={"/peh/ecosystem-comparison" as any}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold liquid-glass-pill hover:bg-accent text-foreground transition-all cursor-pointer shadow-xs"
-            >
-              <Layers className="size-3.5 text-primary" />
-              <span>Matriks Ekosistem</span>
-            </Link>
-            <Link
-              to={"/peh/global-overview" as any}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-all cursor-pointer shadow-xs"
-            >
-              <Sparkles className="size-3.5" />
-              <span>Overview Hub</span>
-            </Link>
-          </div>
-        </div>
+      {/* Title (Matching MBA Page Header Style) */}
+      <div className="text-center mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2.5">
+          <Icon className="size-7 text-primary" />
+          <span>{config.label}</span>
+        </h2>
       </div>
 
       {/* Grid Aplikasi Terintegrasi - Mengikuti gaya kotak Tools 100 */}

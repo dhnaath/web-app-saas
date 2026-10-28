@@ -3,7 +3,10 @@ import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { ShellHeader } from "@/app/shell-header";
+import { ALL_APP_MODULES } from "@/features/launcher/AppModuleSection";
+import { MBACard } from "@/components/common/MBACard";
 import {
+  LayoutGrid,
   Users,
   Heart,
   Building2,
@@ -288,7 +291,7 @@ export function FamilyCommunityPage({
   const [selectedCategory, setSelectedCategory] =
     useState<FamilyCommunityCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite, favorites } = useFavorites();
 
   const filteredApps = useMemo(() => {
     return FAMILY_COMMUNITY_APPS.filter((app) => {
@@ -308,256 +311,67 @@ export function FamilyCommunityPage({
 
   return (
     <div className="w-full flex-1 flex flex-col font-sans pb-16">
-      {/* Portaled ShellHeader Filter Pills */}
-      {!isEmbedded && (
-        <ShellHeader>
-          <div className="flex items-center gap-1.5 shrink-0 m-0 p-0">
-            <div className="flex items-center gap-1 border border-border/70 rounded-full p-1 bg-muted/60 dark:bg-zinc-800/80 backdrop-blur-xs text-xs shrink-0 shadow-2xs h-[36px]">
-              {FAMILY_COMMUNITY_CATEGORY_TABS.map((tab) => {
-                const isActive = selectedCategory === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setSelectedCategory(tab.id)}
-                    title={`${tab.label} (${tab.count})`}
-                    className={`px-3 h-[28px] rounded-full text-xs font-medium transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                      isActive
-                        ? "bg-background text-foreground font-semibold shadow-xs"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                        isActive
-                          ? "bg-primary/15 text-primary font-bold"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {tab.count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </ShellHeader>
-      )}
+      {/* Portaled ShellHeader Filter Pills (Direct Selected / Unselected Layers) */}
+      <ShellHeader>
+        <div className="flex items-center gap-1 h-full m-0 p-0">
+          {FAMILY_COMMUNITY_CATEGORY_TABS.map((tab) => {
+            const isActive = selectedCategory === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedCategory(tab.id)}
+                title={`${tab.label} (${tab.count})`}
+                className={`px-3.5 h-[36px] rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                  isActive
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 font-medium"
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span
+                  className={`text-[10px] ${
+                    isActive
+                      ? "text-primary-foreground/90 font-bold"
+                      : "text-muted-foreground/75"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </ShellHeader>
 
       {/* Main Page Container */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 space-y-6">
-        {/* Hero Header Section */}
-        <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card/90 via-card/60 to-rose-500/5 p-6 sm:p-8 shadow-xs backdrop-blur-sm">
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold">
-                <Users className="size-3.5" />
-                <span>Family & Community Hub</span>
-                <span className="size-1 rounded-full bg-rose-500" />
-                <span>9 Aplikasi</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                Family and Community
-              </h1>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Semua (9) · Family (3) · Relationships (2) · Neighborhood (3) · Giving (1).
-                Pusat pengarsipan keluarga besar, keselamatan domestik, pemeliharaan jejaring kerabat, kerukunan warga RT/RW, layanan sipil publik, serta filantropi sosial zakat & donasi.
-              </p>
-            </div>
-
-            {/* Quick Stat Highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Family
-                </span>
-                <span className="text-lg font-bold text-rose-600 dark:text-rose-400 mt-0.5">
-                  3 Modul
-                </span>
-              </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Relationships
-                </span>
-                <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">
-                  2 Modul
-                </span>
-              </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Neighborhood
-                </span>
-                <span className="text-lg font-bold text-teal-600 dark:text-teal-400 mt-0.5">
-                  3 Modul
-                </span>
-              </div>
-              <div className="p-3 rounded-2xl bg-card/80 border border-border/70 flex flex-col">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Giving
-                </span>
-                <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                  1 Modul
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Search & Interactive Pill Filter Bar */}
-          <div className="mt-6 pt-5 border-t border-border/60 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            {/* Category Segmented Buttons */}
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-              {FAMILY_COMMUNITY_CATEGORY_TABS.map((tab) => {
-                const isActive = selectedCategory === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setSelectedCategory(tab.id)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 border ${
-                      isActive
-                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                        : "bg-card/70 hover:bg-accent text-foreground/80 border-border/70"
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isActive
-                          ? "bg-white/20 text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {tab.count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Instant Search Bar */}
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari modul atau fitur..."
-                className="w-full pl-9 pr-4 py-1.5 rounded-full text-xs bg-background/80 border border-border/80 focus:outline-hidden focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-muted-foreground"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-4 space-y-4">
+        {/* Title (Matching MBA Page Header Style) */}
+        <div className="text-center mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2.5">
+            <Users className="size-7 text-primary" />
+            <span>Family and Community</span>
+          </h1>
         </div>
 
         {/* Modular Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <AnimatePresence mode="popLayout">
-            {filteredApps.map((app) => {
-              const IconComponent = app.icon;
-              const fav = isFavorite(app.id);
-
-              return (
-                <motion.div
-                  key={app.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className={`group relative rounded-3xl border ${app.accentBorder} bg-card/90 hover:bg-card p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md hover:-translate-y-0.5`}
-                >
-                  <div className="space-y-4">
-                    {/* Header: Icon, Badge & Favorite Action */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`size-12 rounded-2xl bg-gradient-to-br ${app.accentGradient} flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform duration-200`}
-                        >
-                          <IconComponent className="size-6" />
-                        </div>
-                        <div>
-                          <span
-                            className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${app.badgeBg}`}
-                          >
-                            {app.badgeText}
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(app.id);
-                        }}
-                        className={`size-8 rounded-full flex items-center justify-center transition-colors ${
-                          fav
-                            ? "text-amber-500 bg-amber-500/10"
-                            : "text-muted-foreground/60 hover:text-amber-500 hover:bg-muted"
-                        }`}
-                        title={fav ? "Hapus dari favorit" : "Tambah ke favorit"}
-                      >
-                        <Star className={`size-4 ${fav ? "fill-current" : ""}`} />
-                      </button>
-                    </div>
-
-                    {/* App Title & Description */}
-                    <div className="space-y-1.5">
-                      <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
-                        <Link to={app.to} className="hover:underline">
-                          {app.name}
-                        </Link>
-                        <ChevronRight className="size-4 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform" />
-                      </h2>
-                      <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                        {app.shortDesc}
-                      </p>
-                    </div>
-
-                    {/* Sub-menu Direct Links */}
-                    <div className="pt-2">
-                      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
-                        Fitur & Modul Langsung
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {app.subMenus.map((sub) => (
-                          <Link
-                            key={sub.id}
-                            to={sub.to}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs bg-muted/60 hover:bg-primary/10 hover:text-primary border border-border/60 hover:border-primary/30 transition-all font-medium text-foreground/80"
-                          >
-                            <span>{sub.label}</span>
-                            <ChevronRight className="size-3 opacity-60" />
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Footer: Action Button */}
-                  <div className="mt-5 pt-4 border-t border-border/50 flex items-center justify-between">
-                    <span className="text-[11px] text-muted-foreground font-medium">
-                      {app.subMenus.length} tautan fitur
-                    </span>
-                    <Link
-                      to={app.to}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
-                    >
-                      <span>Buka Aplikasi</span>
-                      <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-5">
+          {filteredApps.map((app) => (
+            <MBACard
+              key={app.id}
+              title={app.name}
+              to={app.to}
+              icon={app.icon}
+              badge={app.badgeText}
+              shortDesc={app.shortDesc}
+              accentGradient={app.accentGradient}
+              features={app.subMenus.map((sub) => ({
+                title: sub.label,
+                to: sub.to || app.to,
+              }))}
+              isFav={isFavorite(app.to)}
+              toggleFavorite={toggleFavorite}
+            />
+          ))}
         </div>
 
         {/* Empty state if search has no results */}

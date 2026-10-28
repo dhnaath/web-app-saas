@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan } from "@/config/nav";
+import { getAppMetaByRoute } from "@/utils/appLookup";
 
 export interface ExpandAppItem {
   id: string;
@@ -86,17 +87,16 @@ export function MacExpandStack({
   }, [isOpen, onClose]);
 
   // Compute up to 5 apps (favoring user favorites, then defaults)
-  const allNavItems = navKonsultan.flatMap((g) => g.items);
   const favoriteApps: ExpandAppItem[] = favorites
     .map((favPath) => {
-      const found = allNavItems.find((item) => item.to === favPath);
-      if (!found) return null;
+      const meta = getAppMetaByRoute(favPath);
       return {
-        id: found.to,
-        label: found.label,
-        to: found.to,
-        icon: found.icon,
+        id: favPath,
+        label: meta.label,
+        to: favPath,
+        icon: meta.icon as any,
         category: "Favorit",
+        gradient: meta.accentGradient,
       };
     })
     .filter(Boolean) as ExpandAppItem[];

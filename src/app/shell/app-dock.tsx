@@ -16,6 +16,7 @@ import {
 import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan } from "@/config/nav";
 import { STANDALONE_APPS } from "@/features/standalone/standaloneAppsData";
+import { getAppMetaByRoute } from "@/utils/appLookup";
 import { MacExpandStack } from "./mac-expand-stack";
 
 // Jarak (px) dari kursor ke ikon yang mempengaruhi ukurannya.
@@ -33,6 +34,8 @@ export interface DockItemConfig {
   isActive?: boolean;
   isFavorite?: boolean;
   isSeparator?: boolean;
+  iconColor?: string;
+  accentGradient?: string;
 }
 
 function DockIcon({ 
@@ -89,7 +92,12 @@ function DockIcon({
             : "bg-card/90 text-muted-foreground shadow-xs hover:bg-accent hover:text-foreground border-border hover:shadow-md"
         } backdrop-blur-md border`}
       >
-        <item.icon className="w-1/2 h-1/2 shrink-0 pointer-events-none" strokeWidth={item.strokeWidth || 2} />
+        <item.icon
+          className={`w-1/2 h-1/2 shrink-0 pointer-events-none ${
+            !isActive && item.iconColor ? item.iconColor : ""
+          }`}
+          strokeWidth={item.strokeWidth || 2}
+        />
       </motion.div>
       {isActive && (
         <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary ring-2 ring-primary/30 shadow-xs z-20" />
@@ -244,36 +252,16 @@ export function AppDock({
       { id: "/home", label: "Beranda", icon: Home },
     ];
 
-    // Pinned Favorites (Maksimal 5 favorit bintang di dock)
+    // Pinned Favorites (Maksimal 5 favorit di dock dengan icon & nama asli aplikasi)
     const dynamicFavs: DockItemConfig[] = favorites.slice(0, 5).map((favPath) => {
-      const targetBase = favPath.split("?")[0];
-      const found = allItems.find(
-        (item) => item.to === favPath || item.to === targetBase || (item.to !== "/" && targetBase.startsWith(item.to))
-      );
-      if (found) {
-        return {
-          id: found.to,
-          label: found.label,
-          icon: found.icon,
-          isFavorite: true,
-        };
-      }
-      const slug = targetBase.replace(/^\//, "");
-      const foundStandalone = STANDALONE_APPS[slug];
-      if (foundStandalone) {
-        return {
-          id: favPath,
-          label: foundStandalone.title,
-          icon: Target,
-          isFavorite: true,
-        };
-      }
-      const cleanLabel = slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      const meta = getAppMetaByRoute(favPath);
       return {
         id: favPath,
-        label: cleanLabel || "Favorit",
-        icon: Star,
+        label: meta.label,
+        icon: meta.icon,
         isFavorite: true,
+        iconColor: meta.iconColor,
+        accentGradient: meta.accentGradient,
       };
     });
 

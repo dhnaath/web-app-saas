@@ -34,6 +34,9 @@ const silverHistory = generateHistory(SILVER_PRICE_PER_GRAM, 0.01);
 const issiHistory = generateHistory(210.5, 0.015);
 const jiiHistory = generateHistory(520.3, 0.015);
 const jii70History = generateHistory(215.8, 0.015);
+const ihsgHistory = generateHistory(7285.4, 0.012);
+const lq45History = generateHistory(982.1, 0.014);
+const idx30History = generateHistory(504.6, 0.014);
 const djimiHistory = generateHistory(9580.0, 0.015);
 const msciHistory = generateHistory(2600.0, 0.015);
 const sp500shHistory = generateHistory(7900.0, 0.015);
@@ -161,6 +164,39 @@ export const MOCK_COMMODITIES: Commodity[] = [
     change24h: 0,
     changePercent24h: 0,
     history: sp500shHistory,
+    isIndex: true,
+  },
+  {
+    id: "ihsg",
+    symbol: "IHSG",
+    name: "IHSG (IDX Composite)",
+    unit: "Poin",
+    currentPrice: 0,
+    change24h: 0,
+    changePercent24h: 0,
+    history: ihsgHistory,
+    isIndex: true,
+  },
+  {
+    id: "lq45",
+    symbol: "LQ45",
+    name: "Indeks LQ45 BEI",
+    unit: "Poin",
+    currentPrice: 0,
+    change24h: 0,
+    changePercent24h: 0,
+    history: lq45History,
+    isIndex: true,
+  },
+  {
+    id: "idx30",
+    symbol: "IDX30",
+    name: "Indeks IDX30 BEI",
+    unit: "Poin",
+    currentPrice: 0,
+    change24h: 0,
+    changePercent24h: 0,
+    history: idx30History,
     isIndex: true,
   },
 ];
