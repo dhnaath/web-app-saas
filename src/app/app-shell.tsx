@@ -15,6 +15,10 @@ import {
 import { useState, useEffect, useMemo, useRef, useCallback, useLayoutEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  Scale,
+  FileCheck,
+  Coins,
+  ShieldCheck,
   LayoutDashboard,
   Terminal,
   Users,
@@ -87,6 +91,9 @@ import {
   ShoppingBag,
   Vault,
   Luggage,
+  Landmark,
+  ChevronDown,
+  Camera,
   type LucideIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -110,9 +117,20 @@ import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import { useProgressiveBlurSetting } from "@/hooks/useProgressiveBlurSetting";
 import { useLiquidGlassSetting } from "@/hooks/useLiquidGlassSetting";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { getAppMetaByRoute } from "@/utils/appLookup";
 
 
-export type AppModeId = "personal" | "household" | "relatives" | "employment" | "owner" | "public" | "student" | "creator" | "wellbeing" | "leisure" | "home-leisure" | "family-community";
+export type AppModeId =
+  | "financial"
+  | "business"
+  | "employment"
+  | "creative"
+  | "research"
+  | "sharia"
+  | "personal"
+  | "family"
+  | "public_affairs"
+  | "networks";
 
 export interface ModeItem {
   id: AppModeId;
@@ -126,85 +144,53 @@ export interface ModeItem {
 
 export const APP_MODES: ModeItem[] = [
   {
-    id: "personal",
-    label: "Personal Life",
-    badge: "5 Modul",
-    desc: "Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)",
-    icon: Heart,
+    id: "financial",
+    label: "Financial Planning and Wealth Management",
+    badge: "5 Tahapan",
+    desc: "Perencanaan Finansial, Wealth Spectrum, Valuasi & Suksesi",
+    icon: Coins,
     badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     links: [
-      { to: "/personal-life", label: "Personal Life Hub", icon: Heart },
-      { to: "/habit-tracker", label: "Habits and Planning", icon: Flame },
-      { to: "/journal", label: "Journaling", icon: BookOpen },
-      { to: "/health?tab=workouts", label: "Fitness and Sleep", icon: Dumbbell },
-      { to: "/health", label: "Health Records", icon: HeartPulse },
-      { to: "/passwords", label: "Personal Tools", icon: Key },
+      { to: "/financial-planning", label: "Financial Planning Hub", icon: Coins },
+      { to: "/surety", label: "Tahap 1: Surety & Kepatuhan", icon: ShieldCheck },
+      { to: "/flow", label: "Tahap 2: Flow & Cashflow", icon: Wallet },
+      { to: "/build", label: "Tahap 3: Build & Portofolio", icon: Building },
+      { to: "/grow", label: "Tahap 4: Grow & Wealth Asset", icon: TrendingUp },
+      { to: "/legacy", label: "Tahap 5: Legacy & Suksesi", icon: BookOpen },
+      { to: "/asset", label: "Kuadran Aset", icon: Briefcase },
+      { to: "/earning", label: "Kuadran Pendapatan", icon: DollarSign },
+      { to: "/liability", label: "Kuadran Liabilitas", icon: Receipt },
+      { to: "/expense", label: "Kuadran Pengeluaran", icon: ShoppingCart },
+      { to: "/valuasi", label: "Valuasi Bisnis MAPPI", icon: Landmark },
     ],
   },
   {
-    id: "home-leisure",
-    label: "Home and Leisure",
-    badge: "6 Modul",
-    desc: "Semua (6) · Home (2) · Vehicle (2) · Leisure (2)",
-    icon: Home,
+    id: "business",
+    label: "Business Administration and Operations Management",
+    badge: "7 Modul",
+    desc: "Semua (7) · Supply (2) · Customers (3) · Back Office (2)",
+    icon: Store,
     badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     links: [
-      { to: "/home-and-leisure", label: "Home and Leisure Hub", icon: Home },
-      { to: "/lainnya?app=home-chores", label: "Household Care", icon: CheckSquare },
-      { to: "/recipes", label: "Kitchen and Shopping", icon: Utensils },
-      { to: "/lainnya?app=vehicle-identity", label: "Vehicle Records", icon: Car },
-      { to: "/lainnya?app=mileage-fuel", label: "Vehicle Care", icon: Fuel },
-      { to: "/trips", label: "Travel and Weather", icon: Plane },
-      { to: "/movies", label: "Entertainment", icon: Film },
-    ],
-  },
-  {
-    id: "family-community",
-    label: "Family and Community",
-    badge: "9 Modul",
-    desc: "Semua (9) · Family (3) · Relationships (2) · Neighborhood (3) · Giving (1)",
-    icon: Users,
-    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
-    links: [
-      { to: "/family-and-community", label: "Family and Community Hub", icon: Users },
-      { to: "/lainnya?app=family-tree", label: "Family Records", icon: GitFork },
-      { to: "/lainnya?app=emergency-hub", label: "Family Safety", icon: ShieldAlert },
-      { to: "/peh/family-budget", label: "Family Life", icon: Heart },
-      { to: "/lainnya?app=circle-groups", label: "Staying in Touch", icon: MessagesSquare },
-      { to: "/lainnya?app=gift-tracker", label: "Celebrations", icon: Star },
-      { to: "/lainnya?app=rt-rw-directory", label: "Neighbors and Board", icon: Building },
-      { to: "/lainnya?app=public-services-guide", label: "Civic Services", icon: Compass },
-      { to: "/lainnya?app=civic-calendar", label: "Civic Agenda", icon: CalendarDays },
-      { to: "/zakat", label: "Giving and Impact", icon: Wallet },
-    ],
-  },
-  {
-    id: "student",
-    label: "Knowledge and Learning",
-    badge: "7 Modul",
-    desc: "Semua (7) · Documents (3) · Learning (2) · Creative (2)",
-    icon: GraduationCap,
-    badgeClass: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
-    links: [
-      { to: "/knowledge-and-learning", label: "Knowledge and Learning Hub", icon: GraduationCap },
-      { to: "/notes", label: "Notes and Documents", icon: FileText },
-      { to: "/knowledge-base", label: "Knowledge Library", icon: BookOpen },
-      { to: "/research-manager", label: "Research and Reading", icon: Compass },
-      { to: "/courses", label: "Courses and Study", icon: GraduationCap },
-      { to: "/languages", label: "Skills and Credentials", icon: Globe },
-      { to: "/ideas", label: "Ideas and Design", icon: Palette },
-      { to: "/writing", label: "Writing and Code", icon: Code },
+      { to: "/business-operations", label: "Business Operations Hub", icon: Store },
+      { to: "/peh/vendors", label: "Vendors & Procurement", icon: Truck },
+      { to: "/katalog-produk", label: "Products & Stock", icon: Package },
+      { to: "/klien", label: "Client Records", icon: Briefcase },
+      { to: "/portal", label: "Client Communication", icon: MessagesSquare },
+      { to: "/lainnya?app=queue-line", label: "Service Flow & Antrean", icon: Clock },
+      { to: "/expense-tracker", label: "Spending & Assets", icon: Receipt },
+      { to: "/statistics", label: "Data & Access Analytics", icon: LineChart },
     ],
   },
   {
     id: "employment",
-    label: "Work and Productivity",
+    label: "Productivity Workspace and Workflow Systems",
     badge: "9 Modul",
     desc: "Semua (9) · Execution (3) · Partners (2) · Control (3) · Ownership (1)",
     icon: Briefcase,
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     links: [
-      { to: "/work-productivity", label: "Work & Productivity Hub", icon: Briefcase },
+      { to: "/work-productivity", label: "Productivity Workspace Hub", icon: Briefcase },
       { to: "/peh/milestones", label: "Target & Milestone", icon: Target },
       { to: "/peh/workflows", label: "Alur Kerja & Pipeline", icon: CheckCircle2 },
       { to: "/peh/projects", label: "Pipeline Produksi Konten", icon: FolderKanban },
@@ -212,41 +198,129 @@ export const APP_MODES: ModeItem[] = [
       { to: "/peh/procurement", label: "Pengadaan & Purchase Orders", icon: DollarSign },
       { to: "/peh/meetings", label: "Notulensi & Keputusan Rapat", icon: CheckSquare },
       { to: "/peh/incidents", label: "Log Masalah & Insiden", icon: ShieldAlert },
-      { to: "/peh/compliance", label: "Kepatuhan & Audit Regulasi", icon: ShieldAlert },
+      { to: "/peh/compliance", label: "Kepatuhan & Audit Regulasi", icon: ShieldCheck },
       { to: "/peh/cap-table", label: "Struktur Saham & Cap Table", icon: LayoutGrid },
     ],
   },
   {
-    id: "owner",
-    label: "Business Operations and Customers",
-    badge: "7 Modul",
-    desc: "Semua (7) · Supply (2) · Customers (3) · Back Office (2)",
-    icon: Store,
-    badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    id: "creative",
+    label: "Creative Workspace and Media Production",
+    badge: "6 Modul",
+    desc: "Semua (6) · Studio (2) · Publishing (1) · Media (2) · Interactive (1)",
+    icon: Palette,
+    badgeClass: "bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20",
     links: [
-      { to: "/business-operations", label: "Business Operations Hub", icon: Store },
-      { to: "/peh/vendors", label: "Vendors and Procurement", icon: Truck },
-      { to: "/katalog-produk", label: "Products and Stock", icon: Package },
-      { to: "/klien", label: "Client Records", icon: Briefcase },
-      { to: "/portal", label: "Client Communication", icon: MessagesSquare },
-      { to: "/lainnya?app=queue-line", label: "Service Flow", icon: Clock },
-      { to: "/expense-tracker", label: "Spending and Assets", icon: Receipt },
-      { to: "/statistics", label: "Data and Access", icon: LineChart },
+      { to: "/creative-workspace", label: "Creative Workspace Hub", icon: Palette },
+      { to: "/design", label: "Visual Arts & Design Studio", icon: Palette },
+      { to: "/movies", label: "Film, Video & Screenplay", icon: Film },
+      { to: "/writing", label: "Writing, Publishing & Editorial", icon: PenTool },
+      { to: "/podcasts", label: "Audio, Voice & Podcast Studio", icon: Activity },
+      { to: "/photography", label: "Photography & Asset Gallery", icon: Camera },
+      { to: "/games", label: "Interactive Media & Game Design", icon: Code },
     ],
   },
   {
-    id: "public",
-    label: "Public",
-    badge: "External",
-    desc: "Ranah Publik & Dinamika Luar",
-    icon: Globe,
+    id: "research",
+    label: "Research Foundations and Reference Frameworks",
+    badge: "6 Modul",
+    desc: "Semua (6) · Frameworks (2) · Reference (2) · Research (2)",
+    icon: GraduationCap,
+    badgeClass: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+    links: [
+      { to: "/research-frameworks", label: "Research Frameworks Hub", icon: GraduationCap },
+      { to: "/100-framework", label: "100 Strategic Frameworks", icon: Grid2X2 },
+      { to: "/valuasi", label: "Business Valuation & MAPPI", icon: Building },
+      { to: "/research-manager", label: "Research & Market Intelligence", icon: Compass },
+      { to: "/kurasi/bisnis", label: "Kurasi Pengetahuan Bisnis", icon: BookOpen },
+      { to: "/knowledge-base", label: "Knowledge Base & Wiki", icon: NotebookText },
+      { to: "/courses", label: "Academic Studies & Credentials", icon: GraduationCap },
+    ],
+  },
+  {
+    id: "sharia",
+    label: "Islamic Principles and Sharia Values",
+    badge: "16 Modul",
+    desc: "Semua (16) · Akad Sosial (5) · Akad Bisnis (5) · Zakat & Wakaf (3) · Audit Muamalah (3)",
+    icon: Scale,
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    links: [
+      { to: "/sharia-values", label: "Islamic Principles Hub", icon: Scale },
+      { to: "/syariah/akad?app=tabarru", label: "Tabarru' & Hibah Manager", icon: HeartHandshake },
+      { to: "/syariah/akad?app=mudharabah", label: "Mudharabah Bagi Hasil Usaha", icon: TrendingUp },
+      { to: "/syariah/akad?app=musyarakah", label: "Musyarakah & Kemitraan Bersama", icon: Users },
+      { to: "/syariah/akad?app=murabahah", label: "Murabahah & Margin Transparan", icon: Receipt },
+      { to: "/syariah/akad?app=ijarah", label: "Ijarah & Sewa Jasa (IMBT)", icon: FileCheck },
+      { to: "/zakat?app=maal", label: "Zakat Maal & Portofolio", icon: Coins },
+      { to: "/zakat?app=profesi", label: "Zakat Profesi", icon: Wallet },
+      { to: "/syariah/terlarang?app=riba", label: "Audit Bebas Riba & Gharar", icon: ShieldAlert },
+      { to: "/100-komoditas?tab=syariah", label: "Saham Syariah & Pasar Halal", icon: ShieldCheck },
+    ],
+  },
+  {
+    id: "personal",
+    label: "Personal Life and Profile Management",
+    badge: "5 Modul",
+    desc: "Semua (5) · Habits and Mind (2) · Body and Health (2) · Personal Tools (1)",
+    icon: Heart,
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    links: [
+      { to: "/personal-life", label: "Personal Life Hub", icon: Heart },
+      { to: "/habit-tracker", label: "Habits and Planning", icon: Flame },
+      { to: "/journal", label: "Journaling & Refleksi", icon: BookOpen },
+      { to: "/health?tab=workouts", label: "Fitness and Sleep", icon: Dumbbell },
+      { to: "/health", label: "Health Records", icon: HeartPulse },
+      { to: "/passwords", label: "Personal Tools & Passwords", icon: Key },
+    ],
+  },
+  {
+    id: "family",
+    label: "Family Records and Household Planning",
+    badge: "6 Modul",
+    desc: "Semua (6) · Family (3) · Household (2) · Vehicles (1)",
+    icon: Home,
+    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    links: [
+      { to: "/family-records", label: "Family Records Hub", icon: Home },
+      { to: "/peh/family-tree", label: "Family Records & Ancestry", icon: GitFork },
+      { to: "/lainnya?app=emergency-hub", label: "Family Safety & Health Hub", icon: ShieldAlert },
+      { to: "/peh/family-budget", label: "Family Budget & Shared Life", icon: Wallet },
+      { to: "/lainnya?app=home-chores", label: "Household Care & Maintenance", icon: CheckSquare },
+      { to: "/recipes", label: "Kitchen, Pantry & Shopping", icon: Utensils },
+      { to: "/lainnya?app=vehicle-identity", label: "Vehicles Records & Care", icon: Car },
+    ],
+  },
+  {
+    id: "public_affairs",
+    label: "Public Relations and Policy Affairs",
+    badge: "6 Modul",
+    desc: "Semua (6) · Civic (3) · Policy (2) · Media (1)",
+    icon: Landmark,
     badgeClass: "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20",
     links: [
-      { to: "/outward", label: "Outward Radar", icon: Compass },
-      { to: "/outlook", label: "Outlook Dinamika", icon: TrendingUp },
-      { to: "/weather", label: "Cuaca & Iklim Global", icon: CloudSun },
-      { to: "/100-komoditas", label: "100 Komoditas Pasar", icon: Package },
-      { to: "/incoterms", label: "Panduan Incoterms & Ekspor", icon: Navigation },
+      { to: "/public-affairs", label: "Public Relations Hub", icon: Landmark },
+      { to: "/komunitas-warga", label: "Komunitas Warga & RT/RW", icon: Building },
+      { to: "/lainnya?app=public-services-guide", label: "Layanan Publik & Tata Kelola", icon: Compass },
+      { to: "/lainnya?app=civic-calendar", label: "Agenda Musyawarah Publik", icon: CalendarDays },
+      { to: "/peh/advocacy", label: "Advokasi Kebijakan & Regulasi", icon: ShieldAlert },
+      { to: "/peh/media", label: "Humas & Hubungan Media", icon: MessagesSquare },
+      { to: "/zakat", label: "Zakat, Filantropi & Dampak", icon: Wallet },
+    ],
+  },
+  {
+    id: "networks",
+    label: "Contact Directory and Social Networks",
+    badge: "6 Modul",
+    desc: "Semua (6) · Directory (2) · Relations (2) · Networks (2)",
+    icon: Users,
+    badgeClass: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+    links: [
+      { to: "/social-networks", label: "Contact Directory Hub", icon: Users },
+      { to: "/people-manager", label: "People Manager (Identity Layer)", icon: Users },
+      { to: "/peh/contacts", label: "Direktori Kontak Eksekutif", icon: Key },
+      { to: "/interaction-manager", label: "Relationship Timeline & CRM", icon: MessagesSquare },
+      { to: "/peh/circle-groups", label: "Circle Groups & Komunitas", icon: Users },
+      { to: "/peh/gifts", label: "Celebrations & Hadiah", icon: Star },
+      { to: "/peh/mentorship", label: "Mentorship & Advisory", icon: Compass },
     ],
   },
 ];
@@ -456,7 +530,7 @@ export function AppShell({
         return saved as AppModeId;
       }
     } catch {}
-    return "personal";
+    return "financial";
   });
   const [isModeOpen, setIsModeOpen] = useState(false);
 
@@ -470,6 +544,21 @@ export function AppShell({
     window.addEventListener("aio_launcher_mode_changed", handleLauncherModeChanged);
     return () => window.removeEventListener("aio_launcher_mode_changed", handleLauncherModeChanged);
   }, []);
+
+  // Sinkronisasi otomatis workspace aktif dengan route yang sedang dibuka
+  useEffect(() => {
+    if (!pathname || pathname === "/") return;
+    if (pathname.includes("financial")) setCurrentMode("financial");
+    else if (pathname.includes("business")) setCurrentMode("business");
+    else if (pathname.includes("productivity") || pathname.includes("employment")) setCurrentMode("employment");
+    else if (pathname.includes("creative")) setCurrentMode("creative");
+    else if (pathname.includes("research")) setCurrentMode("research");
+    else if (pathname.includes("sharia") || pathname.includes("syariah")) setCurrentMode("sharia");
+    else if (pathname.includes("personal")) setCurrentMode("personal");
+    else if (pathname.includes("family")) setCurrentMode("family");
+    else if (pathname.includes("public")) setCurrentMode("public_affairs");
+    else if (pathname.includes("network") || pathname.includes("social") || pathname.includes("contact")) setCurrentMode("networks");
+  }, [pathname]);
   const activeModeConfig = APP_MODES.find((m) => m.id === currentMode) || APP_MODES[0];
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLeftSidebar75, setIsLeftSidebar75] = useState<boolean>(() => {
@@ -507,17 +596,16 @@ export function AppShell({
   const { favorites, toggleFavorite } = useFavorites();
 
   // Gabungan semua item nav untuk daftar Favorit
-  const allNavItems: { to: string; label: string; icon: LucideIcon }[] = [
-    { to: "/", label: "Launcher", icon: LayoutDashboard },
-    { to: "/terminal", label: "Terminal", icon: Terminal },
-    ...navKonsultan.flatMap((g) => g.items as { to: string; label: string; icon: LucideIcon }[]),
-  ];
-  const favItems = favorites
-    .map((route) => {
-      const match = allNavItems.find((i) => i.to === route || i.to.split("?")[0] === route.split("?")[0]);
-      if (match) return { ...match, to: route };
-      return { to: route, label: route.replace("/", "").replace(/-/g, " "), icon: Star };
-    });
+  const favItems = favorites.map((route) => {
+    const meta = getAppMetaByRoute(route);
+    return {
+      to: route,
+      label: meta.label,
+      icon: meta.icon as LucideIcon,
+      color: meta.iconColor,
+      gradient: meta.accentGradient,
+    };
+  });
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -810,11 +898,52 @@ export function AppShell({
 
           {sidebarView === "navigation" ? (
             <div className="flex flex-col gap-3">
+              {/* Workspace Selector: Pemilih 10 Workspace Terpadu di Sidebar */}
+              {!isLeftSidebar75 ? (
+                <div className="px-1 mb-1">
+                  <div className="flex items-center justify-between gap-1 mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Pilih Workspace
+                    </span>
+                    <span className="text-[10px] font-semibold text-primary">
+                      10 Workspace
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={currentMode}
+                      onChange={(e) => {
+                        const newMode = e.target.value as AppModeId;
+                        setCurrentMode(newMode);
+                        try {
+                          localStorage.setItem("aio_active_mode", newMode);
+                        } catch {}
+                      }}
+                      className="w-full h-8 pl-2.5 pr-7 text-xs font-semibold bg-white/15 dark:bg-white/10 hover:bg-white/20 border border-white/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-foreground cursor-pointer appearance-none truncate"
+                    >
+                      {APP_MODES.map((m) => (
+                        <option key={m.id} value={m.id} className="bg-popover text-popover-foreground">
+                          {m.label} ({m.badge})
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={13} className="text-muted-foreground pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2" />
+                  </div>
+                </div>
+              ) : (
+                /* Mode Ringkas 75px: Icon workspace aktif */
+                <div className="flex justify-center pb-2 border-b border-white/20">
+                  <div className="p-2 rounded-xl bg-white/15 text-white" title={activeModeConfig.label}>
+                    <activeModeConfig.icon className="size-5 text-primary" />
+                  </div>
+                </div>
+              )}
+
               {/* Navigation items for current mode */}
               <div className="flex flex-col gap-1.5">
                 {!isLeftSidebar75 && (
                   <p className="px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    Navigasi Mode ({activeModeConfig.label})
+                    Modul & Fitur ({activeModeConfig.label})
                   </p>
                 )}
                 {activeModeConfig.links.map((link) => {
@@ -972,7 +1101,7 @@ export function AppShell({
                                 : "bg-white/15 dark:bg-white/10 text-muted-foreground group-hover:text-foreground"
                             }`}
                           >
-                            <FavIcon className="h-4 w-4" />
+                            <FavIcon className={`h-4 w-4 ${!isActive && item.color ? item.color : ""}`} />
                           </div>
                           <span className="truncate">{item.label}</span>
                         </Link>
@@ -1265,8 +1394,9 @@ export function AppShell({
             {/* Bagian Kanan Header: 2 Floating Pills (Pill 1: Wadah Utama ~600px untuk Elemen Aksi & Portal, Pill 2: Pengaturan & Sidebar Kanan) */}
             <div className="flex items-center gap-2">
               {/* Pill Shape Wadah Utama (600px) tempat elemen aksi, modul, & portal disiapkan */}
+              {/* Pill Shape Wadah Utama (600px) tempat elemen aksi, modul, & portal disiapkan */}
               <div
-                className="pointer-events-auto h-[44px] w-[600px] max-w-[calc(100vw-240px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all flex items-center p-1 gap-1.5 overflow-hidden"
+                className="pointer-events-auto h-[46px] min-h-[46px] w-auto max-w-[calc(100vw-220px)] rounded-full liquid-glass-header-pill bg-white/60 dark:bg-zinc-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xs shrink-0 transition-all flex items-center p-1 gap-1.5"
               >
                 {!actions && !hasAppHeader && !isHome && (
                   <div className="relative z-10 flex items-center gap-1.5 px-3 text-xs font-medium text-foreground truncate max-w-[200px] sm:max-w-[280px] shrink-0">
@@ -1281,7 +1411,7 @@ export function AppShell({
                 )}
                 <div
                   id="app-header-actions-portal"
-                  className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden flex-1 overflow-x-auto no-scrollbar h-full"
+                  className="relative z-10 flex items-center gap-1.5 min-w-0 empty:hidden flex-1 overflow-x-auto no-scrollbar h-full py-0 overflow-y-visible"
                 />
               </div>
 

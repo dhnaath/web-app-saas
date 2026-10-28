@@ -55,9 +55,12 @@ import {
   Sprout,
   ChevronDown,
   ChevronUp,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { type NavItem } from "@/config/nav";
+import { cn } from "@/lib/utils";
+import { ShellHeader } from "@/app/shell-header";
 import { WealthSpectrumPillView } from "./WealthSpectrumPillView";
 
 
@@ -728,7 +731,7 @@ interface FinancialWealthSectionProps {
 }
 
 
-export type FinancialCategoryTab = "all" | "spectrum" | "surety" | "flow" | "build" | "grow" | "legacy" | "sharia";
+export type FinancialCategoryTab = "all" | "spectrum" | "surety" | "flow" | "build" | "grow" | "legacy";
 
 export interface StageFeatureItem {
   id: string;
@@ -1463,66 +1466,130 @@ export function FinancialWealthSection({
 
   const filteredStages = useMemo(() => {
     if (selectedTab === "all") return WEALTH_STAGE_MAIN_BOXES;
-    if (selectedTab === "sharia" || selectedTab === "spectrum") return [];
+    if (selectedTab === "spectrum") return [];
     return WEALTH_STAGE_MAIN_BOXES.filter((stage) => stage.id === selectedTab);
   }, [selectedTab]);
 
-  const tabBtn = (active: boolean, extra = "") =>
-    `shrink-0 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${extra} ${
-      active
-        ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-        : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground"
-    }`;
-  const badge = (active: boolean) =>
-    `text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-      active ? "bg-primary-foreground/20 text-primary-foreground" : "bg-background/80 text-muted-foreground"
-    }`;
+  const activeStage = useMemo(() => {
+    if (selectedTab === "all" || selectedTab === "spectrum") return null;
+    return WEALTH_STAGE_MAIN_BOXES.find((s) => s.id === selectedTab) || null;
+  }, [selectedTab]);
 
   return (
     <div className="w-full flex flex-col items-center">
+      {/* Portaled ShellHeader: Clean Stage & Spectrum Selector di Top Right Bar */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 h-full py-0 shrink-0">
+          {/* Selector Tahap Wealth */}
+          <div className="relative flex items-center gap-1.5 px-2.5 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
+            <Layers size={12} className="text-primary shrink-0 pointer-events-none" />
+            <select
+              value={selectedTab}
+              onChange={(e) => {
+                setSelectedTab(e.target.value as FinancialCategoryTab);
+                if (e.target.value !== "spectrum") setSelectedPillar(null);
+              }}
+              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
+              title="Pilih Tahap Wealth Management"
+            >
+              <option value="all" className="bg-popover text-popover-foreground">Semua (5 Tahap)</option>
+              {WEALTH_STAGE_MAIN_BOXES.map((st) => (
+                <option key={st.id} value={st.id} className="bg-popover text-popover-foreground">
+                  {st.step}. {st.name}
+                </option>
+              ))}
+              <option value="spectrum" className="bg-popover text-popover-foreground">
+                Wealth Spectrum ({countSpectrum})
+              </option>
+            </select>
+            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
+          </div>
+
+          {/* Toggle Cepat Wealth Spectrum */}
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedTab((prev) => (prev === "spectrum" ? "all" : "spectrum"));
+              setSelectedPillar(null);
+            }}
+            className={cn(
+              "inline-flex items-center gap-1.5 px-2.5 h-[30px] rounded-full text-xs font-semibold shrink-0 cursor-pointer transition-all border active:scale-95",
+              selectedTab === "spectrum"
+                ? "bg-emerald-500 text-white border-emerald-600 shadow-xs font-bold"
+                : "bg-black/5 dark:bg-white/10 hover:bg-black/10 text-muted-foreground hover:text-foreground border-black/5 dark:border-white/10"
+            )}
+            title="Tampilkan Arsitektur Wealth Spectrum (5 Pilar x 5 Modul)"
+          >
+            <ShieldCheck size={12} className={selectedTab === "spectrum" ? "text-white" : "text-emerald-500"} />
+            <span>Spectrum ({countSpectrum})</span>
+          </button>
+
+          {/* Reset Cepat jika filter aktif */}
+          {selectedTab !== "all" && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedTab("all");
+                setSelectedPillar(null);
+              }}
+              className="inline-flex items-center gap-1 px-2 h-[30px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
+              title="Reset ke Semua (5 Tahap)"
+            >
+              <X size={11} />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
+      </ShellHeader>
+
       {/* Title & Description */}
-      <div className="text-center mb-4 sm:mb-5">
+      <div className="text-center mb-3 sm:mb-4">
         <h3 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2">
-          <span>Financial Planning <span className="font-normal">&</span> Wealth Management</span>
+          <span>Financial Planning and Wealth Management</span>
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-2xl mx-auto">
-          5 Tahap Wealth, Arsitektur Wealth Spectrum ({countSpectrum} Apps: 5 Pilar × 5 Modul) & Kategori Khusus Sharia Principles
+          5 Tahap Wealth & Arsitektur Wealth Spectrum ({countSpectrum} Apps: 5 Pilar × 5 Modul)
         </p>
       </div>
 
-      {/* Filter Tabs: Semua (5 Tahap), tiap tahap, Wealth Spectrum, Sharia */}
-      <div className="flex flex-wrap items-center justify-center gap-2 w-full mb-4 sm:mb-5">
-        <button onClick={() => setSelectedTab("all")} className={tabBtn(selectedTab === "all", "px-4")}>
-          <Layers className="size-4 shrink-0" />
-          <span>Semua (5 Tahap)</span>
-          <span className={badge(selectedTab === "all")}>5</span>
-        </button>
-
-        {WEALTH_STAGE_MAIN_BOXES.map((st) => {
-          const StageIcon = st.icon;
-          return (
-            <button key={st.id} onClick={() => setSelectedTab(st.id)} className={tabBtn(selectedTab === st.id)}>
-              <StageIcon className="size-3.5 shrink-0" />
-              <span>{st.step}. {st.name}</span>
+      {/* Minimal Status Strip / Filter Active Indicator */}
+      <div className="flex items-center justify-center gap-2 w-full mb-5">
+        {selectedTab === "all" ? (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-muted-foreground bg-muted/40 border border-border/40">
+            <Layers className="size-3.5 text-primary" />
+            <span>Menampilkan seluruh <strong>5 Tahap Wealth</strong> (Surety, Flow, Build, Grow, Legacy)</span>
+          </span>
+        ) : selectedTab === "spectrum" ? (
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <ShieldCheck className="size-3.5 text-emerald-500" />
+            <span>Arsitektur Wealth Spectrum ({countSpectrum} Modul Aktif)</span>
+            <button
+              type="button"
+              onClick={() => setSelectedTab("all")}
+              className="hover:opacity-80 p-0.5 rounded-full cursor-pointer ml-1"
+              title="Kembali ke semua tahap"
+            >
+              <X className="size-3" />
             </button>
-          );
-        })}
-
-        <button
-          onClick={() => { setSelectedTab("spectrum"); setSelectedPillar(null); }}
-          className={tabBtn(selectedTab === "spectrum", "px-4")}
-        >
-          <ShieldCheck className="size-4 shrink-0 text-emerald-500" />
-          <span>Wealth Spectrum</span>
-          <span className={badge(selectedTab === "spectrum")}>{countSpectrum}</span>
-        </button>
-
-        <button onClick={() => setSelectedTab("sharia")} className={tabBtn(selectedTab === "sharia", "px-4")}>
-          <Handshake className="size-4 shrink-0 text-amber-500" />
-          <span>Sharia Principles</span>
-          <span className={badge(selectedTab === "sharia")}>18</span>
-        </button>
+          </span>
+        ) : (
+          activeStage && (
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+              <activeStage.icon className="size-3.5" />
+              <span>Tahap {activeStage.step}: {activeStage.name} ({activeStage.features.length} modul)</span>
+              <button
+                type="button"
+                onClick={() => setSelectedTab("all")}
+                className="hover:opacity-80 p-0.5 rounded-full cursor-pointer ml-1"
+                title="Tampilkan semua tahap"
+              >
+                <X className="size-3" />
+              </button>
+            </span>
+          )
+        )}
       </div>
+
 
       {/* Konten */}
       {selectedTab === "spectrum" ? (
@@ -1533,34 +1600,6 @@ export function FinancialWealthSection({
           toggleFavorite={toggleFavorite}
           getGradient={getGradient}
         />
-      ) : selectedTab === "sharia" ? (
-        <div className="w-full flex flex-col gap-4">
-          <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-card border border-primary/20 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <Handshake className="size-5" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-foreground">Kategori Khusus: Sharia Principles</h4>
-                <p className="text-xs text-muted-foreground">
-                  3 Kotak Utama: 11 Akad Muamalah, 4 Modul Zakat & Filantropi, serta 3 Audit Bebas Riba, Gharar & Maysir
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/syariah/akad"
-              className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 shrink-0"
-            >
-              <span>Panduan Rukun & Fatwa DSN-MUI</span>
-              <ArrowRight className="size-3" />
-            </Link>
-          </div>
-
-          {SHARIA_MAIN_BOXES.map((box) => (
-            <ShariaMainBox key={box.id} box={box} />
-          ))}
-
-        </div>
       ) : (
         <div className="w-full flex flex-col gap-6">
           {filteredStages.map((stage) => (

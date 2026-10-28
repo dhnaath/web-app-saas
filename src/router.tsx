@@ -28,13 +28,20 @@ import {
 import { StandaloneAppView } from "./features/standalone/StandaloneAppView";
 import { STANDALONE_APPS } from "./features/standalone/standaloneAppsData";
 import { ValueTreatedPage } from "./features/value-treated/ValueTreatedPage";
-import { AppModuleSection } from "./features/launcher/AppModuleSection";
 import { WorkProductivityPage } from "./features/work-productivity/WorkProductivityPage";
 import { PersonalLifePage } from "./features/personal-life/PersonalLifePage";
 import { BusinessOperationsCustomersPage } from "./features/business-operations/BusinessOperationsCustomersPage";
 import { KnowledgeAndLearningPage } from "./features/knowledge-learning/KnowledgeAndLearningPage";
 import { HomeLeisurePage } from "./features/home-leisure/HomeLeisurePage";
 import { FamilyCommunityPage } from "./features/family-community/FamilyCommunityPage";
+import { IslamicPrinciplesShariaValuesPage } from "./features/syariah/IslamicPrinciplesShariaValuesPage";
+import { CreativeWorkspaceMediaPage } from "./features/creative-workspace/CreativeWorkspaceMediaPage";
+import { ResearchFrameworksPage } from "./features/research-frameworks/ResearchFrameworksPage";
+import { FamilyRecordsHouseholdPage } from "./features/family-records/FamilyRecordsHouseholdPage";
+import { PublicRelationsPolicyAffairsPage } from "./features/public-affairs/PublicRelationsPolicyAffairsPage";
+import { ContactDirectoryNetworksPage } from "./features/social-networks/ContactDirectoryNetworksPage";
+import { FinancialWealthSection } from "./features/launcher/FinancialWealthSection";
+import { Tools100Section } from "./features/launcher/Tools100Section";
 import { useFavorites } from "./hooks/useFavorites";
 import {
   PehHabitsView,
@@ -1145,7 +1152,7 @@ const milestonesRoute = createRoute({
 
 function WorkProductivityView() {
   return (
-    <AppShell title="Work and Productivity" subtitle="Semua (9) • Execution (3), Partners (2), Control (3), Ownership (1)">
+    <AppShell title="Productivity Workspace and Workflow Systems" subtitle="Semua (9) • Execution (3), Partners (2), Control (3), Ownership (1)">
       <WorkProductivityPage />
     </AppShell>
   );
@@ -1284,6 +1291,138 @@ const familyCommunityRoute = createRoute({
   component: FamilyCommunityView,
 });
 
+function IslamicPrinciplesShariaValuesView() {
+  return (
+    <AppShell
+      title="Islamic Principles and Sharia Values"
+      subtitle="Semua (16) · Akad Sosial (5) · Akad Bisnis (5) · Zakat & Wakaf (3) · Audit Muamalah (3)"
+    >
+      <IslamicPrinciplesShariaValuesPage />
+    </AppShell>
+  );
+}
+
+const shariaValuesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/sharia-values",
+  component: IslamicPrinciplesShariaValuesView,
+});
+
+const islamicPrinciplesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/islamic-principles",
+  component: IslamicPrinciplesShariaValuesView,
+});
+
+function CreativeWorkspaceMediaView() {
+  return (
+    <AppShell
+      title="Creative Workspace and Media Production"
+      subtitle="Semua (6) · Studio (2) · Publishing (1) · Media (2) · Interactive (1)"
+    >
+      <CreativeWorkspaceMediaPage />
+    </AppShell>
+  );
+}
+
+const creativeWorkspaceRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/creative-workspace",
+  component: CreativeWorkspaceMediaView,
+});
+
+function ResearchFrameworksView() {
+  return (
+    <AppShell
+      title="Research Foundations and Reference Frameworks"
+      subtitle="Semua (6) · Frameworks (2) · Reference (2) · Research (2)"
+    >
+      <ResearchFrameworksPage />
+    </AppShell>
+  );
+}
+
+const researchFrameworksRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/research-frameworks",
+  component: ResearchFrameworksView,
+});
+
+function FamilyRecordsHouseholdView() {
+  return (
+    <AppShell
+      title="Family Records and Household Planning"
+      subtitle="Semua (6) · Family (3) · Household (2) · Vehicles (1)"
+    >
+      <FamilyRecordsHouseholdPage />
+    </AppShell>
+  );
+}
+
+const familyRecordsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/family-records",
+  component: FamilyRecordsHouseholdView,
+});
+
+function PublicRelationsPolicyAffairsView() {
+  return (
+    <AppShell
+      title="Public Relations and Policy Affairs"
+      subtitle="Semua (6) · Civic (3) · Policy (2) · Media (1)"
+    >
+      <PublicRelationsPolicyAffairsPage />
+    </AppShell>
+  );
+}
+
+const publicAffairsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/public-affairs",
+  component: PublicRelationsPolicyAffairsView,
+});
+
+function ContactDirectoryNetworksView() {
+  return (
+    <AppShell
+      title="Contact Directory and Social Networks"
+      subtitle="Semua (6) · Directory (2) · Relations (2) · Networks (2)"
+    >
+      <ContactDirectoryNetworksPage />
+    </AppShell>
+  );
+}
+
+const socialNetworksRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/social-networks",
+  component: ContactDirectoryNetworksView,
+});
+
+function FinancialPlanningWealthView() {
+  const { favorites, toggleFavorite } = useFavorites();
+  return (
+    <AppShell
+      title="Financial Planning and Wealth Management"
+      subtitle="5 Tahap Wealth, Arsitektur Wealth Spectrum & Kategori Khusus Sharia Principles"
+    >
+      <div className="w-full max-w-[1500px] mx-auto px-4 py-2">
+        <FinancialWealthSection
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
+          getGradient={() => "from-emerald-500 to-teal-700"}
+        />
+      </div>
+    </AppShell>
+  );
+}
+
+const financialPlanningRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/financial-planning",
+  component: FinancialPlanningWealthView,
+});
+
 function TimeTrackerView() {
   return (
     <AppShell title="Time Tracker" subtitle="Catatan Waktu Resmi/Legal-Grade • Timesheet & Billing">
@@ -1356,39 +1495,22 @@ const peopleRoute = createRoute({
   component: PeopleManagerView,
 });
 
-function AppModulePageView() {
-  const { favorites, toggleFavorite } = useFavorites();
-  return (
-    <AppShell
-      title="App Module"
-      subtitle="Suite 47 Standalone Apps Terintegrasi — Produktivitas, Personal, dan Relasi"
-    >
-      <div className="w-full max-w-[1500px] mx-auto p-4 sm:p-6 space-y-6">
-        <AppModuleSection
-          favorites={favorites}
-          toggleFavorite={toggleFavorite}
-        />
-      </div>
-    </AppShell>
-  );
-}
-
 const appModuleRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/app-module",
-  component: AppModulePageView,
+  component: WorkProductivityView,
 });
 
 const productivityRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/productivity",
-  component: AppModulePageView,
+  component: WorkProductivityView,
 });
 
 const personalRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/personal",
-  component: AppModulePageView,
+  component: PersonalLifeView,
 });
 
 function KomunitasWargaView() {
@@ -1816,6 +1938,27 @@ const vrioRoute = createRoute({ getParentRoute: () => rootRoute, path: "/vrio", 
 const framework100Route = createRoute({ getParentRoute: () => rootRoute, path: "/100-framework", component: () => <FrameworkByNameView name="Katalog 100 Framework" /> });
 const valueTreatedRoute = createRoute({ getParentRoute: () => rootRoute, path: "/value-treated", component: ValueTreatedPage });
 
+function Tools100Page() {
+  const { favorites, toggleFavorite } = useFavorites();
+  return (
+    <AppShell
+      title="100 Tools Mini MBA"
+      subtitle="8 Pilar Strategis & MBA Tools: 100 Instrumen Analisis, Framework Mini MBA & Kanvas Strategis"
+    >
+      <div className="w-full max-w-[1600px] mx-auto p-4 sm:p-6 space-y-6">
+        <Tools100Section
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
+          getGradient={() => "bg-linear-to-br from-indigo-500 to-indigo-700"}
+        />
+      </div>
+    </AppShell>
+  );
+}
+
+const tools100Route = createRoute({ getParentRoute: () => rootRoute, path: "/100-tools", component: Tools100Page });
+const miniMbaRoute = createRoute({ getParentRoute: () => rootRoute, path: "/mini-mba", component: Tools100Page });
+
 
 // 6. Dynamic catch-all route for any standalone app / nav path
 function DynamicAppView() {
@@ -2150,6 +2293,14 @@ const routeTree = rootRoute.addChildren([
   homeLeisureRoute,
   familyAndCommunityRoute,
   familyCommunityRoute,
+  shariaValuesRoute,
+  islamicPrinciplesRoute,
+  creativeWorkspaceRoute,
+  researchFrameworksRoute,
+  familyRecordsRoute,
+  publicAffairsRoute,
+  socialNetworksRoute,
+  financialPlanningRoute,
   timeTrackerRoute,
   timesheetRoute,
   timesheetsRoute,
@@ -2257,6 +2408,8 @@ const routeTree = rootRoute.addChildren([
   vrioRoute,
   framework100Route,
   valueTreatedRoute,
+  tools100Route,
+  miniMbaRoute,
   catchAllRoute,
 
 ]);

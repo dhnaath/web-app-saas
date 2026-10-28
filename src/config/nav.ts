@@ -150,6 +150,27 @@ export type NavGroup = {
 
 export const navKonsultan: NavGroup[] = [
   // ============================================================================
+  // MASTER WORKSPACES (6 KATEGORI TERPADU)
+  // ============================================================================
+  {
+    title: "Master Workspaces",
+    isStandalone: true,
+    parentCategory: "Workspace",
+    items: [
+      { to: "/financial-planning", label: "Financial Planning and Wealth Management", icon: Coins, badge: "5 Tahapan" },
+      { to: "/business-operations", label: "Business Administration and Operations Management", icon: Store, badge: "7 Modul" },
+      { to: "/work-productivity", label: "Productivity Workspace and Workflow Systems", icon: Briefcase, badge: "9 Modul" },
+      { to: "/creative-workspace", label: "Creative Workspace and Media Production", icon: Palette, badge: "6 Modul" },
+      { to: "/research-frameworks", label: "Research Foundations and Reference Frameworks", icon: GraduationCap, badge: "6 Modul" },
+      { to: "/sharia-values", label: "Islamic Principles and Sharia Values", icon: Scale, badge: "16 Modul" },
+      { to: "/personal-life", label: "Personal Life and Profile Management", icon: Heart, badge: "5 Modul" },
+      { to: "/family-records", label: "Family Records and Household Planning", icon: Home, badge: "6 Modul" },
+      { to: "/public-affairs", label: "Public Relations and Policy Affairs", icon: Landmark, badge: "6 Modul" },
+      { to: "/social-networks", label: "Contact Directory and Social Networks", icon: Users, badge: "6 Modul" },
+    ],
+  },
+
+  // ============================================================================
   // 1. FINANCIAL PLANNING & WEALTH MANAGEMENT (STANDALONE & WEALTH MATRIX)
   // ============================================================================
   {
@@ -569,7 +590,7 @@ export const navKonsultan: NavGroup[] = [
     isStandalone: true,
     parentCategory: "Productivity",
     items: [
-      { to: "/work-productivity", label: "Work & Productivity", icon: Briefcase, badge: "9 Modul" },
+      { to: "/work-productivity", label: "Productivity Workspace and Workflow Systems", icon: Briefcase, badge: "9 Modul" },
       { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
       { to: "/kalender", label: "Calendar", icon: CalendarDays },
       { to: "/proyek", label: "Project Manager", icon: FolderKanban },
@@ -714,6 +735,11 @@ export const navKonsultan: NavGroup[] = [
 ];
 
 export const otherNavGroups: NavGroup[] = [
+  // Master Workspaces (6 Kategori Hub)
+  ...navKonsultan
+    .filter((g) => g.title === "Master Workspaces")
+    .map((g) => ({ ...g, sectionCategory: "Master Workspaces" })),
+
   // 100 Strategic Management Frameworks (17 Groups)
   ...navKonsultan
     .filter((g) => g.parentCategory === "100 Tools")

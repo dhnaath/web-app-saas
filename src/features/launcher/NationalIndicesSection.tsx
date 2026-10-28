@@ -22,6 +22,7 @@ import {
   CalendarClock,
   Globe2,
   Info,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -29,11 +30,25 @@ import {
   NationalIndexItem,
 } from '@/data/nationalIndicesData';
 
+export const NATIONAL_INDEX_PORTAL_LINKS: Record<string, string> = {
+  ipm: 'https://www.bps.go.id/id/statistics/subject/indeks-pembangunan-manusia',
+  gini: 'https://www.bps.go.id/id/statistics/subject/gini-ratio',
+  kemiskinan: 'https://www.bps.go.id/id/statistics/subject/kemiskinan-dan-ketimpangan',
+  cpi: 'https://www.ti.or.id',
+  wgi: 'https://info.worldbank.org/governance/wgi/',
+  gii: 'https://www.wipo.int/global_innovation_index/en/',
+  gci: 'https://www.weforum.org/reports/global-competitiveness-report-2019',
+  sdg: 'https://dashboards.sdgindex.org/profiles/indonesia',
+  idu: 'https://kemenpppa.go.id',
+  ikp: 'https://badanpangan.go.id',
+};
+
 interface NationalIndicesSectionProps {
   isEmbedded?: boolean;
+  hideHeaderBanner?: boolean;
 }
 
-export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSectionProps) {
+export function NationalIndicesSection({ isEmbedded = false, hideHeaderBanner = false }: NationalIndicesSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [selectedItem, setSelectedItem] = useState<NationalIndexItem | null>(null);
@@ -158,49 +173,10 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
         </div>
       )}
 
-      {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card/95 to-primary/5 p-6 sm:p-8 shadow-xs">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide bg-primary/10 text-primary border border-primary/20">
-                <BarChart3 className="size-3.5" />
-                DASHBOARD SOSIAL-EKONOMI MAKRO
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-                <Globe2 className="size-3" />
-                Benchmark Global & Regional ASEAN
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              10 Indeks Pembangunan & Kesejahteraan Nasional
-            </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Pemantauan komprehensif 10 indikator strategis kualitas hidup, keadilan sosial, tata kelola, inovasi, dan modal manusia Indonesia menuju Indonesia Emas 2045.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            <button
-              onClick={handleCopySummary}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:bg-muted text-foreground text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95"
-            >
-              <Copy className="size-3.5" />
-              Salin Ringkasan
-            </button>
-            <button
-              onClick={handleDownloadCsv}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95"
-            >
-              <Download className="size-3.5" />
-              Unduh CSV
-            </button>
-          </div>
-        </div>
-
-        {/* 4 Kartu KPI Ringkas */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-border/60">
-          <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+      {/* Header Banner atau KPI Langsung */}
+      {hideHeaderBanner ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-2xs">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs font-medium">Total Indeks</span>
               <Award className="size-4 text-primary" />
@@ -209,7 +185,7 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
             <p className="text-[11px] text-muted-foreground mt-0.5">Sosial, ekonomi & institusi</p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+          <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-2xs">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs font-medium">IPM Indonesia</span>
               <TrendingUp className="size-4 text-emerald-500" />
@@ -220,7 +196,7 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
             <p className="text-[11px] text-muted-foreground mt-0.5">Status Tinggi (+0.84% YoY)</p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+          <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-2xs">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs font-medium">Inovasi Global (GII)</span>
               <Sparkles className="size-4 text-purple-500" />
@@ -231,7 +207,7 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
             <p className="text-[11px] text-muted-foreground mt-0.5">Naik +7 tingkat (WIPO)</p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+          <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-2xs">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs font-medium">Tantangan Kritis</span>
               <ShieldAlert className="size-4 text-rose-500" />
@@ -242,7 +218,92 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
             <p className="text-[11px] text-muted-foreground mt-0.5">Perlu akselerasi penegakan hukum</p>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card/95 to-primary/5 p-6 sm:p-8 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide bg-primary/10 text-primary border border-primary/20">
+                  <BarChart3 className="size-3.5" />
+                  DASHBOARD SOSIAL-EKONOMI MAKRO
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+                  <Globe2 className="size-3" />
+                  Benchmark Global & Regional ASEAN
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                10 Indeks Pembangunan & Kesejahteraan Nasional
+              </h1>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Pemantauan komprehensif 10 indikator strategis kualitas hidup, keadilan sosial, tata kelola, inovasi, dan modal manusia Indonesia menuju Indonesia Emas 2045.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+              <button
+                onClick={handleCopySummary}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:bg-muted text-foreground text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95"
+              >
+                <Copy className="size-3.5" />
+                Salin Ringkasan
+              </button>
+              <button
+                onClick={handleDownloadCsv}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95"
+              >
+                <Download className="size-3.5" />
+                Unduh CSV
+              </button>
+            </div>
+          </div>
+
+          {/* 4 Kartu KPI Ringkas */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-border/60">
+            <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-medium">Total Indeks</span>
+                <Award className="size-4 text-primary" />
+              </div>
+              <p className="text-xl sm:text-2xl font-bold text-foreground mt-1.5">10 Indikator</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Sosial, ekonomi & institusi</p>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-medium">IPM Indonesia</span>
+                <TrendingUp className="size-4 text-emerald-500" />
+              </div>
+              <p className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">
+                74.39
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Status Tinggi (+0.84% YoY)</p>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-medium">Inovasi Global (GII)</span>
+                <Sparkles className="size-4 text-purple-500" />
+              </div>
+              <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1.5">
+                #54 Dunia
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Naik +7 tingkat (WIPO)</p>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xs p-3.5 sm:p-4">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="text-xs font-medium">Tantangan Kritis</span>
+                <ShieldAlert className="size-4 text-rose-500" />
+              </div>
+              <p className="text-xl sm:text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1.5">
+                CPI: 34 / 100
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Perlu akselerasi penegakan hukum</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filter Kategori & View Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
@@ -435,13 +496,28 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
               </div>
 
               {/* Card Footer: Source & Button */}
-              <div className="pt-4 mt-4 border-t border-border/60 flex items-center justify-between">
-                <span className="text-[11px] text-muted-foreground truncate max-w-[65%]">
+              <div className="pt-4 mt-4 border-t border-border/60 flex items-center justify-between gap-2">
+                <span className="text-[11px] text-muted-foreground truncate max-w-[55%]">
                   Sumber: {item.sumberResmi}
                 </span>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform">
-                  Detail <ArrowUpRight className="size-3.5" />
-                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {NATIONAL_INDEX_PORTAL_LINKS[item.id] && (
+                    <a
+                      href={NATIONAL_INDEX_PORTAL_LINKS[item.id]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground text-foreground text-[11px] font-semibold transition-colors"
+                      title={`Direct Link Portal Resmi: ${item.sumberResmi}`}
+                    >
+                      <span>Portal</span>
+                      <ExternalLink className="size-3" />
+                    </a>
+                  )}
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground text-xs font-bold transition-colors">
+                    Detail <ArrowUpRight className="size-3.5" />
+                  </span>
+                </div>
               </div>
             </div>
           ))}
@@ -524,16 +600,31 @@ export function NationalIndicesSection({ isEmbedded = false }: NationalIndicesSe
                       {item.sumberResmi}
                     </td>
                     <td className="py-3.5 px-4 text-center">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedItem(item);
-                        }}
-                        className="p-1.5 rounded-lg bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground transition-all cursor-pointer"
-                        title="Buka Detail"
-                      >
-                        <ArrowUpRight className="size-3.5" />
-                      </button>
+                      <div className="flex items-center justify-center gap-1.5">
+                        {NATIONAL_INDEX_PORTAL_LINKS[item.id] && (
+                          <a
+                            href={NATIONAL_INDEX_PORTAL_LINKS[item.id]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="px-2 py-1 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground text-foreground text-[10px] font-semibold transition-colors inline-flex items-center gap-1"
+                            title={`Direct Link Portal Resmi: ${item.sumberResmi}`}
+                          >
+                            <span>Portal</span>
+                            <ExternalLink className="size-3" />
+                          </a>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedItem(item);
+                          }}
+                          className="p-1.5 rounded-lg bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground transition-all cursor-pointer"
+                          title="Buka Detail"
+                        >
+                          <ArrowUpRight className="size-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
