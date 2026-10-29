@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Star, ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
+import { useKembaliButtonClass } from "@/hooks/useKembaliButtonClass";
+import { CardMoreMenu } from "./CardMoreMenu";
 
 export interface MBACardFeatureItem {
   title: string;
@@ -22,6 +24,8 @@ export interface MBACardProps {
   toggleFavorite: (to: string) => void;
   gradient?: string;
   accentGradient?: string;
+  maxFeatureCols?: 3 | 4 | 5;
+  cardHeightClass?: string;
 }
 
 const GRADIENT_PALETTES = [
@@ -52,14 +56,16 @@ export function MBACard({
   to,
   icon: Icon,
   badge,
-  shortDesc,
   features = [],
   isFav,
   toggleFavorite,
   gradient,
   accentGradient,
+  maxFeatureCols = 3,
+  cardHeightClass = "min-h-[300px]",
 }: MBACardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const kembaliBtnClass = useKembaliButtonClass();
   const [interactionConfig, setInteractionConfig] = useState(() => ({
     axis: Math.random() > 0.5 ? "x" : "y",
     dir: Math.random() > 0.5 ? 1 : -1,
@@ -94,9 +100,9 @@ export function MBACard({
     : undefined;
 
   return (
-    <div className="w-full [perspective:1000px] min-h-[300px]">
+    <div className={`w-full [perspective:1000px] ${cardHeightClass}`}>
       <motion.div
-        className="relative w-full h-full min-h-[300px] [transform-style:preserve-3d]"
+        className={`relative w-full h-full ${cardHeightClass} [transform-style:preserve-3d]`}
         animate={{
           rotateX: isFlipped && interactionConfig.axis === "x" ? 180 * interactionConfig.dir : 0,
           rotateY: isFlipped && interactionConfig.axis === "y" ? 180 * interactionConfig.dir : 0,
@@ -104,9 +110,9 @@ export function MBACard({
         transition={{ duration: 0.6, type: "spring", stiffness: 80, damping: 15 }}
       >
         {/* Front Face (Gaya Kotak Tools 100 MBA) */}
-        <div className="w-full h-full rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group [backface-visibility:hidden]">
-          <div>
-            <div className="flex items-start justify-between gap-3">
+        <div className="w-full h-full rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-3 group [backface-visibility:hidden]">
+          <div className="flex flex-col min-h-0 flex-1">
+            <div className="flex items-start justify-between gap-3 shrink-0">
               <Link
                 to={mainPath as any}
                 search={mainSearch as any}
@@ -129,35 +135,19 @@ export function MBACard({
                 </div>
               </Link>
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  toggleFavorite(to);
-                }}
-                className={`p-1.5 rounded-xl border transition-all cursor-pointer active:scale-95 shrink-0 ${
-                  isFav
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-400 shadow-xs"
-                    : "border-border/60 hover:border-amber-400/30 hover:bg-muted/60 text-muted-foreground hover:text-amber-400"
-                }`}
-                title={isFav ? "Hapus dari Favorit Dock" : "Tambah ke Favorit Dock (Maksimal 5)"}
-                aria-label={isFav ? `Hapus ${title} dari favorit` : `Tambahkan ${title} ke favorit dock`}
-              >
-                <Star
-                  className={`size-4 transition-transform ${
-                    isFav ? "fill-amber-400 text-amber-400 scale-110" : ""
-                  }`}
-                />
-              </button>
+              <CardMoreMenu
+                title={title}
+                isFav={isFav}
+                onToggleFavorite={() => toggleFavorite(to)}
+              />
             </div>
 
-            <div className="mt-3 pt-3 border-t border-border/60">
-              <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center">
+            <div className="mt-3 pt-1 flex flex-col min-h-0 flex-1">
+              <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center shrink-0">
                 Features ({features.length}):
               </span>
 
-              <div className="flex flex-wrap justify-center gap-1.5 max-h-[195px] overflow-y-auto pr-0.5 [scrollbar-width:thin]">
+              <div className="flex flex-wrap justify-center content-start gap-1.5 flex-1 min-h-0 max-h-[195px] overflow-y-auto pr-0.5 [scrollbar-width:thin]">
                 {features.map((feat, idx) => {
                   const FeatIcon = feat.icon || Icon;
                   const featPath = feat.to.split("?")[0];
@@ -171,7 +161,13 @@ export function MBACard({
                       to={featPath as any}
                       search={featSearch as any}
                       title={feat.desc || feat.title}
-                      className="min-w-[calc((100%-0.75rem)/3)] max-w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip"
+                      className={`${
+                        maxFeatureCols === 5
+                          ? "min-w-[calc((100%-1.625rem)/5)] px-1.5 gap-1"
+                          : maxFeatureCols === 4
+                            ? "min-w-[calc((100%-1.25rem)/4)] px-2 gap-1.5"
+                            : "min-w-[calc((100%-0.875rem)/3)] px-2.5 gap-1.5"
+                      } max-w-full inline-flex items-center justify-center py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip`}
                     >
                       <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
                       <span className="text-center leading-snug whitespace-normal">{feat.title}</span>
@@ -182,7 +178,7 @@ export function MBACard({
             </div>
           </div>
 
-          <div className="border-t border-border/50 pt-3 flex items-center justify-end text-xs">
+          <div className="pt-1 flex items-center justify-end text-xs shrink-0">
             <button
               type="button"
               onClick={handleFlip}
@@ -195,9 +191,9 @@ export function MBACard({
           </div>
         </div>
 
-        {/* Back Face (Warna gradien app + rincian + tombol kembali persis Tools 100 MBA) */}
+        {/* Back Face (Warna icon app + tombol kembali di ujung bawah kanan persis Tools 100 MBA) */}
         <div
-          className={`absolute inset-0 w-full h-full rounded-2xl ${cardGradient} p-5 shadow-lg border border-white/20 flex flex-col justify-between overflow-hidden [backface-visibility:hidden]`}
+          className={`absolute inset-0 w-full h-full rounded-2xl ${cardGradient} p-4 shadow-lg border border-white/20 flex flex-col justify-end items-end overflow-hidden [backface-visibility:hidden]`}
           style={{
             transform:
               interactionConfig.axis === "x"
@@ -205,40 +201,15 @@ export function MBACard({
                 : `rotateY(${180 * interactionConfig.dir}deg)`,
           }}
         >
-          <div className="space-y-2.5 text-white">
-            <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-white shrink-0">
-                <Icon size={16} strokeWidth={2} />
-              </div>
-              <h5 className="font-bold text-sm text-white truncate drop-shadow-xs">{title}</h5>
-            </div>
-            {shortDesc && (
-              <p className="text-xs text-white/90 leading-relaxed line-clamp-5 drop-shadow-2xs">
-                {shortDesc}
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between w-full pt-3 border-t border-white/15">
-            <Link
-              to={mainPath as any}
-              search={mainSearch as any}
-              className="px-3 py-1.5 rounded-lg bg-white/95 hover:bg-white text-slate-900 text-xs font-bold active:scale-95 transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Buka</span>
-              <ArrowRight size={12} />
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleFlip}
-              className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
-              title="Kembali"
-            >
-              <RotateCcw size={12} />
-              <span className="text-[11px] font-medium">Kembali</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleFlip}
+            className={kembaliBtnClass}
+            title="Kembali"
+          >
+            <RotateCcw size={12} className="shrink-0" />
+            <span className="text-[11px] font-medium">Kembali</span>
+          </button>
         </div>
       </motion.div>
     </div>

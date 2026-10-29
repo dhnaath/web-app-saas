@@ -311,10 +311,10 @@ export function Launcher() {
       title="All in One Workspace"
       subtitle="Workspace Eksekutif Terintegrasi: Bisnis, Finansial, Manajemen, Komoditas & 10 Mode Kehidupan"
     >
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-2 space-y-2 pb-2">
+      <div className="w-full max-w-[1500px] mx-auto px-4 sm:px-6 py-2 space-y-2 pb-2">
         {/* Swipe Carousel Area */}
-        <div className="overflow-hidden cursor-grab active:cursor-grabbing transition-[height] duration-300" ref={emblaRef}>
-          <div className="flex touch-pan-y items-start">
+        <div className="w-full overflow-hidden cursor-grab active:cursor-grabbing transition-[height] duration-300" ref={emblaRef}>
+          <div className="w-full flex touch-pan-y items-start">
             {LAUNCHER_TABS.map((tab, idx) => {
               const isActive = activeTabIdx === idx;
               return (
