@@ -10,16 +10,32 @@ import {
   RotateCcw,
   ArrowRight,
   Layers,
+  ChevronDown,
 } from "lucide-react";
 import {
   JENJANG_LEVELS,
   CURRICULUM_DISCIPLINES,
 } from "@/features/curated/curriculumData";
+import { getCurriculumCategoryGroups } from "@/features/curated/curriculumCategories";
 
 export function ValueTreatedPage() {
   const [activeJenjangId, setActiveJenjangId] = useState<number>(2);
   const [searchQuery, setSearchQuery] = useState("");
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
+  const [categoryOnlyMode, setCategoryOnlyMode] = useState<boolean>(true);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+
+  const toggleCategoryExpand = (catKey: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [catKey]: !prev[catKey],
+    }));
+  };
+
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("wira_vt_favs");
@@ -182,13 +198,43 @@ export function ValueTreatedPage() {
 
       {/* Grid: 10 BIDANG TETAP, ISI FITUR MENYESUAIKAN */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
           <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
             <span>10 Bidang Value pada Jenjang {currentJenjang.name}</span>
             <span className="text-xs font-normal text-muted-foreground">
               ({currentJenjang.count} fitur per bidang • Total {totalModul} modul)
             </span>
           </h3>
+
+          {activeJenjangId >= 4 && (
+            <div className="flex items-center gap-1.5 self-start sm:self-auto">
+              <span className="text-[11px] text-muted-foreground font-medium">Tampilan:</span>
+              <div className="inline-flex items-center p-0.5 rounded-xl bg-card border border-border shadow-2xs text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => setCategoryOnlyMode(true)}
+                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-semibold ${
+                    categoryOnlyMode
+                      ? "bg-amber-500 text-white shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Kategori Saja
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCategoryOnlyMode(false)}
+                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-semibold ${
+                    !categoryOnlyMode
+                      ? "bg-amber-500 text-white shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Kategori & Materi
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -197,14 +243,18 @@ export function ValueTreatedPage() {
             const Icon = disc.icon;
             const isFlipped = !!flippedCards[disc.slug];
             const isFav = favorites.includes(`/kurasi/${disc.slug}`);
+            const categoryGroups =
+              activeJenjangId >= 3
+                ? getCurriculumCategoryGroups(disc.slug, activeJenjangId, features)
+                : [];
 
             return (
               <div
                 key={disc.id}
-                className="w-full [perspective:1000px] min-h-[350px]"
+                className="w-full [perspective:1000px] h-full"
               >
                 <motion.div
-                  className="relative w-full h-full min-h-[350px] [transform-style:preserve-3d]"
+                  className="relative w-full h-full [transform-style:preserve-3d]"
                   animate={{
                     rotateY: isFlipped ? 180 : 0,
                   }}
@@ -266,7 +316,11 @@ export function ValueTreatedPage() {
                         <div className="flex items-center justify-between text-[11px] font-bold text-foreground mb-2">
                           <span className="flex items-center gap-1.5">
                             <Layers size={12} className="text-amber-500" />
-                            <span>Materi Fitur ({features.length} Pokok):</span>
+                            <span>
+                              {categoryGroups.length > 0
+                                ? `Kategori (${categoryGroups.length} Kategori • ${features.length} Materi):`
+                                : `Materi Fitur (${features.length} Pokok):`}
+                            </span>
                           </span>
                           <span className="text-[10px] font-mono text-muted-foreground">
                             {currentJenjang.name}
@@ -293,35 +347,60 @@ export function ValueTreatedPage() {
                               </div>
                             ))}
                           </div>
-                        ) : features.length <= 9 ? (
-                          /* 1 SKS (9 Fitur): 2 Kolom Ringkas */
-                          <div className="grid grid-cols-2 gap-1.5 max-h-[175px] overflow-y-auto no-scrollbar">
-                            {features.map((featName, idx) => (
-                              <div
-                                key={idx}
-                                className="px-2 py-1 rounded-lg bg-muted/40 border border-border/50 text-[11px] font-medium text-foreground flex items-center gap-1.5 truncate hover:bg-muted/70 transition-colors"
-                                title={featName}
-                              >
-                                <span className="text-[9px] font-mono text-muted-foreground font-bold shrink-0">
-                                  {idx + 1}.
-                                </span>
-                                <span className="truncate">{featName}</span>
-                              </div>
-                            ))}
-                          </div>
                         ) : (
-                          /* 2 SKS, 3 SKS, + Praktikum (16, 25, 36 Fitur): Cloud Badges Ringkas & Scrollable */
-                          <div className="max-h-[175px] overflow-y-auto pr-1 space-y-1.5 no-scrollbar">
-                            <div className="flex flex-wrap gap-1.5">
-                              {features.map((featName, idx) => (
-                                <span
-                                  key={idx}
-                                  className="px-2 py-0.5 rounded-md bg-muted/50 border border-border/50 text-[10px] font-medium text-foreground hover:bg-amber-500/10 hover:border-amber-500/30 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-default"
-                                  title={`Materi ${idx + 1}: ${featName}`}
-                                >
-                                  {idx + 1}. {featName}
-                                </span>
-                              ))}
+                          /* 1 SKS (9), 2 SKS (16), 3 SKS (25), + Praktikum (36): Terpisah Per Kategori & Sambung Urut ke Bawah */
+                          <div className="space-y-2">
+                            <div className="relative pl-3.5 space-y-2 before:absolute before:left-[5px] before:top-2.5 before:bottom-2.5 before:w-[2px] before:bg-linear-to-b before:from-amber-500/70 before:via-amber-500/30 before:to-border/60">
+                              {categoryGroups.map((group, cIdx) => {
+                                const catKey = `${disc.slug}-${group.id}`;
+                                const isExpanded =
+                                  !categoryOnlyMode || !!expandedCategories[catKey];
+                                return (
+                                  <div key={group.id} className="relative space-y-1">
+                                    {/* Titik penghubung yang menyambungkan garis ke bawah */}
+                                    <span className="absolute -left-3.5 top-2 size-2 rounded-full bg-amber-500 ring-2 ring-card shadow-2xs" />
+
+                                    {/* Kategori Card */}
+                                    <button
+                                      type="button"
+                                      onClick={(e) => toggleCategoryExpand(catKey, e)}
+                                      className="w-full text-left p-1.5 sm:p-2 rounded-xl bg-muted/40 hover:bg-muted/70 border border-border/60 text-xs font-semibold text-foreground flex items-center justify-between transition-colors group/cat cursor-pointer"
+                                    >
+                                      <div className="flex items-center gap-1.5 truncate">
+                                        <span className="truncate group-hover/cat:text-amber-600 dark:group-hover/cat:text-amber-400 transition-colors">
+                                          {group.name}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1.5 shrink-0 ml-1.5">
+                                        <span className="text-[10px] font-mono font-medium text-muted-foreground bg-card px-1.5 py-0.5 rounded-md border border-border/60">
+                                          {group.items.length}
+                                        </span>
+                                        <ChevronDown
+                                          size={12}
+                                          className={`text-muted-foreground transition-transform duration-200 ${
+                                            isExpanded ? "rotate-180" : ""
+                                          }`}
+                                        />
+                                      </div>
+                                    </button>
+
+                                    {/* Rincian item materi jika dibuka / mode lengkap */}
+                                    {isExpanded && (
+                                      <div className="pl-1.5 pt-0.5 pb-1 flex flex-wrap gap-1 animate-in fade-in duration-200">
+                                        {group.items.map((featName, fIdx) => (
+                                          <span
+                                            key={fIdx}
+                                            className="px-1.5 py-0.5 rounded-md bg-card/90 border border-border/60 text-[10px] font-medium text-foreground hover:bg-amber-500/10 hover:border-amber-500/30 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-default"
+                                            title={`Kategori ${cIdx + 1} • Materi: ${featName}`}
+                                          >
+                                            {featName}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
                         )}

@@ -842,7 +842,7 @@ const ToolsFlipCard = ({
 
             <div className="mt-3 pt-1">
               <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center">
-                Features ({app.features.length}):
+                {app.categoryLabel || app.badge || "Kategori"} ({app.features.length}):
               </span>
 
               <div className="flex flex-wrap justify-center gap-1.5 max-h-[195px] overflow-y-auto pr-0.5 [scrollbar-width:thin]">
@@ -990,7 +990,7 @@ export const ValueTreatedFlipCard = ({
             <div className="mt-3 pt-2.5 border-t border-border/60">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-bold tracking-wider text-muted-foreground">
-                  Features ({app.features.length}):
+                  {app.categoryLabel || "Kategori"} ({app.features.length}):
                 </span>
                 {hasMore && (
                   <button

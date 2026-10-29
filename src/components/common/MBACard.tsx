@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw, ChevronDown, Layers } from "lucide-react";
 import { useKembaliButtonClass } from "@/hooks/useKembaliButtonClass";
 import { CardMoreMenu } from "./CardMoreMenu";
 
@@ -12,6 +12,13 @@ export interface MBACardFeatureItem {
   desc?: string;
 }
 
+export interface MBACardCategoryGroup {
+  id: number;
+  categoryNumber: number;
+  name: string;
+  items: MBACardFeatureItem[];
+}
+
 export interface MBACardProps {
   id?: string;
   title: string;
@@ -20,12 +27,15 @@ export interface MBACardProps {
   badge?: string;
   shortDesc?: string;
   features?: MBACardFeatureItem[];
+  categoryGroups?: MBACardCategoryGroup[];
+  categoryOnlyMode?: boolean;
   isFav: boolean;
   toggleFavorite: (to: string) => void;
   gradient?: string;
   accentGradient?: string;
   maxFeatureCols?: 3 | 4 | 5;
   cardHeightClass?: string;
+  showFeatureIcons?: boolean;
 }
 
 const GRADIENT_PALETTES = [
@@ -57,15 +67,28 @@ export function MBACard({
   icon: Icon,
   badge,
   features = [],
+  categoryGroups,
+  categoryOnlyMode = true,
   isFav,
   toggleFavorite,
   gradient,
   accentGradient,
   maxFeatureCols = 3,
   cardHeightClass = "min-h-[300px]",
+  showFeatureIcons = true,
 }: MBACardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Record<number, boolean>>({});
   const kembaliBtnClass = useKembaliButtonClass();
+
+  const toggleCategory = (catId: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [catId]: !prev[catId],
+    }));
+  };
   const [interactionConfig, setInteractionConfig] = useState(() => ({
     axis: Math.random() > 0.5 ? "x" : "y",
     dir: Math.random() > 0.5 ? 1 : -1,
@@ -100,9 +123,9 @@ export function MBACard({
     : undefined;
 
   return (
-    <div className={`w-full [perspective:1000px] ${cardHeightClass}`}>
+    <div className={`w-full [perspective:1000px] h-full ${cardHeightClass}`}>
       <motion.div
-        className={`relative w-full h-full ${cardHeightClass} [transform-style:preserve-3d]`}
+        className="relative w-full h-full [transform-style:preserve-3d]"
         animate={{
           rotateX: isFlipped && interactionConfig.axis === "x" ? 180 * interactionConfig.dir : 0,
           rotateY: isFlipped && interactionConfig.axis === "y" ? 180 * interactionConfig.dir : 0,
@@ -110,8 +133,8 @@ export function MBACard({
         transition={{ duration: 0.6, type: "spring", stiffness: 80, damping: 15 }}
       >
         {/* Front Face (Gaya Kotak Tools 100 MBA) */}
-        <div className="w-full h-full rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-3 group [backface-visibility:hidden]">
-          <div className="flex flex-col min-h-0 flex-1">
+        <div className="w-full h-full rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group [backface-visibility:hidden]">
+          <div className="flex flex-col flex-1">
             <div className="flex items-start justify-between gap-3 shrink-0">
               <Link
                 to={mainPath as any}
@@ -142,43 +165,83 @@ export function MBACard({
               />
             </div>
 
-            <div className="mt-3 pt-1 flex flex-col min-h-0 flex-1">
-              <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center shrink-0">
-                Features ({features.length}):
-              </span>
+            {categoryGroups && categoryGroups.length > 0 ? (
+              <div className="mt-3 pt-1 flex flex-col flex-1 space-y-4">
+                {categoryGroups.map((group, cIdx) => (
+                  <div key={group.id} className="flex flex-col">
+                    {/* Judul Kategori menggantikan tulisan Features */}
+                    <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-1.5 text-center shrink-0">
+                      {group.name} ({group.items.length}):
+                    </span>
 
-              <div className="flex flex-wrap justify-center content-start gap-1.5 flex-1 min-h-0 max-h-[195px] overflow-y-auto pr-0.5 [scrollbar-width:thin]">
-                {features.map((feat, idx) => {
-                  const FeatIcon = feat.icon || Icon;
-                  const featPath = feat.to.split("?")[0];
-                  const featSearch = feat.to.includes("?")
-                    ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
-                    : undefined;
+                    <div className="flex flex-wrap justify-center content-start gap-1.5">
+                      {group.items.map((feat, idx) => {
+                        const FeatIcon = feat.icon;
+                        const featPath = feat.to.split("?")[0];
+                        const featSearch = feat.to.includes("?")
+                          ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+                          : undefined;
 
-                  return (
-                    <Link
-                      key={idx}
-                      to={featPath as any}
-                      search={featSearch as any}
-                      title={feat.desc || feat.title}
-                      className={`${
-                        maxFeatureCols === 5
-                          ? "min-w-[calc((100%-1.625rem)/5)] px-1.5 gap-1"
-                          : maxFeatureCols === 4
-                            ? "min-w-[calc((100%-1.25rem)/4)] px-2 gap-1.5"
-                            : "min-w-[calc((100%-0.875rem)/3)] px-2.5 gap-1.5"
-                      } max-w-full inline-flex items-center justify-center py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip`}
-                    >
-                      <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
-                      <span className="text-center leading-snug whitespace-normal">{feat.title}</span>
-                    </Link>
-                  );
-                })}
+                        return (
+                          <Link
+                            key={idx}
+                            to={featPath as any}
+                            search={featSearch as any}
+                            title={feat.desc || feat.title}
+                            className="min-w-[calc((100%-0.875rem)/3)] max-w-full inline-flex items-center justify-center py-1.5 px-2.5 gap-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center"
+                          >
+                            {showFeatureIcons && FeatIcon && (
+                              <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
+                            )}
+                            <span className="text-center leading-snug whitespace-normal">{feat.title}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="mt-3 pt-1 flex flex-col flex-1">
+                <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center shrink-0">
+                  {badge ? `${badge} (${features.length}):` : `Features (${features.length}):`}
+                </span>
+
+                <div className="flex flex-wrap justify-center content-start gap-1.5 flex-1">
+                  {features.map((feat, idx) => {
+                    const FeatIcon = feat.icon;
+                    const featPath = feat.to.split("?")[0];
+                    const featSearch = feat.to.includes("?")
+                      ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+                      : undefined;
+
+                    return (
+                      <Link
+                        key={idx}
+                        to={featPath as any}
+                        search={featSearch as any}
+                        title={feat.desc || feat.title}
+                        className={`${
+                          maxFeatureCols === 5
+                            ? "min-w-[calc((100%-1.625rem)/5)] px-1.5 gap-1"
+                            : maxFeatureCols === 4
+                              ? "min-w-[calc((100%-1.25rem)/4)] px-2 gap-1.5"
+                              : "min-w-[calc((100%-0.875rem)/3)] px-2.5 gap-1.5"
+                        } max-w-full inline-flex items-center justify-center py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center`}
+                      >
+                        {showFeatureIcons && FeatIcon && (
+                          <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
+                        )}
+                        <span className="text-center leading-snug whitespace-normal">{feat.title}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="pt-1 flex items-center justify-end text-xs shrink-0">
+          <div className="pt-2 flex items-center justify-end text-xs shrink-0">
             <button
               type="button"
               onClick={handleFlip}
