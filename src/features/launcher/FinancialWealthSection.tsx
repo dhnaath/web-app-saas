@@ -1481,8 +1481,8 @@ export function FinancialWealthSection({
       <ShellHeader>
         <div className="flex items-center gap-1.5 h-full py-0 shrink-0">
           {/* Selector Tahap Wealth */}
-          <div className="relative flex items-center gap-1.5 px-2.5 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
-            <Layers size={12} className="text-primary shrink-0 pointer-events-none" />
+          <div className="relative flex items-center gap-1.5 px-2.5 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
+            <Layers size={20} className="text-primary shrink-0 pointer-events-none" />
             <select
               value={selectedTab}
               onChange={(e) => {
@@ -1492,7 +1492,7 @@ export function FinancialWealthSection({
               className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
               title="Pilih Tahap Wealth Management"
             >
-              <option value="all" className="bg-popover text-popover-foreground">Semua (5 Tahap)</option>
+              <option value="all" className="bg-popover text-popover-foreground">5 Tahap</option>
               {WEALTH_STAGE_MAIN_BOXES.map((st) => (
                 <option key={st.id} value={st.id} className="bg-popover text-popover-foreground">
                   {st.step}. {st.name}
@@ -1508,19 +1508,20 @@ export function FinancialWealthSection({
           {/* Toggle Cepat Wealth Spectrum */}
           <button
             type="button"
+            data-state={selectedTab === "spectrum" ? "active" : undefined}
             onClick={() => {
               setSelectedTab((prev) => (prev === "spectrum" ? "all" : "spectrum"));
               setSelectedPillar(null);
             }}
             className={cn(
-              "inline-flex items-center gap-1.5 px-2.5 h-[30px] rounded-full text-xs font-semibold shrink-0 cursor-pointer transition-all border active:scale-95",
+              "inline-flex items-center gap-1.5 px-2.5 h-[36px] rounded-full text-xs font-semibold shrink-0 cursor-pointer transition-all border active:scale-95",
               selectedTab === "spectrum"
                 ? "bg-emerald-500 text-white border-emerald-600 shadow-xs font-bold"
                 : "bg-black/5 dark:bg-white/10 hover:bg-black/10 text-muted-foreground hover:text-foreground border-black/5 dark:border-white/10"
             )}
             title="Tampilkan Arsitektur Wealth Spectrum (5 Pilar x 5 Modul)"
           >
-            <ShieldCheck size={12} className={selectedTab === "spectrum" ? "text-white" : "text-emerald-500"} />
+            <ShieldCheck size={20} className={cn("shrink-0", selectedTab === "spectrum" ? "text-white" : "text-emerald-500")} />
             <span>Spectrum ({countSpectrum})</span>
           </button>
 
@@ -1532,10 +1533,10 @@ export function FinancialWealthSection({
                 setSelectedTab("all");
                 setSelectedPillar(null);
               }}
-              className="inline-flex items-center gap-1 px-2 h-[30px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
-              title="Reset ke Semua (5 Tahap)"
+              className="inline-flex items-center gap-1 px-2 h-[36px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
+              title="Reset ke 5 Tahap"
             >
-              <X size={11} />
+              <X size={16} className="shrink-0" />
               <span>Reset</span>
             </button>
           )}

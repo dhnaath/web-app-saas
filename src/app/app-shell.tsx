@@ -455,23 +455,34 @@ export function AppShell({
     }
   }, [pathname]);
 
+  const [rightSidebarTab, setRightSidebarTab] = useState<"control" | "favorites">("control");
+
+  const [isLeftOpen, setIsLeftOpen] = useState(false);
+  const [isRightOpen, setIsRightOpen] = useState(false);
+  const [isLeftSidebar75, setIsLeftSidebar75] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem("aio_left_sidebar_75");
+      if (v !== null) return v === "true";
+      return localStorage.getItem("aio_left_sidebar_100") === "true";
+    } catch {
+      return false;
+    }
+  });
+
   // Listen to open-left-sidebar custom events
   useEffect(() => {
     const handleOpenLeft = (e: any) => {
-      setOpenDrawer("left");
+      setIsLeftOpen(true);
+      if (!isLeftSidebar75) {
+        setIsRightOpen(false);
+      }
       if (e?.detail?.tab) {
         setSidebarView(e.detail.tab);
       }
     };
     window.addEventListener("open-left-sidebar", handleOpenLeft);
     return () => window.removeEventListener("open-left-sidebar", handleOpenLeft);
-  }, []);
-
-  const [rightSidebarTab, setRightSidebarTab] = useState<"control" | "favorites">("control");
-
-  // Both sidebars are off-canvas overlay drawers that float on top of the content
-  // without shifting the main body layout.
-  const [openDrawer, setOpenDrawer] = useState<"left" | "right" | null>(null);
+  }, [isLeftSidebar75]);
 
   const shellSidebarCtx = useMemo(() => ({ setHasAppSidebar }), []);
 
@@ -561,15 +572,6 @@ export function AppShell({
   }, [pathname]);
   const activeModeConfig = APP_MODES.find((m) => m.id === currentMode) || APP_MODES[0];
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isLeftSidebar75, setIsLeftSidebar75] = useState<boolean>(() => {
-    try {
-      const v = localStorage.getItem("aio_left_sidebar_75");
-      if (v !== null) return v === "true";
-      return localStorage.getItem("aio_left_sidebar_100") === "true";
-    } catch {
-      return false;
-    }
-  });
 
   const toggleLeftSidebar75 = () => {
     setIsLeftSidebar75((prev) => {
@@ -582,7 +584,7 @@ export function AppShell({
   };
 
   const closeLeftSidebar = useCallback(() => {
-    setOpenDrawer(null);
+    setIsLeftOpen(false);
     if (isLeftSidebar75) {
       setIsLeftSidebar75(false);
       try {
@@ -796,7 +798,7 @@ export function AppShell({
           isLeftSidebar75
             ? "w-[75px] bg-primary border-r border-white/20 shadow-xl"
             : "w-[350px] liquid-glass-sidebar-left"
-        } max-w-[85vw] shrink-0 flex-col transition-all duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
+        } max-w-[85vw] shrink-0 flex-col transition-all duration-300 ease-in-out ${isLeftOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         {/* Spacer atas: Tombol close / toggle kiri yang sejajar dengan header + 3 dots traffic controls & 3 dots action */}
         <div
@@ -953,7 +955,11 @@ export function AppShell({
                     <Link
                       key={link.to}
                       to={link.to}
-                      onClick={() => setOpenDrawer(null)}
+                      onClick={() => {
+                        if (!isLeftSidebar75) {
+                          setIsLeftOpen(false);
+                        }
+                      }}
                       title={link.label}
                       className={`flex items-center ${
                         isLeftSidebar75
@@ -988,8 +994,8 @@ export function AppShell({
             <SidebarPillarsMenu
               isCompact={isLeftSidebar75}
               onNavigate={() => {
-                if (typeof window !== "undefined" && window.innerWidth < 1024) {
-                  setOpenDrawer(null);
+                if (!isLeftSidebar75 && typeof window !== "undefined" && window.innerWidth < 1024) {
+                  setIsLeftOpen(false);
                 }
               }}
             />
@@ -1008,13 +1014,13 @@ export function AppShell({
         </div>
       </aside>
 
-      <aside id="sidenavRight" className={`fixed inset-y-0 right-0 z-50 flex w-[350px] max-w-[85vw] flex-col liquid-glass-sidebar-right transition-transform duration-300 ease-in-out ${openDrawer === "right" ? "translate-x-0" : "translate-x-full"}`}>
+      <aside id="sidenavRight" className={`fixed inset-y-0 right-0 z-50 flex w-[350px] max-w-[85vw] flex-col liquid-glass-sidebar-right transition-transform duration-300 ease-in-out ${isRightOpen ? "translate-x-0" : "translate-x-full"}`}>
         {/* Right Sidebar Spacer: Tombol close / toggle kanan yang sejajar dengan header */}
         <div className="w-full h-[60px] sidebar-top-glass shrink-0 flex items-center justify-end px-3 border-b border-white/20 dark:border-white/10">
           <button
             type="button"
             className="size-9 rounded-full aspect-square text-white/90 hover:text-white hover:bg-white/20 active:scale-95 transition-all cursor-pointer flex items-center justify-center shrink-0"
-            onClick={() => setOpenDrawer(null)}
+            onClick={() => setIsRightOpen(false)}
             title="Sembunyikan Control Center"
             aria-label="Tutup sidebar kanan"
           >
@@ -1091,7 +1097,7 @@ export function AppShell({
                         <Link
                           to={toPath as any}
                           search={toSearch as any}
-                          onClick={() => setOpenDrawer(null)}
+                          onClick={() => setIsRightOpen(false)}
                           className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer"
                         >
                           <div
@@ -1134,7 +1140,7 @@ export function AppShell({
                 </p>
                 <Link
                   to="/"
-                  onClick={() => setOpenDrawer(null)}
+                  onClick={() => setIsRightOpen(false)}
                   className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs text-foreground bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 border border-white/15 dark:border-white/10 backdrop-blur-sm transition-all cursor-pointer"
                 >
                   <LayoutDashboard className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -1144,7 +1150,7 @@ export function AppShell({
                   type="button"
                   onClick={() => {
                     setIsTerminalOpen(true);
-                    setOpenDrawer(null);
+                    setIsRightOpen(false);
                   }}
                   className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs text-foreground bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 border border-white/15 dark:border-white/10 backdrop-blur-sm transition-all cursor-pointer text-left w-full"
                 >
@@ -1171,7 +1177,7 @@ export function AppShell({
                 </button>
                 <Link
                   to="/notification-center"
-                  onClick={() => setOpenDrawer(null)}
+                  onClick={() => setIsRightOpen(false)}
                   className="grid h-9 w-9 place-items-center rounded-xl border border-white/20 dark:border-white/10 bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md text-foreground transition-all shrink-0 cursor-pointer"
                   title="Notifikasi"
                   aria-label="Notifikasi"
@@ -1244,7 +1250,7 @@ export function AppShell({
                       <Link
                         key={item.to}
                         to={item.to as any}
-                        onClick={() => setOpenDrawer(null)}
+                        onClick={() => setIsRightOpen(false)}
                         className={`group flex items-center justify-between rounded-xl p-2.5 transition-all border backdrop-blur-md cursor-pointer ${
                           isActive
                             ? "bg-white/25 dark:bg-white/10 border-primary/40 text-primary shadow-xs font-semibold ring-1 ring-primary/30"
@@ -1285,7 +1291,7 @@ export function AppShell({
                   type="button"
                   onClick={() => {
                     setIsTerminalOpen(true);
-                    setOpenDrawer(null);
+                    setIsRightOpen(false);
                   }}
                   className="flex items-center justify-between rounded-xl px-2.5 py-2 text-xs text-foreground bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 border border-white/15 dark:border-white/10 backdrop-blur-sm transition-all cursor-pointer text-left w-full group"
                 >
@@ -1297,7 +1303,7 @@ export function AppShell({
                 </button>
                 <Link
                   to="/"
-                  onClick={() => setOpenDrawer(null)}
+                  onClick={() => setIsRightOpen(false)}
                   className="flex items-center justify-between rounded-xl px-2.5 py-2 text-xs text-foreground bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 border border-white/15 dark:border-white/10 backdrop-blur-sm transition-all cursor-pointer group"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -1328,15 +1334,20 @@ export function AppShell({
       <main
         id="mainContent"
         className={`relative flex flex-1 flex-col overflow-hidden transition-[margin,width] duration-300 ease-in-out ${
-          openDrawer === "left" && isLeftSidebar75
+          isLeftOpen && isLeftSidebar75
             ? "ml-[75px] w-[calc(100%-75px)]"
             : "ml-0 w-full"
         }`}
       >
-        {openDrawer && !(openDrawer === "left" && isLeftSidebar75) && (
+        {(isRightOpen || (isLeftOpen && !isLeftSidebar75)) && (
           <div
             className="fixed inset-0 z-40 bg-transparent cursor-default"
-            onClick={() => setOpenDrawer(null)}
+            onClick={() => {
+              setIsRightOpen(false);
+              if (!isLeftSidebar75) {
+                setIsLeftOpen(false);
+              }
+            }}
           />
         )}
         <header ref={headerRef as any} className="absolute top-0 inset-x-0 z-20 pointer-events-none transition-all duration-300">
@@ -1363,12 +1374,21 @@ export function AppShell({
                 <button
                   type="button"
                   className={`relative z-10 size-9 rounded-full aspect-square shrink-0 transition-colors flex items-center justify-center cursor-pointer ${
-                    openDrawer === "left"
+                    isLeftOpen
                       ? "bg-primary text-primary-foreground font-bold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
-                  onClick={() => setOpenDrawer(openDrawer === "left" ? null : "left")}
-                  title={openDrawer === "left" ? "Sembunyikan Navigasi" : "Tampilkan Navigasi"}
+                  onClick={() => {
+                    if (isLeftOpen) {
+                      setIsLeftOpen(false);
+                    } else {
+                      setIsLeftOpen(true);
+                      if (!isLeftSidebar75) {
+                        setIsRightOpen(false);
+                      }
+                    }
+                  }}
+                  title={isLeftOpen ? "Sembunyikan Navigasi" : "Tampilkan Navigasi"}
                   aria-label="Toggle sidebar kiri"
                 >
                   <WindowPositionLeftIcon size={24} />
@@ -1436,12 +1456,21 @@ export function AppShell({
                 <button
                   type="button"
                   className={`relative z-10 size-9 rounded-full aspect-square shrink-0 transition-colors flex items-center justify-center cursor-pointer ${
-                    openDrawer === "right"
+                    isRightOpen
                       ? "bg-primary text-primary-foreground font-bold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
-                  onClick={() => setOpenDrawer(openDrawer === "right" ? null : "right")}
-                  title={openDrawer === "right" ? "Sembunyikan Control Center" : "Tampilkan Control Center (Sidebar Kanan)"}
+                  onClick={() => {
+                    if (isRightOpen) {
+                      setIsRightOpen(false);
+                    } else {
+                      setIsRightOpen(true);
+                      if (!isLeftSidebar75) {
+                        setIsLeftOpen(false);
+                      }
+                    }
+                  }}
+                  title={isRightOpen ? "Sembunyikan Control Center" : "Tampilkan Control Center (Sidebar Kanan)"}
                   aria-label="Toggle sidebar kanan"
                 >
                   <WindowPositionRightIcon size={24} />
@@ -1462,7 +1491,7 @@ export function AppShell({
               tint={blurConfig.tint ? `linear-gradient(to top, transparent 0%, hsl(var(--background) / 0.82) 100%)` : false}
               className="fixed top-0 right-0 z-15 pointer-events-none transition-[left] duration-300 ease-in-out"
               style={{
-                left: openDrawer === "left" && isLeftSidebar75 ? "75px" : "0px",
+                left: isLeftOpen && isLeftSidebar75 ? "75px" : "0px",
               }}
             />
 
@@ -1474,7 +1503,7 @@ export function AppShell({
               tint={blurConfig.tint ? `linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.88) 100%)` : false}
               className="fixed bottom-0 right-0 z-15 pointer-events-none transition-[left] duration-300 ease-in-out"
               style={{
-                left: openDrawer === "left" && isLeftSidebar75 ? "75px" : "0px",
+                left: isLeftOpen && isLeftSidebar75 ? "75px" : "0px",
               }}
             />
           </>
@@ -1493,7 +1522,7 @@ export function AppShell({
           <div
             className="fixed bottom-[calc(5rem+10pt)] right-0 flex justify-center pb-1 pointer-events-none z-30 animate-in fade-in duration-200 transition-[left] duration-300 ease-in-out"
             style={{
-              left: openDrawer === "left" && isLeftSidebar75 ? "75px" : "0px",
+              left: isLeftOpen && isLeftSidebar75 ? "75px" : "0px",
             }}
           >
             <button
@@ -1510,7 +1539,7 @@ export function AppShell({
           </div>
         )}
         <AppDock
-          sidebarShift={openDrawer === "left" && isLeftSidebar75}
+          sidebarShift={isLeftOpen && isLeftSidebar75}
           onQuickCapture={() => {
             setIsQuickCaptureOpen((prev) => !prev);
             setIsShortcutOpen(false);

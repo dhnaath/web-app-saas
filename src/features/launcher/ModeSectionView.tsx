@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useKembaliButtonClass } from "@/hooks/useKembaliButtonClass";
+import { CardMoreMenu } from "@/components/common/CardMoreMenu";
 import { WorkProductivityPage } from "../work-productivity/WorkProductivityPage";
 import { PersonalLifePage } from "../personal-life/PersonalLifePage";
 import { BusinessOperationsCustomersPage } from "../business-operations/BusinessOperationsCustomersPage";
@@ -1042,6 +1044,7 @@ export const ModeFlipCard = ({
   gradient,
 }: ModeFlipCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const kembaliBtnClass = useKembaliButtonClass();
   const [interactionConfig, setInteractionConfig] = useState(() => ({
     axis: Math.random() > 0.5 ? "x" : "y",
     dir: Math.random() > 0.5 ? 1 : -1,
@@ -1100,23 +1103,11 @@ export const ModeFlipCard = ({
                 </div>
               </Link>
 
-              <button
-                type="button"
-                onClick={() => toggleFavorite(app.to)}
-                className={`p-1.5 rounded-xl border transition-all cursor-pointer active:scale-95 shrink-0 ${
-                  isFav
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-400 shadow-xs"
-                    : "border-border/60 hover:border-amber-400/30 hover:bg-muted/60 text-muted-foreground hover:text-amber-400"
-                }`}
-                title={isFav ? "Hapus dari Favorit Dock" : "Tambah ke Favorit Dock (Maksimal 5)"}
-                aria-label={isFav ? `Hapus ${app.name} dari favorit` : `Tambahkan ${app.name} ke favorit dock`}
-              >
-                <Star
-                  className={`size-4 transition-transform ${
-                    isFav ? "fill-amber-400 text-amber-400 scale-110" : ""
-                  }`}
-                />
-              </button>
+              <CardMoreMenu
+                title={app.name}
+                isFav={isFav}
+                onToggleFavorite={() => toggleFavorite(app.to)}
+              />
             </div>
 
             {/* Submenu Fitur Chips */}
@@ -1174,10 +1165,10 @@ export const ModeFlipCard = ({
           <button
             type="button"
             onClick={handleFlip}
-            className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
+            className={kembaliBtnClass}
             title="Kembali"
           >
-            <RotateCcw size={12} />
+            <RotateCcw size={12} className="shrink-0" />
             <span className="text-[11px] font-medium">Kembali</span>
           </button>
         </div>

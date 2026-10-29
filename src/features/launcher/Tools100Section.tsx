@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { useKembaliButtonClass } from "@/hooks/useKembaliButtonClass";
+import { CardMoreMenu } from "@/components/common/CardMoreMenu";
 import {
   Compass,
   Target,
@@ -777,6 +779,7 @@ const ToolsFlipCard = ({
   gradient?: string;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const kembaliBtnClass = useKembaliButtonClass();
   const [interactionConfig, setInteractionConfig] = useState(() => ({
     axis: Math.random() > 0.5 ? "x" : "y",
     dir: Math.random() > 0.5 ? 1 : -1,
@@ -830,26 +833,14 @@ const ToolsFlipCard = ({
                 </div>
               </Link>
 
-              <button
-                type="button"
-                onClick={() => toggleFavorite(app.to)}
-                className={`p-1.5 rounded-xl border transition-all cursor-pointer active:scale-95 shrink-0 ${
-                  isFav
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-400 shadow-xs"
-                    : "border-border/60 hover:border-amber-400/30 hover:bg-muted/60 text-muted-foreground hover:text-amber-400"
-                }`}
-                title={isFav ? "Hapus dari Favorit Dock" : "Tambah ke Favorit Dock (Maksimal 5)"}
-                aria-label={isFav ? `Hapus ${app.title} dari favorit` : `Tambahkan ${app.title} ke favorit dock`}
-              >
-                <Star
-                  className={`size-4 transition-transform ${
-                    isFav ? "fill-amber-400 text-amber-400 scale-110" : ""
-                  }`}
-                />
-              </button>
+              <CardMoreMenu
+                title={app.title}
+                isFav={isFav}
+                onToggleFavorite={() => toggleFavorite(app.to)}
+              />
             </div>
 
-            <div className="mt-3 pt-3 border-t border-border/60">
+            <div className="mt-3 pt-1">
               <span className="text-[10px] font-bold tracking-wider text-muted-foreground block mb-2 text-center">
                 Features ({app.features.length}):
               </span>
@@ -879,7 +870,7 @@ const ToolsFlipCard = ({
             </div>
           </div>
 
-          <div className="border-t border-border/50 pt-3 flex items-center justify-end text-xs">
+          <div className="pt-1 flex items-center justify-end text-xs">
             <button
               type="button"
               onClick={handleFlip}
@@ -905,10 +896,10 @@ const ToolsFlipCard = ({
           <button
             type="button"
             onClick={handleFlip}
-            className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
+            className={kembaliBtnClass}
             title="Kembali"
           >
-            <RotateCcw size={12} />
+            <RotateCcw size={12} className="shrink-0" />
             <span className="text-[11px] font-medium">Kembali</span>
           </button>
         </div>
@@ -928,6 +919,7 @@ export const ValueTreatedFlipCard = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const kembaliBtnClass = useKembaliButtonClass();
   const [interactionConfig, setInteractionConfig] = useState(() => ({
     axis: Math.random() > 0.5 ? "x" : "y",
     dir: Math.random() > 0.5 ? 1 : -1,
@@ -988,23 +980,11 @@ export const ValueTreatedFlipCard = ({
                 </div>
               </Link>
 
-              <button
-                type="button"
-                onClick={() => toggleFavorite(app.to)}
-                className={`p-1.5 rounded-xl border transition-all cursor-pointer active:scale-95 shrink-0 ${
-                  isFav
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-400 shadow-xs"
-                    : "border-border/60 hover:border-amber-400/30 hover:bg-muted/60 text-muted-foreground hover:text-amber-400"
-                }`}
-                title={isFav ? "Hapus dari Favorit Dock" : "Tambah ke Favorit Dock (Maksimal 5)"}
-                aria-label={isFav ? `Hapus ${app.title} dari favorit` : `Tambahkan ${app.title} ke favorit dock`}
-              >
-                <Star
-                  className={`size-4 transition-transform ${
-                    isFav ? "fill-amber-400 text-amber-400 scale-110" : ""
-                  }`}
-                />
-              </button>
+              <CardMoreMenu
+                title={app.title}
+                isFav={isFav}
+                onToggleFavorite={() => toggleFavorite(app.to)}
+              />
             </div>
 
             <div className="mt-3 pt-2.5 border-t border-border/60">
@@ -1081,10 +1061,10 @@ export const ValueTreatedFlipCard = ({
           <button
             type="button"
             onClick={handleFlip}
-            className="px-2.5 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 active:scale-95 text-white border border-white/25 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs backdrop-blur-xs"
+            className={kembaliBtnClass}
             title="Kembali"
           >
-            <RotateCcw size={12} />
+            <RotateCcw size={12} className="shrink-0" />
             <span className="text-[11px] font-medium">Kembali</span>
           </button>
         </div>

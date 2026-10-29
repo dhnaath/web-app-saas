@@ -1153,10 +1153,145 @@ export function CommodityDashboardSection({
       {/* Portaled ShellHeader: Clean & Seamless Toolbar di Bar Atas */}
       <ShellHeader>
         <div className="flex items-center gap-1.5 h-full py-0 shrink-0">
-          {/* Tombol Icon Cari (Minimalis & Menyatu) */}
+          {/* Selector Jenis Batas / Regulasi */}
+          <div className="relative flex items-center gap-1.5 px-2.5 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
+            <ShieldAlert size={20} className="text-amber-500 shrink-0 pointer-events-none" />
+            <select
+              value={selectedPricingType}
+              onChange={(e) => setSelectedPricingType(e.target.value as any)}
+              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
+              title="Pilih Jenis Batas Harga / Regulasi"
+            >
+              <option value="Semua" className="bg-popover text-popover-foreground">Regulasi</option>
+              {PRICING_TYPES.map(p => (
+                <option key={p} value={p} className="bg-popover text-popover-foreground">{p}</option>
+              ))}
+            </select>
+            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
+          </div>
+
+          {/* Selector Ritme Pembaruan */}
+          <div className="relative flex items-center gap-1.5 px-2.5 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
+            <CalendarClock size={20} className="text-primary shrink-0 pointer-events-none" />
+            <select
+              value={selectedCadence}
+              onChange={(e) => setSelectedCadence(e.target.value as any)}
+              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
+              title="Pilih Ritme Pembaruan Komoditas"
+            >
+              <option value="Semua" className="bg-popover text-popover-foreground">Ritme</option>
+              {UPDATE_CADENCES.map(cadence => (
+                <option key={cadence} value={cadence} className="bg-popover text-popover-foreground">
+                  Ritme: {cadence}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
+          </div>
+
+          {/* Selector Sumber Data Resmi */}
+          <div className="relative flex items-center gap-1.5 px-2.5 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10 max-w-[170px]">
+            <Building2 size={20} className="text-emerald-500 shrink-0 pointer-events-none" />
+            <select
+              value={selectedSource}
+              onChange={(e) => setSelectedSource(e.target.value)}
+              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight truncate"
+              title="Pilih Sumber Data Resmi"
+            >
+              <option value="Semua" className="bg-popover text-popover-foreground">Sumber</option>
+              {COMMODITY_SOURCES.map(source => (
+                <option key={source} value={source} className="bg-popover text-popover-foreground">
+                  {source}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
+          </div>
+
+          {/* Selector Urutan & Arah Sort */}
+          <div className="relative flex items-center gap-1 pl-2.5 pr-1 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
+            <ArrowUpDown size={20} className="text-violet-500 shrink-0 pointer-events-none" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-3 appearance-none py-0 leading-tight"
+              title="Pilih Kriteria Pengurutan"
+            >
+              <option value="id" className="bg-popover text-popover-foreground">Urut: ID</option>
+              <option value="nama" className="bg-popover text-popover-foreground">Urut: Nama</option>
+              <option value="harga" className="bg-popover text-popover-foreground">Urut: Harga</option>
+              <option value="cadence" className="bg-popover text-popover-foreground">Urut: Ritme</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+              className="commodity-header-icon-btn size-9 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/20 transition-all text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
+              title={sortDirection === 'asc' ? 'Urutan Naik (A-Z / Rendah ke Tinggi)' : 'Urutan Turun (Z-A / Tinggi ke Rendah)'}
+            >
+              <TrendingUp size={20} className={cn("shrink-0", sortDirection === 'desc' ? 'rotate-180 text-amber-500' : 'text-emerald-500')} />
+            </button>
+          </div>
+
+          {/* Tombol Reset Cepat (Tampil jika ada filter/sort non-default) */}
+          {(searchQuery || selectedCadence !== 'Semua' || selectedPricingType !== 'Semua' || selectedSource !== 'Semua' || sortBy !== 'id') && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCadence('Semua');
+                setSelectedPricingType('Semua');
+                setSelectedSource('Semua');
+                setSortBy('id');
+                setSortDirection('asc');
+              }}
+              className="inline-flex items-center gap-1 px-2.5 h-[36px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
+              title="Reset seluruh filter dan pengurutan ke awal"
+            >
+              <X size={16} className="shrink-0" />
+              <span>Reset</span>
+            </button>
+          )}
+
+          {/* Divider pemisah halus */}
+          <div className="h-4 w-px bg-border/60 shrink-0" />
+
+          {/* Toggle View Mode: Grid Kartu vs Tabel (Clean Pill Menyatu) */}
+          <div className="flex items-center gap-0.5 p-0.5 bg-black/5 dark:bg-white/5 rounded-full shrink-0 border border-black/5 dark:border-white/10">
+            <button
+              type="button"
+              onClick={() => setViewMode('cards')}
+              className={cn(
+                "commodity-header-icon-btn size-9 rounded-full flex items-center justify-center transition-all cursor-pointer active:scale-95",
+                viewMode === 'cards'
+                  ? "bg-background dark:bg-zinc-700 text-foreground shadow-2xs font-bold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
+              )}
+              title="Tampilan Kartu Grid"
+            >
+              <LayoutGrid size={20} className="shrink-0" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              className={cn(
+                "commodity-header-icon-btn size-9 rounded-full flex items-center justify-center transition-all cursor-pointer active:scale-95",
+                viewMode === 'table'
+                  ? "bg-background dark:bg-zinc-700 text-foreground shadow-2xs font-bold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
+              )}
+              title="Tampilan Tabel Data"
+            >
+              <TableIcon size={20} className="shrink-0" />
+            </button>
+          </div>
+
+          {/* Divider pemisah halus */}
+          <div className="h-4 w-px bg-border/60 shrink-0" />
+
+          {/* Tombol Icon Cari di Sisi Kanan (Minimalis & Menyatu) */}
           {isSearchExpanded ? (
             <div className="relative flex items-center min-w-[140px] max-w-[200px] sm:max-w-[220px] animate-in fade-in zoom-in-95 duration-150 shrink-0">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground size-3.5 pointer-events-none" />
+              <Search size={20} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground shrink-0 pointer-events-none" />
               <input
                 type="text"
                 autoFocus
@@ -1169,7 +1304,7 @@ export function CommodityDashboardSection({
                     else setSearchQuery('');
                   }
                 }}
-                className="w-full pl-8 pr-7 py-1 h-[30px] text-xs bg-black/5 dark:bg-white/10 border-0 rounded-full focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground transition-all"
+                className="w-full pl-9 pr-7 py-1 h-[36px] text-xs bg-black/5 dark:bg-white/10 border-0 rounded-full focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground transition-all"
               />
               <button
                 type="button"
@@ -1188,151 +1323,16 @@ export function CommodityDashboardSection({
               type="button"
               onClick={() => setIsSearchExpanded(true)}
               className={cn(
-                "size-8 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 active:scale-95",
+                "commodity-header-icon-btn size-9 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 active:scale-95",
                 searchQuery
                   ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                   : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10"
               )}
               title={searchQuery ? `Pencarian aktif: "${searchQuery}" (klik untuk ubah)` : "Cari 100 komoditas"}
             >
-              <Search size={15} />
+              <Search size={20} className="shrink-0" />
             </button>
           )}
-
-          {/* Divider pemisah halus */}
-          <div className="h-4 w-px bg-border/60 shrink-0" />
-
-          {/* Selector Jenis Batas / Regulasi */}
-          <div className="relative flex items-center gap-1.5 px-2.5 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
-            <ShieldAlert size={12} className="text-amber-500 shrink-0 pointer-events-none" />
-            <select
-              value={selectedPricingType}
-              onChange={(e) => setSelectedPricingType(e.target.value as any)}
-              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
-              title="Pilih Jenis Batas Harga / Regulasi"
-            >
-              <option value="Semua" className="bg-popover text-popover-foreground">Semua Regulasi</option>
-              {PRICING_TYPES.map(p => (
-                <option key={p} value={p} className="bg-popover text-popover-foreground">{p}</option>
-              ))}
-            </select>
-            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
-          </div>
-
-          {/* Selector Ritme Pembaruan */}
-          <div className="relative flex items-center gap-1.5 px-2.5 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
-            <CalendarClock size={12} className="text-primary shrink-0 pointer-events-none" />
-            <select
-              value={selectedCadence}
-              onChange={(e) => setSelectedCadence(e.target.value as any)}
-              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
-              title="Pilih Ritme Pembaruan Komoditas"
-            >
-              <option value="Semua" className="bg-popover text-popover-foreground">Semua Ritme</option>
-              {UPDATE_CADENCES.map(cadence => (
-                <option key={cadence} value={cadence} className="bg-popover text-popover-foreground">
-                  Ritme: {cadence}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
-          </div>
-
-          {/* Selector Sumber Data Resmi */}
-          <div className="relative flex items-center gap-1.5 px-2.5 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10 max-w-[170px]">
-            <Building2 size={12} className="text-emerald-500 shrink-0 pointer-events-none" />
-            <select
-              value={selectedSource}
-              onChange={(e) => setSelectedSource(e.target.value)}
-              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight truncate"
-              title="Pilih Sumber Data Resmi"
-            >
-              <option value="Semua" className="bg-popover text-popover-foreground">Semua Sumber</option>
-              {COMMODITY_SOURCES.map(source => (
-                <option key={source} value={source} className="bg-popover text-popover-foreground">
-                  {source}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
-          </div>
-
-          {/* Selector Urutan & Arah Sort */}
-          <div className="relative flex items-center gap-1 pl-2.5 pr-1 h-[30px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
-            <ArrowUpDown size={12} className="text-violet-500 shrink-0 pointer-events-none" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-3 appearance-none py-0 leading-tight"
-              title="Pilih Kriteria Pengurutan"
-            >
-              <option value="id" className="bg-popover text-popover-foreground">Urut: ID</option>
-              <option value="nama" className="bg-popover text-popover-foreground">Urut: Nama</option>
-              <option value="harga" className="bg-popover text-popover-foreground">Urut: Harga</option>
-              <option value="cadence" className="bg-popover text-popover-foreground">Urut: Ritme</option>
-            </select>
-            <button
-              type="button"
-              onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
-              className="size-5 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/20 transition-all text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
-              title={sortDirection === 'asc' ? 'Urutan Naik (A-Z / Rendah ke Tinggi)' : 'Urutan Turun (Z-A / Tinggi ke Rendah)'}
-            >
-              <TrendingUp size={11} className={sortDirection === 'desc' ? 'rotate-180 text-amber-500' : 'text-emerald-500'} />
-            </button>
-          </div>
-
-          {/* Tombol Reset Cepat (Tampil jika ada filter/sort non-default) */}
-          {(searchQuery || selectedCadence !== 'Semua' || selectedPricingType !== 'Semua' || selectedSource !== 'Semua' || sortBy !== 'id') && (
-            <button
-              type="button"
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCadence('Semua');
-                setSelectedPricingType('Semua');
-                setSelectedSource('Semua');
-                setSortBy('id');
-                setSortDirection('asc');
-              }}
-              className="inline-flex items-center gap-1 px-2.5 h-[30px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
-              title="Reset seluruh filter dan pengurutan ke awal"
-            >
-              <X size={11} />
-              <span>Reset</span>
-            </button>
-          )}
-
-          {/* Divider pemisah halus */}
-          <div className="h-4 w-px bg-border/60 shrink-0" />
-
-          {/* Toggle View Mode: Grid Kartu vs Tabel (Clean Pill Menyatu) */}
-          <div className="flex items-center gap-0.5 p-0.5 bg-black/5 dark:bg-white/5 rounded-full shrink-0 border border-black/5 dark:border-white/10">
-            <button
-              type="button"
-              onClick={() => setViewMode('cards')}
-              className={cn(
-                "size-7 rounded-full flex items-center justify-center transition-all cursor-pointer active:scale-95",
-                viewMode === 'cards'
-                  ? "bg-background dark:bg-zinc-700 text-foreground shadow-2xs font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
-              )}
-              title="Tampilan Kartu Grid"
-            >
-              <LayoutGrid size={13} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('table')}
-              className={cn(
-                "size-7 rounded-full flex items-center justify-center transition-all cursor-pointer active:scale-95",
-                viewMode === 'table'
-                  ? "bg-background dark:bg-zinc-700 text-foreground shadow-2xs font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
-              )}
-              title="Tampilan Tabel Data"
-            >
-              <TableIcon size={13} />
-            </button>
-          </div>
         </div>
       </ShellHeader>
 
