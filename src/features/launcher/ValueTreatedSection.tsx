@@ -10,6 +10,7 @@ import {
   JENJANG_LEVELS,
   CURRICULUM_DISCIPLINES,
 } from "@/features/curated/curriculumData";
+import { getCurriculumCategoryGroups } from "@/features/curated/curriculumCategories";
 
 interface ValueTreatedSectionProps {
   favorites: string[];
@@ -24,6 +25,7 @@ export function ValueTreatedSection({
   // 5 Jenjang Level SKS (Default: 2 = Matrikulasi)
   const [activeJenjangId, setActiveJenjangId] = useState<number>(2);
   const [searchQuery, setSearchQuery] = useState("");
+  const [categoryOnlyMode, setCategoryOnlyMode] = useState<boolean>(true);
 
   const currentJenjang = useMemo(() => {
     return JENJANG_LEVELS.find((j) => j.id === activeJenjangId) || JENJANG_LEVELS[0];
@@ -97,43 +99,55 @@ export function ValueTreatedSection({
         </p>
       </div>
 
-      {/* Info Context Bar & Search */}
+      {/* Info Context Bar, Category Mode Toggle & Search */}
       <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">
             Jenjang Aktif: {currentJenjang.name}
           </span>
           <span>•</span>
-          <span>{currentJenjang.desc}</span>
+          <span className="hidden sm:inline">{currentJenjang.desc}</span>
         </div>
 
         {/* Quick Search in Features */}
         <div className="relative w-full sm:w-72 shrink-0">
-          <Search className="absolute left-3 top-2.5 size-3.5 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder={`Cari fitur di ${currentJenjang.name}...`}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-8 py-2 text-xs rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 shadow-2xs transition-all"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-2.5 top-2 size-5 text-muted-foreground hover:text-foreground flex items-center justify-center cursor-pointer rounded-full hover:bg-muted"
-            >
-              <X size={12} />
-            </button>
-          )}
+            <Search className="absolute left-3 top-2.5 size-3.5 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder={`Cari materi di ${currentJenjang.name}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-8 py-2 text-xs rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 shadow-2xs transition-all"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-2 size-5 text-muted-foreground hover:text-foreground flex items-center justify-center cursor-pointer rounded-full hover:bg-muted"
+              >
+                <X size={12} />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
 
       {/* Konten Grid: 10 BIDANG TETAP (2x5), UKURAN KOTAK MENU SERAGAM DI SEMUA JENJANG */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4.5 sm:gap-5">
         {filteredDisciplines.map((disc) => {
           const features = disc.featuresByLevel[activeJenjangId] || [];
           const routePath = `/kurasi/${disc.slug}`;
+          const isCategoryJenjang = activeJenjangId >= 3;
+          const categoryGroups = isCategoryJenjang
+            ? getCurriculumCategoryGroups(disc.slug, activeJenjangId, features).map((group) => ({
+                id: group.id,
+                categoryNumber: group.categoryNumber,
+                name: group.name,
+                items: group.items.map((featName) => ({
+                  title: featName,
+                  to: routePath,
+                })),
+              }))
+            : undefined;
 
           return (
             <MBACard
@@ -146,11 +160,13 @@ export function ValueTreatedSection({
               features={features.map((featName) => ({
                 title: featName,
                 to: routePath,
-                icon: disc.icon,
               }))}
+              categoryGroups={categoryGroups}
+              categoryOnlyMode={categoryOnlyMode}
+              showFeatureIcons={false}
               isFav={favorites.includes(routePath)}
               toggleFavorite={toggleFavorite}
-              cardHeightClass="h-[340px]"
+              cardHeightClass="h-full"
               maxFeatureCols={
                 activeJenjangId === 4 || activeJenjangId === 5 || activeJenjangId === 6
                   ? 5
