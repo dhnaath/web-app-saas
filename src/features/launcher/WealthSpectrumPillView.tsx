@@ -27,9 +27,6 @@ export function WealthSpectrumPillView({
   toggleFavorite,
   getGradient,
 }: WealthSpectrumPillViewProps) {
-  // Mode tampilan: "both" (default, menampilkan 5 poin deskripsi & 5 modul app sekaligus)
-  const [viewMode, setViewMode] = useState<"both" | "points" | "apps">("both");
-
   const displayedTahapan = selectedFilter
     ? FIVE_TAHAPAN_WEALTH.filter((t) => t.id === selectedFilter)
     : FIVE_TAHAPAN_WEALTH;
@@ -67,46 +64,6 @@ export function WealthSpectrumPillView({
               <span>Semua Pilar</span>
             </button>
           )}
-
-          {/* Pengalih Mode: Keduanya / Hanya 5 Poin / Hanya 5 Modul */}
-          <div className="inline-flex items-center p-0.5 rounded-lg bg-muted/80 border border-border text-xs">
-            <button
-              type="button"
-              onClick={() => setViewMode("both")}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
-                viewMode === "both"
-                  ? "bg-background text-foreground shadow-2xs font-bold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title="Tampilkan 5 Poin Deskripsi dan 5 Modul App Sekaligus"
-            >
-              Keduanya
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("points")}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
-                viewMode === "points"
-                  ? "bg-background text-foreground shadow-2xs font-bold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title="Fokus Menampilkan 5 Poin Deskripsi"
-            >
-              5 Poin Deskripsi
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("apps")}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
-                viewMode === "apps"
-                  ? "bg-background text-foreground shadow-2xs font-bold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title="Fokus Menampilkan 5 Modul Aplikasi"
-            >
-              5 Modul App
-            </button>
-          </div>
         </div>
       </div>
 
@@ -173,42 +130,9 @@ export function WealthSpectrumPillView({
                 </div>
               </div>
 
-              {/* Bagian Tengah: 5 Poin Deskripsi Fondasi & 5 Nama Modul App Terpadu */}
+              {/* Bagian Tengah: 5 Nama Modul App Terpadu */}
               <div className="p-3 sm:p-3.5 flex-1 flex flex-col gap-2.5">
-                {/* 1. 5 Poin Deskripsi Prinsip Fondasi (Terbuka & Terbaca Jelas) */}
-                {(viewMode === "both" || viewMode === "points") && (
-                  <div className="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/25 space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-amber-700 dark:text-amber-400">
-                      <span className="flex items-center gap-1.5">
-                        <Sparkles size={12} className="shrink-0 text-amber-500" />
-                        <span>5 Poin Deskripsi {t.name}:</span>
-                      </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">
-                        5 Poin Fondasi
-                      </span>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {t.items.map((item) => (
-                        <div
-                          key={item.num}
-                          className="flex items-start gap-2 text-[10.5px] leading-snug"
-                        >
-                          <span className="size-4 rounded-full bg-amber-500/25 text-amber-800 dark:text-amber-300 text-[9px] font-bold font-mono flex items-center justify-center shrink-0 mt-0.5">
-                            {item.num}
-                          </span>
-                          <span className="text-foreground/90 font-normal">
-                            {item.text}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. 5 Nama Modul Aplikasi & Fitur-fiturnya */}
-                {(viewMode === "both" || viewMode === "apps") && (
-                  <div className="space-y-2">
+                <div className="space-y-2">
                     <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-1">
                       <span>5 Modul Aplikasi & Fitur ({appsForTahap.length}):</span>
                       <Link
@@ -302,7 +226,6 @@ export function WealthSpectrumPillView({
                       })}
                     </div>
                   </div>
-                )}
               </div>
 
               {/* Footer Kartu */}

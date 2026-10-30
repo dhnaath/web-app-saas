@@ -33,7 +33,7 @@ export interface MBACardProps {
   toggleFavorite: (to: string) => void;
   gradient?: string;
   accentGradient?: string;
-  maxFeatureCols?: 3 | 4 | 5;
+  maxFeatureCols?: 2 | 3 | 4 | 5;
   cardHeightClass?: string;
   showFeatureIcons?: boolean;
 }
@@ -174,7 +174,13 @@ export function MBACard({
                       {group.name} ({group.items.length}):
                     </span>
 
-                    <div className="flex flex-wrap justify-center content-start gap-1.5">
+                    <div
+                      className={
+                        group.items.length === 4
+                          ? "grid grid-cols-2 gap-2 w-full"
+                          : "flex flex-wrap justify-center content-start gap-1.5"
+                      }
+                    >
                       {group.items.map((feat, idx) => {
                         const FeatIcon = feat.icon;
                         const featPath = feat.to.split("?")[0];
@@ -182,13 +188,19 @@ export function MBACard({
                           ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
                           : undefined;
 
+                        const is2x2 = group.items.length === 4;
+
                         return (
                           <Link
                             key={idx}
                             to={featPath as any}
                             search={featSearch as any}
                             title={feat.desc || feat.title}
-                            className="min-w-[calc((100%-0.875rem)/3)] max-w-full inline-flex items-center justify-center py-1.5 px-2.5 gap-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center"
+                            className={
+                              is2x2
+                                ? "w-full inline-flex items-center justify-center py-2 px-2.5 gap-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center"
+                                : "min-w-[calc((100%-0.875rem)/3)] max-w-full inline-flex items-center justify-center py-1.5 px-2.5 gap-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center"
+                            }
                           >
                             {showFeatureIcons && FeatIcon && (
                               <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />
@@ -207,7 +219,13 @@ export function MBACard({
                   {badge ? `${badge} (${features.length}):` : `Features (${features.length}):`}
                 </span>
 
-                <div className="flex flex-wrap justify-center content-start gap-1.5 flex-1">
+                <div
+                  className={
+                    features.length === 4 || maxFeatureCols === 2
+                      ? "grid grid-cols-2 gap-2 w-full flex-1 content-start"
+                      : "flex flex-wrap justify-center content-start gap-1.5 flex-1"
+                  }
+                >
                   {features.map((feat, idx) => {
                     const FeatIcon = feat.icon;
                     const featPath = feat.to.split("?")[0];
@@ -215,19 +233,25 @@ export function MBACard({
                       ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
                       : undefined;
 
+                    const is2x2 = features.length === 4 || maxFeatureCols === 2;
+
                     return (
                       <Link
                         key={idx}
                         to={featPath as any}
                         search={featSearch as any}
                         title={feat.desc || feat.title}
-                        className={`${
-                          maxFeatureCols === 5
-                            ? "min-w-[calc((100%-1.625rem)/5)] px-1.5 gap-1"
-                            : maxFeatureCols === 4
-                              ? "min-w-[calc((100%-1.25rem)/4)] px-2 gap-1.5"
-                              : "min-w-[calc((100%-0.875rem)/3)] px-2.5 gap-1.5"
-                        } max-w-full inline-flex items-center justify-center py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center`}
+                        className={
+                          is2x2
+                            ? "w-full inline-flex items-center justify-center py-2 px-2.5 gap-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center"
+                            : `${
+                                maxFeatureCols === 5
+                                  ? "min-w-[calc((100%-1.625rem)/5)] px-1.5 gap-1"
+                                  : maxFeatureCols === 4
+                                    ? "min-w-[calc((100%-1.25rem)/4)] px-2 gap-1.5"
+                                    : "min-w-[calc((100%-0.875rem)/3)] px-2.5 gap-1.5"
+                              } max-w-full inline-flex items-center justify-center py-1.5 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30 group/chip text-center`
+                        }
                       >
                         {showFeatureIcons && FeatIcon && (
                           <FeatIcon size={12} className="text-primary shrink-0 group-hover/chip:scale-110 transition-transform" />

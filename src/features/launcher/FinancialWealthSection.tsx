@@ -55,13 +55,15 @@ import {
   Sprout,
   ChevronDown,
   ChevronUp,
+  Sparkles,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { type NavItem } from "@/config/nav";
 import { cn } from "@/lib/utils";
 import { ShellHeader } from "@/app/shell-header";
-import { WealthSpectrumPillView } from "./WealthSpectrumPillView";
+import { MBACard } from "@/components/common/MBACard";
+import { useLanguage, type Language } from "@/features/finance/hooks/useLanguage";
 
 
 export interface FinancialStandaloneFeature {
@@ -402,18 +404,17 @@ export const STANDALONE_FINANCIAL_APPS: StandaloneFinancialAppDef[] = [
     ],
   },
   {
-    id: "tata-kelola-dan-valuasi",
+    id: "tata-kelola",
     to: "/legacy?tab=cat_tatakelola",
-    title: "Good Governance & Valuasi MAPPI",
-    subtitle: "Tata kelola legalitas aset keluarga dan sertifikasi nilai pasar independen sesuai Standar Penilaian Indonesia (SPI) MAPPI.",
+    title: "Good Governance",
+    subtitle: "Tata kelola legalitas aset keluarga, struktur kepemilikan terstruktur, dan kepatuhan hukum antargenerasi.",
     category: "legacy",
     categoryLabel: "Legacy",
     icon: Building,
     badge: "Standalone",
     features: [
-      { title: "Penilaian Properti (Market & Cost)", to: "/valuasi", icon: Building },
-      { title: "Penilaian Bisnis (Income DCF)", to: "/valuasi", icon: Briefcase },
       { title: "Tata Kelola & Audit Aset", to: "/legacy?tab=cat_tatakelola", icon: Scale },
+      { title: "Struktur Kepemilikan", to: "/legacy?tab=cat_tatakelola&sub=struktur", icon: Building },
     ],
   },
   {
@@ -992,11 +993,11 @@ export const WEALTH_STAGE_MAIN_BOXES: WealthStageMainBoxDef[] = [
     description:
       "Strategi akselerasi melalui alokasi sektor produktif, efek berlipat bunga majemuk (compounding), dan penyesuaian berkala agar return melampaui inflasi secara terukur dan berkelanjutan.",
     principles: [
-      { num: 1, text: "Proses menentukan batas kenyamanan dan kapasitas finansial dalam merespons dinamika pasar secara terukur." },
-      { num: 2, text: "Metode pendistribusian modal ke berbagai sektor produktif untuk mengoptimalkan potensi apresiasi nilai aset." },
-      { num: 3, text: "Prinsip pengelolaan dana yang mengutamakan akurasi hasil dan efisiensi proses agar nilai melampaui inflasi." },
-      { num: 4, text: "Mekanisme pertumbuhan nilai di mana keuntungan yang dihasilkan diinvestasikan kembali (compounding)." },
-      { num: 5, text: "Tindakan meninjau dan menyesuaikan strategi secara berkala untuk memastikan instrumen sesuai tujuan." },
+      { num: 1, text: "Proses menentukan batas kenyamanan dan kapasitas finansial dalam merespons dinamika pasar, memastikan strategi pertumbuhan yang dipilih tetap terukur dan berkelanjutan." },
+      { num: 2, text: "Metode pendistribusian modal ke berbagai sektor produktif untuk mengoptimalkan potensi apresiasi nilai aset secara keseluruhan." },
+      { num: 3, text: "Prinsip pengelolaan dana yang mengutamakan akurasi hasil dan efisiensi proses agar nilai kekayaan dapat melampaui inflasi." },
+      { num: 4, text: "Mekanisme pertumbuhan nilai di mana keuntungan yang dihasilkan diinvestasikan kembali untuk menciptakan efek berlipat pada kekayaan dari waktu ke waktu." },
+      { num: 5, text: "Tindakan meninjau dan menyesuaikan strategi secara berkala untuk memastikan seluruh instrumen tetap berjalan sesuai tujuan jangka panjang." },
     ],
     features: [
       {
@@ -1073,14 +1074,14 @@ export const WEALTH_STAGE_MAIN_BOXES: WealthStageMainBoxDef[] = [
         icon: GraduationCap,
       },
       {
-        id: "valuasi-mappi",
-        title: "Valuasi MAPPI & Governance",
-        subtitle: "Standar Penilaian Indonesia (SPI) terakreditasi: penilaian properti komersial/residensial, valuasi entitas bisnis, dan opini wajar.",
-        to: "/valuasi",
+        id: "tata-kelola",
+        title: "Good Governance",
+        subtitle: "Tata kelola legalitas aset keluarga, struktur kepemilikan terstruktur, dan kepatuhan hukum antargenerasi.",
+        to: "/legacy?tab=cat_tatakelola",
         icon: Building,
         subFeatures: [
-          { title: "Valuasi MAPPI", to: "/valuasi", icon: Building },
           { title: "Good Governance", to: "/legacy?tab=cat_tatakelola", icon: Scale },
+          { title: "Struktur Kepemilikan", to: "/legacy?tab=cat_tatakelola&sub=struktur", icon: Building },
         ],
       },
       {
@@ -1454,20 +1455,376 @@ const ShariaMainBox = ({
 };
 
 
+export const WEALTH_STAGE_PRINCIPLES_I18N: Record<
+  string,
+  Record<
+    Language,
+    {
+      subtitle: string;
+      description: string;
+      principles: { num: number; text: string }[];
+    }
+  >
+> = {
+  surety: {
+    id: {
+      subtitle: "Mitigasi dan Kepastian Risiko",
+      description: "Fondasi keamanan ekonomi dan instrumen penjamin terhadap risiko kegagalan, melindungi aset dan aliran nilai dari peristiwa tak terduga serta memastikan stabilitas finansial berkelanjutan sebelum proses ekspansi nilai dimulai.",
+      principles: [
+        { num: 1, text: "Instrumen hukum dan institusional yang berfungsi sebagai penjamin terhadap risiko kegagalan atau kelalaian finansial." },
+        { num: 2, text: "Lapisan ketahanan sistemik yang melindungi aset dan aliran nilai dari peristiwa tak terduga serta gangguan struktural." },
+        { num: 3, text: "Syarat minimum stabilitas finansial yang harus terpenuhi sebelum proses pertumbuhan dan ekspansi nilai dimulai." },
+        { num: 4, text: "Prinsip dasar perlindungan dalam sistem keuangan yang memastikan terpenuhinya kewajiban dan terjaganya stabilitas nilai ekonomi." },
+        { num: 5, text: "Fondasi keamanan ekonomi yang memungkinkan perencanaan, akumulasi, dan pengembangan kekayaan secara berkelanjutan." },
+      ],
+    },
+    en: {
+      subtitle: "Risk Mitigation & Certainty",
+      description: "Economic security foundation and institutional guarantee against default, safeguarding assets and value streams from unexpected shocks while ensuring sustainable stability before value expansion begins.",
+      principles: [
+        { num: 1, text: "Legal and institutional instruments that act as guarantors against the risk of financial default or negligence." },
+        { num: 2, text: "Systemic resilience layers that shield assets and value streams from unforeseen events and structural disruptions." },
+        { num: 3, text: "Minimum financial stability prerequisites that must be satisfied before growth and value expansion begin." },
+        { num: 4, text: "Foundational protection principles within the financial system ensuring fulfillment of obligations and preservation of economic value." },
+        { num: 5, text: "Economic security foundations empowering disciplined, long-term wealth planning, accumulation, and stewardship." },
+      ],
+    },
+    ms: {
+      subtitle: "Mitigasi dan Kepastian Risiko",
+      description: "Asas keselamatan ekonomi dan instrumen penjamin terhadap risiko kegagalan, melindungi aset dan aliran nilai daripada peristiwa tidak diduga serta memastikan kestabilan kewangan mampan sebelum proses pengembangan bermula.",
+      principles: [
+        { num: 1, text: "Instrumen undang-undang dan institusi yang berfungsi sebagai penjamin terhadap risiko kegagalan atau kecuaian kewangan." },
+        { num: 2, text: "Lapisan ketahanan sistemik yang melindungi aset dan aliran nilai daripada peristiwa tidak diduga serta gangguan struktur." },
+        { num: 3, text: "Syarat minimum kestabilan kewangan yang mesti dipenuhi sebelum proses pertumbuhan dan pengembangan nilai bermula." },
+        { num: 4, text: "Prinsip asas perlindungan dalam sistem kewangan yang memastikan kewajipan dipenuhi dan kestabilan nilai ekonomi terpelihara." },
+        { num: 5, text: "Asas keselamatan ekonomi yang membolehkan perancangan, pengumpulan, dan pembangunan kekayaan secara mampan." },
+      ],
+    },
+    zh: {
+      subtitle: "风险缓释与确定性",
+      description: "经济安全基石与防范违约的制度保障，保护资产与资金流免受意外冲击，并在开启价值扩张前确立长效稳固的财务基本盘。",
+      principles: [
+        { num: 1, text: "作为防范财务违约或过失风险担保的法律与制度工具。" },
+        { num: 2, text: "保护资产与价值流免受意外事件与结构性扰动影响的系统性韧性防御层。" },
+        { num: 3, text: "在启动增长与财富价值规模扩张之前必须满足的最低财务稳定性前提。" },
+        { num: 4, text: "金融体系中确保契约义务兑现并维持经济价值稳定的基础保护原则。" },
+        { num: 5, text: "支持持续开展长期财富规划、资产积累与稳健增值的经济安全基石。" },
+      ],
+    },
+  },
+  flow: {
+    id: {
+      subtitle: "Agresi dan Agilitas Kas",
+      description: "Sirkulasi modal dan arus kas adaptif yang memastikan kemampuan finansial aktual dalam memenuhi kebutuhan dan kewajiban berkala tanpa mengorbankan likuiditas dan stabilitas jangka panjang.",
+      principles: [
+        { num: 1, text: "Prasyarat operasional yang memastikan aset dan pendapatan dapat terus bersirkulasi secara berkelanjutan." },
+        { num: 2, text: "Arus kas bersih yang menunjukkan kemampuan finansial aktual dalam memenuhi kebutuhan dan kewajiban secara berkala." },
+        { num: 3, text: "Indikator efisiensi penggunaan modal dalam menjaga likuiditas tanpa mengorbankan stabilitas jangka panjang." },
+        { num: 4, text: "Dinamika pergerakan dana yang mencerminkan aktivitas ekonomi dan kelangsungan sistem finansial." },
+        { num: 5, text: "Sirkulasi nilai ekonomi yang memungkinkan sistem finansial tetap adaptif, hidup, dan berfungsi secara optimal." },
+      ],
+    },
+    en: {
+      subtitle: "Cash Flow & Capital Agility",
+      description: "Adaptive capital circulation and cash velocity ensuring actual financial capability to fulfill recurring obligations without compromising liquidity and long-term stability.",
+      principles: [
+        { num: 1, text: "Operational prerequisites ensuring assets and income continue to circulate sustainably." },
+        { num: 2, text: "Net cash flows reflecting actual financial capacity to meet routine needs and recurring obligations." },
+        { num: 3, text: "Indicators of capital efficiency in maintaining liquidity without sacrificing long-term stability." },
+        { num: 4, text: "Cash dynamics reflecting active economic participation and the continuity of the financial framework." },
+        { num: 5, text: "Economic value circulation empowering the financial architecture to stay adaptive, vital, and functionally optimal." },
+      ],
+    },
+    ms: {
+      subtitle: "Aliran Tunai & Agiliti Modal",
+      description: "Peredaran modal dan aliran tunai adaptif yang memastikan keupayaan kewangan sebenar dalam memenuhi keperluan dan komitmen berkala tanpa menjejaskan kecairan jangka panjang.",
+      principles: [
+        { num: 1, text: "Prasyarat operasi yang memastikan aset dan pendapatan dapat terus beredar secara mampan." },
+        { num: 2, text: "Aliran tunai bersih yang menunjukkan keupayaan kewangan sebenar dalam memenuhi keperluan dan kewajipan berkala." },
+        { num: 3, text: "Penunjuk kecekapan penggunaan modal dalam mengekalkan kecairan tanpa menjejaskan kestabilan jangka panjang." },
+        { num: 4, text: "Dinamik pergerakan dana yang mencerminkan aktiviti ekonomi dan kelangsungan sistem kewangan." },
+        { num: 5, text: "Peredaran nilai ekonomi yang membolehkan sistem kewangan kekal adaptif, hidup, dan berfungsi secara optimum." },
+      ],
+    },
+    zh: {
+      subtitle: "现金流与资本敏捷性",
+      description: "自适应的资本周转与现金流转体系，确保在不牺牲流动性与长期稳健的前提下，持续具备兑现日常需求与定期债务的实际财务能力。",
+      principles: [
+        { num: 1, text: "确保资产与日常收入能够持续稳步循环周转的运营前提条件。" },
+        { num: 2, text: "真实反映按期兑现各项生活需求与法定财务承诺能力的净现金流。" },
+        { num: 3, text: "在不牺牲长期稳健前提下平衡即时流动性与资金利用率的资本效率指标。" },
+        { num: 4, text: "反映真实经济活动活力与金融架构健康持续性的资金流动态势。" },
+        { num: 5, text: "让整体财务体系保持高度灵活性、旺盛生命力与最优运转效能的价值循环机制。" },
+      ],
+    },
+  },
+  build: {
+    id: {
+      subtitle: "Fondasi dan Modal Fundamental",
+      description: "Proses konstruksi dan akumulasi aset bertahap di mana arus kas dikonversi menjadi aset bernilai jangka panjang yang kokoh sebelum memasuki fase pertumbuhan dan ekspansi agresif.",
+      principles: [
+        { num: 1, text: "Proses akumulasi aset secara bertahap untuk membangun fondasi kekayaan yang stabil." },
+        { num: 2, text: "Basis kekayaan yang menjadi penopang utama bagi ekspansi dan keberlanjutan nilai ekonomi." },
+        { num: 3, text: "Tahap konstruksi modal di mana arus kas dikonversi menjadi aset bernilai jangka panjang." },
+        { num: 4, text: "Struktur konsolidasi finansial yang memperkuat posisi ekonomi sebelum memasuki fase pertumbuhan agresif." },
+        { num: 5, text: "Fase pembentukan sistem aset yang dirancang untuk mendukung pertumbuhan dan ketahanan jangka panjang." },
+      ],
+    },
+    en: {
+      subtitle: "Foundation & Fundamental Capital",
+      description: "Disciplined capital construction and asset accumulation converting free cash flow into enduring valuable property before entering aggressive growth and market scaling.",
+      principles: [
+        { num: 1, text: "Gradual asset accumulation process to establish a resilient and stable wealth foundation." },
+        { num: 2, text: "Wealth base serving as the foundational pillar for economic expansion and long-term value sustainability." },
+        { num: 3, text: "Capital construction stage where cash flows are converted into enduring valuable long-term assets." },
+        { num: 4, text: "Financial consolidation structure reinforcing economic standing prior to entering aggressive growth phases." },
+        { num: 5, text: "Asset system development phase engineered to bolster ongoing growth and systemic long-term resilience." },
+      ],
+    },
+    ms: {
+      subtitle: "Asas dan Modal Fundamental",
+      description: "Proses pembinaan dan pengumpulan aset berperingkat di mana aliran tunai ditukarkan kepada aset bernilai jangka panjang sebelum memasuki fasa pertumbuhan agresif.",
+      principles: [
+        { num: 1, text: "Proses pengumpulan aset secara berperingkat untuk membina asas kekayaan yang stabil." },
+        { num: 2, text: "Asas kekayaan yang menjadi tonggak utama bagi pengembangan dan kemampanan nilai ekonomi." },
+        { num: 3, text: "Tahap pembinaan modal di mana aliran tunai ditukarkan kepada aset bernilai jangka panjang." },
+        { num: 4, text: "Struktur penyatuan kewangan yang memperkukuh kedudukan ekonomi sebelum melangkah ke fasa pertumbuhan agresif." },
+        { num: 5, text: "Fase pembentukan sistem aset yang direka untuk menyokong pertumbuhan dan daya tahan jangka panjang." },
+      ],
+    },
+    zh: {
+      subtitle: "财富基石与基础资本",
+      description: "扎实的资本构建与循序渐进的资产积累过程，在步入激进增长与规模扩张之前，将自由现金流转化为稳固持久的生产性长期资产。",
+      principles: [
+        { num: 1, text: "通过循序渐进的资产积累构建稳固持久财富底座的发展过程。" },
+        { num: 2, text: "作为支撑未来经济扩张与长期价值延续核心支柱的底层财富基石。" },
+        { num: 3, text: "将日常经营现金流稳健转化为具有长期保值增值属性资产的资本构建阶段。" },
+        { num: 4, text: "在步入激进增长周期之前全面巩固资产负债表与抗风险能力的财务整合架构。" },
+        { num: 5, text: "专门为支撑跨周期长期可持续增长与抵御市场波动而设计的资产体系构建阶段。" },
+      ],
+    },
+  },
+  grow: {
+    id: {
+      subtitle: "Akselerasi dan Skalabilitas Aset",
+      description: "Strategi akselerasi melalui alokasi sektor produktif, efek berlipat bunga majemuk (compounding), dan penyesuaian berkala agar return melampaui inflasi secara terukur dan berkelanjutan.",
+      principles: [
+        { num: 1, text: "Proses menentukan batas kenyamanan dan kapasitas finansial dalam merespons dinamika pasar, memastikan strategi pertumbuhan yang dipilih tetap terukur dan berkelanjutan." },
+        { num: 2, text: "Metode pendistribusian modal ke berbagai sektor produktif untuk mengoptimalkan potensi apresiasi nilai aset secara keseluruhan." },
+        { num: 3, text: "Prinsip pengelolaan dana yang mengutamakan akurasi hasil dan efisiensi proses agar nilai kekayaan dapat melampaui inflasi." },
+        { num: 4, text: "Mekanisme pertumbuhan nilai di mana keuntungan yang dihasilkan diinvestasikan kembali untuk menciptakan efek berlipat pada kekayaan dari waktu ke waktu." },
+        { num: 5, text: "Tindakan meninjau dan menyesuaikan strategi secara berkala untuk memastikan seluruh instrumen tetap berjalan sesuai tujuan jangka panjang." },
+      ],
+    },
+    en: {
+      subtitle: "Asset Acceleration & Scalability",
+      description: "Acceleration strategies through productive sector allocations, compounding yield mechanisms, and periodic rebalancing to consistently outperform inflation safely.",
+      principles: [
+        { num: 1, text: "Process of defining risk comfort thresholds and financial capacity when responding to market dynamics, ensuring growth strategies remain measured and sustainable." },
+        { num: 2, text: "Methods of allocating capital across productive sectors to optimize overall capital appreciation potential." },
+        { num: 3, text: "Fund management principles prioritizing accurate outcomes and cost efficiency so wealth growth consistently outpaces inflation." },
+        { num: 4, text: "Value multiplication mechanism where earned returns are reinvested to generate compounding wealth expansion over time." },
+        { num: 5, text: "Periodic review and adjustment actions ensuring all financial instruments remain aligned with long-term strategic objectives." },
+      ],
+    },
+    ms: {
+      subtitle: "Pecutan dan Skalabiliti Aset",
+      description: "Strategi pecutan melalui pengagihan sektor produktif, kesan faedah kompaun, dan pelarasan berkala supaya pulangan mengatasi inflasi secara mampan.",
+      principles: [
+        { num: 1, text: "Proses menentukan batas keselesaan dan kapasiti kewangan terhadap dinamik pasaran, memastikan strategi pertumbuhan kekal terukur dan mampan." },
+        { num: 2, text: "Kaedah pengagihan modal ke pelbagai sektor produktif bagi mengoptimumkan potensi kenaikan nilai aset secara menyeluruh." },
+        { num: 3, text: "Prinsip pengurusan dana yang mengutamakan ketepatan hasil dan kecekapan proses supaya nilai kekayaan mengatasi inflasi." },
+        { num: 4, text: "Mekanisme pertumbuhan nilai di mana keuntungan yang dijana dilaburkan semula bagi mencipta kesan penggandaan kekayaan dari semasa ke semasa." },
+        { num: 5, text: "Tindakan menyemak dan melaraskan strategi secara berkala untuk memastikan semua instrumen kekal selaras dengan matlamat jangka panjang." },
+      ],
+    },
+    zh: {
+      subtitle: "资产加速与规模化",
+      description: "通过优质生产性板块配置、复利再投资机制与定期动态再平衡的加速增值策略，确保投资回报在可控风险下长期稳健战胜通胀。",
+      principles: [
+        { num: 1, text: "在应对市场波动时科学厘定心理舒适阈值与量化资金承受能力，确保所选增长策略始终可测、可控且可持续的过程。" },
+        { num: 2, text: "将资本广泛配置于多元生产性实体产业与金融品类，以最大化挖掘全域资产综合升值潜力的方法。" },
+        { num: 3, text: "坚持追求确定性收益成果与极低费率损耗摩擦，确保真实财富增幅持续稳健跑赢通胀的资金管理准则。" },
+        { num: 4, text: "将已实现的投资收益持续滚存再投资、从而随时间推移释放指数级财富复利乘数效应的价值增值机制。" },
+        { num: 5, text: "定期深度评估并动态调优资产配置策略，确保全套投资工具组合始终紧密贴合既定长期战略目标的管理举措。" },
+      ],
+    },
+  },
+  legacy: {
+    id: {
+      subtitle: "Transmisi dan Tata Kelola Nilai",
+      description: "Manifestasi tertinggi sistem finansial melalui tata kelola hukum aset keluarga, transmisi nilai antargenerasi, filantropi terstruktur, dan suksesi bebas sengketa yang lestari.",
+      principles: [
+        { num: 1, text: "Jejak panjang dari seluruh keputusan finansial yang membentuk makna dan tujuan dari kekayaan." },
+        { num: 2, text: "Struktur hukum dan institusional yang memastikan manfaat ekonomi tetap terjaga sepanjang waktu." },
+        { num: 3, text: "Dimensi keberlanjutan finansial yang melampaui batas hidup seorang individu atau entitas." },
+        { num: 4, text: "Sistem transmisi kekayaan yang menjaga kesinambungan nilai antar generasi." },
+        { num: 5, text: "Manifestasi tertinggi dari sebuah sistem finansial yang terintegrasi, stabil, dan berkelanjutan." },
+      ],
+    },
+    en: {
+      subtitle: "Value Transmission & Governance",
+      description: "The apex of wealth stewardship through family legal governance, intergenerational value transmission, structured philanthropy, and dispute-free perpetual succession.",
+      principles: [
+        { num: 1, text: "The enduring footprint of cumulative financial decisions shaping the deeper meaning and ultimate purpose of family wealth." },
+        { num: 2, text: "Legal and institutional frameworks ensuring economic benefits and protections endure across time." },
+        { num: 3, text: "Financial sustainability dimension that transcends the natural lifespan of any single individual or entity." },
+        { num: 4, text: "Wealth transmission architecture safeguarding intergenerational continuity and preserving family core values." },
+        { num: 5, text: "The apex manifestation of a comprehensively integrated, stable, and perpetual financial system." },
+      ],
+    },
+    ms: {
+      subtitle: "Penyampaian dan Tadbir Urus Nilai",
+      description: "Manifestasi tertinggi sistem kewangan melalui tadbir urus undang-undang aset keluarga, pemindahan nilai antara generasi, dan pewarisan mampan.",
+      principles: [
+        { num: 1, text: "Jejak panjang daripada keseluruhan keputusan kewangan yang membentuk makna dan tujuan kekayaan." },
+        { num: 2, text: "Struktur undang-undang dan institusi yang memastikan manfaat ekonomi kekal terpelihara sepanjang masa." },
+        { num: 3, text: "Dimensi kemampanan kewangan yang menjangkaui batas hayat seorang individu atau entiti." },
+        { num: 4, text: "Sistem pemindahan kekayaan yang memelihara kesinambungan nilai antara generasi." },
+        { num: 5, text: "Manifestasi tertinggi bagi sebuah sistem kewangan yang bersepadu, stabil, dan berkekalan." },
+      ],
+    },
+    zh: {
+      subtitle: "价值传承与财富治理",
+      description: "家族财富架构的至高形态：通过完善的法律信托架构、跨代精神与物质财富传承、结构化家族慈善及无争议永续接班体系。",
+      principles: [
+        { num: 1, text: "贯穿历代全部财务决策轨迹并深刻铸就财富精神内涵与终极使命的历史印记。" },
+        { num: 2, text: "借助严谨法律信托与制度化治理结构确保核心经济利益与家族收益历久弥新的长效保障。" },
+        { num: 3, text: "远远超越单一自然人或企业个体生命周期限制的超长周期财务可持续性维度。" },
+        { num: 4, text: "在跨代传承过程中全方位保障精神文化底蕴、伦理价值与物质资产完整延续的财富交接体系。" },
+        { num: 5, text: "高度整合、至臻稳固且代际永续的现代化金融与财富治理生态体系的至高形态。" },
+      ],
+    },
+  },
+};
+
+interface CategorySectionViewProps {
+  stage: WealthStageMainBoxDef;
+  apps: StandaloneFinancialAppDef[];
+  favorites: string[];
+  toggleFavorite: (to: string) => void;
+  getGradient?: (title: string) => string;
+}
+
+function CategorySectionView({
+  stage,
+  apps,
+  favorites,
+  toggleFavorite,
+  getGradient,
+}: CategorySectionViewProps) {
+  const Icon = stage.icon;
+  const lang = useLanguage();
+
+  const stageI18n =
+    WEALTH_STAGE_PRINCIPLES_I18N[stage.id]?.[lang] ||
+    WEALTH_STAGE_PRINCIPLES_I18N[stage.id]?.id || {
+      subtitle: stage.subtitle,
+      principles: stage.principles,
+    };
+
+  const stagePrefix =
+    lang === "en"
+      ? `Stage #${stage.step}`
+      : lang === "zh"
+      ? `阶段 #${stage.step}`
+      : `Tahap #${stage.step}`;
+
+  return (
+    <section id={`category-${stage.id}`} className="w-full space-y-4 sm:space-y-4.5">
+      {/* Kotak Utama: Khusus 5 Deskripsi (Tanpa Bagian Lain) */}
+      <div
+        className={`w-full rounded-2xl sm:rounded-3xl border ${stage.borderClass} bg-card/85 backdrop-blur-md shadow-xs hover:shadow-md transition-all p-4.5 sm:p-5 relative overflow-hidden`}
+      >
+        {/* Accent top gradient line */}
+        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stage.gradientBg}`} />
+
+        {/* Header Kategori Ringkas */}
+        <div className="flex items-center gap-2.5 mb-3.5 px-0.5">
+          <div className={`p-1.5 rounded-lg border ${stage.badgeBg}`}>
+            <Icon className="size-4" />
+          </div>
+          <span className={`text-[11px] font-bold font-mono px-2 py-0.5 rounded-full border ${stage.badgeBg}`}>
+            {stagePrefix}
+          </span>
+          <h3 className="text-sm sm:text-base font-bold text-foreground">
+            {stage.name}
+          </h3>
+          <span className="text-xs text-muted-foreground font-medium hidden sm:inline">
+            — {stageI18n.subtitle}
+          </span>
+        </div>
+
+        {/* Khusus 5 Deskripsi dalam Kotak Utama */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3.5">
+          {stageI18n.principles.map((p) => {
+            const pointLabel =
+              lang === "en"
+                ? `Principle ${p.num}`
+                : lang === "zh"
+                ? `原则 ${p.num}`
+                : `Prinsip ${p.num}`;
+
+            return (
+              <div
+                key={p.num}
+                className="p-3.5 rounded-xl sm:rounded-2xl bg-muted/25 border border-border/60 hover:border-primary/40 hover:bg-muted/40 transition-all flex flex-col justify-start gap-2 shadow-2xs group/card"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="size-5.5 rounded-md bg-primary/10 text-primary text-[11px] font-bold font-mono flex items-center justify-center shrink-0 group-hover/card:bg-primary group-hover/card:text-primary-foreground transition-colors">
+                    {p.num}
+                  </span>
+                  <span className="text-xs font-bold text-foreground tracking-tight leading-snug">
+                    {pointLabel}
+                  </span>
+                </div>
+                <p className="text-[11.5px] text-foreground/80 leading-relaxed font-normal">
+                  {p.text}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Grid Kotak-Kotak Modul (Gaya Seperti di Page Lain dengan MBACard) */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-5">
+        {apps.map((app) => (
+          <MBACard
+            key={app.id}
+            title={app.title}
+            to={app.to}
+            icon={app.icon}
+            badge={app.categoryLabel}
+            shortDesc={app.subtitle}
+            gradient={getGradient ? getGradient(app.title) : undefined}
+            features={app.features?.map((f) => ({
+              title: f.title,
+              to: f.to,
+              icon: f.icon,
+            }))}
+            isFav={favorites.includes(app.to)}
+            toggleFavorite={toggleFavorite}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function FinancialWealthSection({
   favorites,
   toggleFavorite,
   getGradient,
 }: FinancialWealthSectionProps) {
   const [selectedTab, setSelectedTab] = useState<FinancialCategoryTab>("all");
-  const [selectedPillar, setSelectedPillar] = useState<string | null>(null);
+  const lang = useLanguage();
 
-  const countSpectrum = STANDALONE_FINANCIAL_APPS.filter((a) => a.category !== "sharia").length;
-
-  const filteredStages = useMemo(() => {
-    if (selectedTab === "all") return WEALTH_STAGE_MAIN_BOXES;
-    if (selectedTab === "spectrum") return [];
-    return WEALTH_STAGE_MAIN_BOXES.filter((stage) => stage.id === selectedTab);
+  const displayedStages = useMemo(() => {
+    if (selectedTab === "all" || selectedTab === "spectrum") {
+      return WEALTH_STAGE_MAIN_BOXES;
+    }
+    return WEALTH_STAGE_MAIN_BOXES.filter((s) => s.id === selectedTab);
   }, [selectedTab]);
 
   const activeStage = useMemo(() => {
@@ -1475,71 +1832,68 @@ export function FinancialWealthSection({
     return WEALTH_STAGE_MAIN_BOXES.find((s) => s.id === selectedTab) || null;
   }, [selectedTab]);
 
+  const allLabel = lang === "en" ? "All" : lang === "zh" ? "全部" : "Semua";
+
+  const pageSubtitles: Record<Language, string> = {
+    id: "5 Tahap Wealth & Arsitektur Manajemen Kekayaan Terpadu (5 Pilar × 5 Modul Aplikasi)",
+    en: "5 Wealth Stages & Comprehensive Wealth Management Architecture (5 Pillars × 5 Application Modules)",
+    ms: "5 Tahap Kekayaan & Seni Bina Pengurusan Kekayaan Bersepadu (5 Tiang × 5 Modul Aplikasi)",
+    zh: "五大财富阶段与综合财富管理架构（5大支柱 × 5大应用模块）",
+  };
+
+  const statusAllText: Record<Language, string> = {
+    id: "Menampilkan seluruh 25 Modul (Surety, Flow, Build, Grow, Legacy)",
+    en: "Displaying all 25 Modules (Surety, Flow, Build, Grow, Legacy)",
+    ms: "Menampilkan semua 25 Modul (Surety, Flow, Build, Grow, Legacy)",
+    zh: "展示全部25个模块（Surety、Flow、Build、Grow、Legacy）",
+  };
+
+  const activeStageText = activeStage
+    ? lang === "en"
+      ? `Stage ${activeStage.step}: ${activeStage.name} (5 Application Modules)`
+      : lang === "zh"
+      ? `阶段 ${activeStage.step}: ${activeStage.name} (5个应用模块)`
+      : `Tahap ${activeStage.step}: ${activeStage.name} (5 Modul Aplikasi)`
+    : "";
+
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Portaled ShellHeader: Clean Stage & Spectrum Selector di Top Right Bar */}
+      {/* Portaled ShellHeader: Clean Category Selector di Top Right Bar */}
       <ShellHeader>
-        <div className="flex items-center gap-1.5 h-full py-0 shrink-0">
-          {/* Selector Tahap Wealth */}
-          <div className="relative flex items-center gap-1.5 px-2.5 h-[36px] rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-xs shrink-0 cursor-pointer border border-black/5 dark:border-white/10">
-            <Layers size={20} className="text-primary shrink-0 pointer-events-none" />
-            <select
-              value={selectedTab}
-              onChange={(e) => {
-                setSelectedTab(e.target.value as FinancialCategoryTab);
-                if (e.target.value !== "spectrum") setSelectedPillar(null);
-              }}
-              className="bg-transparent border-0 text-xs font-semibold text-foreground focus:outline-none cursor-pointer pr-4 appearance-none py-0 leading-tight"
-              title="Pilih Tahap Wealth Management"
-            >
-              <option value="all" className="bg-popover text-popover-foreground">5 Tahap</option>
-              {WEALTH_STAGE_MAIN_BOXES.map((st) => (
-                <option key={st.id} value={st.id} className="bg-popover text-popover-foreground">
-                  {st.step}. {st.name}
-                </option>
-              ))}
-              <option value="spectrum" className="bg-popover text-popover-foreground">
-                Wealth Spectrum ({countSpectrum})
-              </option>
-            </select>
-            <ChevronDown size={11} className="text-muted-foreground pointer-events-none absolute right-2 shrink-0" />
-          </div>
-
-          {/* Toggle Cepat Wealth Spectrum */}
-          <button
-            type="button"
-            data-state={selectedTab === "spectrum" ? "active" : undefined}
-            onClick={() => {
-              setSelectedTab((prev) => (prev === "spectrum" ? "all" : "spectrum"));
-              setSelectedPillar(null);
-            }}
-            className={cn(
-              "inline-flex items-center gap-1.5 px-2.5 h-[36px] rounded-full text-xs font-semibold shrink-0 cursor-pointer transition-all border active:scale-95",
-              selectedTab === "spectrum"
-                ? "bg-emerald-500 text-white border-emerald-600 shadow-xs font-bold"
-                : "bg-black/5 dark:bg-white/10 hover:bg-black/10 text-muted-foreground hover:text-foreground border-black/5 dark:border-white/10"
-            )}
-            title="Tampilkan Arsitektur Wealth Spectrum (5 Pilar x 5 Modul)"
-          >
-            <ShieldCheck size={20} className={cn("shrink-0", selectedTab === "spectrum" ? "text-white" : "text-emerald-500")} />
-            <span>Spectrum ({countSpectrum})</span>
-          </button>
-
-          {/* Reset Cepat jika filter aktif */}
-          {selectedTab !== "all" && (
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedTab("all");
-                setSelectedPillar(null);
-              }}
-              className="inline-flex items-center gap-1 px-2 h-[36px] rounded-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold shrink-0 cursor-pointer border border-rose-500/20 active:scale-95 transition-all"
-              title="Reset ke 5 Tahap"
-            >
-              <X size={16} className="shrink-0" />
-              <span>Reset</span>
-            </button>
-          )}
+        <div className="flex items-center gap-1 sm:gap-1.5 h-full m-0 p-0.5">
+          {[
+            { id: "all" as FinancialCategoryTab, label: allLabel, count: 25 },
+            { id: "surety" as FinancialCategoryTab, label: "Surety", count: 5 },
+            { id: "flow" as FinancialCategoryTab, label: "Flow", count: 5 },
+            { id: "build" as FinancialCategoryTab, label: "Build", count: 5 },
+            { id: "grow" as FinancialCategoryTab, label: "Grow", count: 5 },
+            { id: "legacy" as FinancialCategoryTab, label: "Legacy", count: 5 },
+          ].map((tab) => {
+            const isActive = selectedTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedTab(tab.id)}
+                title={`${tab.label} (${tab.count})`}
+                className={`h-[36px] px-4.5 rounded-full text-[13px] transition-all cursor-pointer shrink-0 flex items-center gap-2 ${
+                  isActive
+                    ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground font-semibold hover:bg-black/5 dark:hover:bg-white/5"
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span
+                  className={`text-[12px] ${
+                    isActive
+                      ? "text-primary-foreground/90 font-bold"
+                      : "text-muted-foreground/75 font-medium"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </ShellHeader>
 
@@ -1549,40 +1903,27 @@ export function FinancialWealthSection({
           <span>Financial Planning and Wealth Management</span>
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-2xl mx-auto">
-          5 Tahap Wealth & Arsitektur Wealth Spectrum ({countSpectrum} Apps: 5 Pilar × 5 Modul)
+          {pageSubtitles[lang] || pageSubtitles.id}
         </p>
       </div>
 
       {/* Minimal Status Strip / Filter Active Indicator */}
-      <div className="flex items-center justify-center gap-2 w-full mb-5">
+      <div className="flex items-center justify-center gap-2 w-full mb-6">
         {selectedTab === "all" ? (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-muted-foreground bg-muted/40 border border-border/40">
             <Layers className="size-3.5 text-primary" />
-            <span>Menampilkan seluruh <strong>5 Tahap Wealth</strong> (Surety, Flow, Build, Grow, Legacy)</span>
-          </span>
-        ) : selectedTab === "spectrum" ? (
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-            <ShieldCheck className="size-3.5 text-emerald-500" />
-            <span>Arsitektur Wealth Spectrum ({countSpectrum} Modul Aktif)</span>
-            <button
-              type="button"
-              onClick={() => setSelectedTab("all")}
-              className="hover:opacity-80 p-0.5 rounded-full cursor-pointer ml-1"
-              title="Kembali ke semua tahap"
-            >
-              <X className="size-3" />
-            </button>
+            <span>{statusAllText[lang] || statusAllText.id}</span>
           </span>
         ) : (
           activeStage && (
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
               <activeStage.icon className="size-3.5" />
-              <span>Tahap {activeStage.step}: {activeStage.name} ({activeStage.features.length} modul)</span>
+              <span>{activeStageText}</span>
               <button
                 type="button"
                 onClick={() => setSelectedTab("all")}
                 className="hover:opacity-80 p-0.5 rounded-full cursor-pointer ml-1"
-                title="Tampilkan semua tahap"
+                title={lang === "en" ? "Show all categories" : "Tampilkan semua kategori"}
               >
                 <X className="size-3" />
               </button>
@@ -1591,28 +1932,24 @@ export function FinancialWealthSection({
         )}
       </div>
 
-
-      {/* Konten */}
-      {selectedTab === "spectrum" ? (
-        <WealthSpectrumPillView
-          selectedFilter={selectedPillar ?? undefined}
-          onSelectFilter={setSelectedPillar}
-          favorites={favorites}
-          toggleFavorite={toggleFavorite}
-          getGradient={getGradient}
-        />
-      ) : (
-        <div className="w-full flex flex-col gap-6">
-          {filteredStages.map((stage) => (
-            <StageMainBox
+      {/* Konten Kategori dengan Deskripsi Dilebur di Atas Masing-Masing Kategori */}
+      <div className="w-full space-y-10 sm:space-y-12">
+        {displayedStages.map((stage) => {
+          const stageApps = STANDALONE_FINANCIAL_APPS.filter(
+            (app) => app.category === stage.id
+          );
+          return (
+            <CategorySectionView
               key={stage.id}
               stage={stage}
-              isFav={favorites.includes(stage.to)}
+              apps={stageApps}
+              favorites={favorites}
               toggleFavorite={toggleFavorite}
+              getGradient={getGradient}
             />
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -205,7 +205,7 @@ export function CreativeWorkspaceMediaPage({
   return (
     <div className="w-full flex-1 flex flex-col font-sans pb-16">
       <ShellHeader>
-        <div className="flex items-center gap-1 h-full m-0 p-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 h-full m-0 p-0.5">
           {CREATIVE_CATEGORY_TABS.map((tab) => {
             const isActive = selectedCategory === tab.id;
             return (
@@ -213,18 +213,18 @@ export function CreativeWorkspaceMediaPage({
                 key={tab.id}
                 onClick={() => setSelectedCategory(tab.id)}
                 title={`${tab.label} (${tab.count})`}
-                className={`px-3.5 h-[36px] rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`h-[36px] px-4.5 rounded-full text-[13px] transition-all cursor-pointer shrink-0 flex items-center gap-2 ${
                   isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 font-medium"
+                    ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground font-semibold hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`text-[10px] ${
+                  className={`text-[12px] ${
                     isActive
                       ? "text-primary-foreground/90 font-bold"
-                      : "text-muted-foreground/75"
+                      : "text-muted-foreground/75 font-medium"
                   }`}
                 >
                   {tab.count}
