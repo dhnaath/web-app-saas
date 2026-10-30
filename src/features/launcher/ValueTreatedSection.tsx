@@ -56,7 +56,7 @@ export function ValueTreatedSection({
     <div className="w-full flex flex-col items-center font-sans space-y-4">
       {/* Portaled ShellHeader Filter Pills di Bar Atas Kanan */}
       <ShellHeader>
-        <div className="flex items-center gap-1 h-full m-0 p-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 h-full m-0 p-0.5">
           {JENJANG_LEVELS.map((jenjang) => {
             const isActive = activeJenjangId === jenjang.id;
             return (
@@ -66,18 +66,18 @@ export function ValueTreatedSection({
                 data-state={isActive ? "active" : undefined}
                 onClick={() => setActiveJenjangId(jenjang.id)}
                 title={`${jenjang.name} (${jenjang.count} Fitur)`}
-                className={`px-3.5 h-[36px] rounded-full text-xs transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`h-[36px] px-4.5 rounded-full text-[13px] transition-all cursor-pointer shrink-0 flex items-center gap-2 ${
                   isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 font-medium"
+                    ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground font-semibold hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
               >
                 <span>{jenjang.name}</span>
                 <span
-                  className={`text-[10px] ${
+                  className={`text-[12px] ${
                     isActive
                       ? "text-primary-foreground/90 font-bold"
-                      : "text-muted-foreground/75"
+                      : "text-muted-foreground/75 font-medium"
                   }`}
                 >
                   {jenjang.count}
