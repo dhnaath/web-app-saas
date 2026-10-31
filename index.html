@@ -40,12 +40,12 @@
         }
       })();
     </script>
-    <title>DNA Consulting</title>
+    <title>DNA Consulting SaaS</title>
     <meta
       name="description"
       content="Frontend workspace all-in-one: klien, proyek, tugas, keuangan, dan alat produktivitas."
     />
-    <meta property="og:title" content="DNA Consulting" />
+    <meta property="og:title" content="DNA Consulting SaaS" />
     <meta
       property="og:description"
       content="Frontend workspace all-in-one: klien, proyek, tugas, keuangan, dan alat produktivitas."
@@ -670,31 +670,49 @@
         color: #ffffff !important;
       }
 
-      /* Tombol Segmented Aktif (Layer yang Dipilih) */
-      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button.bg-background,
-      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button.bg-primary,
-      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button[data-state="active"],
+      /* Tombol Segmented Aktif (Layer yang Dipilih) Mengikuti Warna Aksen Tema */
+      #app-header-actions-portal button.bg-primary,
+      #app-header-actions-portal button.bg-background,
+      #app-header-actions-portal button[data-state="active"],
+      div#root main#mainContent header #app-header-actions-portal button.bg-primary,
+      div#root main#mainContent header #app-header-actions-portal button.bg-background,
+      div#root main#mainContent header #app-header-actions-portal button[data-state="active"],
+      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button.bg-primary,
+      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button.bg-background,
+      div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button[data-state="active"],
       div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button.bg-background,
       div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button.bg-primary,
       div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button[data-state="active"] {
-        background: #2563eb !important;
-        background-color: #2563eb !important;
-        color: #ffffff !important;
+        background: hsl(var(--primary)) !important;
+        background-color: hsl(var(--primary)) !important;
+        color: hsl(var(--primary-foreground)) !important;
         font-weight: 600 !important;
-        box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
+        box-shadow: 0 1px 3px hsl(var(--primary) / 0.35) !important;
       }
 
-      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button.bg-background,
-      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button.bg-primary,
-      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div#app-header-actions-portal:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) button[data-state="active"],
+      #app-header-actions-portal button.bg-primary *,
+      #app-header-actions-portal button[data-state="active"] *,
+      #app-header-actions-portal button.bg-background * {
+        color: hsl(var(--primary-foreground)) !important;
+      }
+
+      .dark #app-header-actions-portal button.bg-primary,
+      .dark #app-header-actions-portal button.bg-background,
+      .dark #app-header-actions-portal button[data-state="active"],
+      .dark div#root main#mainContent header #app-header-actions-portal button.bg-primary,
+      .dark div#root main#mainContent header #app-header-actions-portal button.bg-background,
+      .dark div#root main#mainContent header #app-header-actions-portal button[data-state="active"],
+      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button.bg-primary,
+      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button.bg-background,
+      .dark div#root:nth-of-type(1) > div:nth-of-type(1) > main#mainContent:nth-of-type(1) > header:nth-of-type(1) div#app-header-actions-portal button[data-state="active"],
       .dark div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button.bg-background,
       .dark div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button.bg-primary,
       .dark div#root > div > main#mainContent > header div#app-header-actions-portal .shell-header-portal-actions button[data-state="active"] {
-        background: #3b82f6 !important;
-        background-color: #3b82f6 !important;
-        color: #ffffff !important;
+        background: hsl(var(--primary)) !important;
+        background-color: hsl(var(--primary)) !important;
+        color: hsl(var(--primary-foreground)) !important;
         font-weight: 600 !important;
-        box-shadow: 0 1px 3px rgba(59, 130, 246, 0.4) !important;
+        box-shadow: 0 1px 3px hsl(var(--primary) / 0.45) !important;
       }
 
       /* Tombol Aksi Mandiri / Tambahan di dalam Header Portal */
