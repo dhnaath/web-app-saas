@@ -949,6 +949,17 @@ html {
   white-space: nowrap;
 }
 
+#app-header-actions-portal button.bg-primary,
+#app-header-actions-portal button[data-state="active"] {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+#app-header-actions-portal button.bg-primary *,
+#app-header-actions-portal button[data-state="active"] * {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
 
 
 
